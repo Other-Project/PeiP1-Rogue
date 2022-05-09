@@ -452,7 +452,7 @@ class Game(object):
             import os
             os.system("cls||clear")
             print(self.floor)
-            print("❤" * self.hero.hp)
+            print("\033[0;31m♥\033[00m" * self.hero.hp)
             print("Inventory: " + ", ".join([str(e) for e in self.hero.inventory]))
             print(self.readMessages())
             c = getch()
