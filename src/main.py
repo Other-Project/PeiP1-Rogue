@@ -1,8 +1,6 @@
+import copy
 import math
 import random
-import copy
-import sys
-from msvcrt import getch
 
 """
 Rogue Five
@@ -15,11 +13,11 @@ def heal(creature):
 
 
 def teleport(creature, unique):
-    map = theGame().floor
-    newC = map.randEmptyCoord()
-    c = map.pos(creature)
-    map.rm(c)
-    map.put(newC, creature)
+    floor = theGame().floor
+    newC = floor.randEmptyCoord()
+    c = floor.pos(creature)
+    floor.rm(c)
+    floor.put(newC, creature)
     return unique
 
 
@@ -54,17 +52,17 @@ class Room:
     def randCoord(self):
         return Coord(random.randint(self.c1.x, self.c2.x), random.randint(self.c1.y, self.c2.y))
 
-    def randEmptyCoord(self, map):
+    def randEmptyCoord(self, floor):
         centre = self.center()
         while True:
             c = self.randCoord()
-            if c == centre or map.get(c) != map.ground:
+            if c == centre or floor.get(c) != floor.ground:
                 continue
             return c
 
-    def decorate(self, map):
-        map.put(self.randEmptyCoord(map), theGame().randEquipment())
-        map.put(self.randEmptyCoord(map), theGame().randMonster())
+    def decorate(self, floor):
+        floor.put(self.randEmptyCoord(floor), theGame().randEquipment())
+        floor.put(self.randEmptyCoord(floor), theGame().randMonster())
 
 
 """
@@ -85,6 +83,18 @@ class Element:
 
     def meet(self, hero):
         raise NotImplementedError("Not implemented yet")
+
+
+class Stairs(Element):
+    def __init__(self, name="Strairs", abbrv="E", color=""):
+        Element.__init__(self, name, abbrv, color)
+
+    def meet(self, hero):
+        if isinstance(hero, Hero):
+            theGame().addMessage("The " + hero.name + " goes down")
+            theGame().level += 1
+            theGame().buildFloor()
+        return None
 
 
 class Equipment(Element):
@@ -207,11 +217,11 @@ class Map:
     ground = '\033[0;90m.\033[00m'
     empty = " "
 
-    def __init__(self, size=20, hero=None, nbrooms=7):
+    def __init__(self, size=20, hero=None, nbRooms=7):
         self.size = size
         self._roomsToReach, self._rooms = [], []
-        self._mat = [[self.empty for x in range(size)] for y in range(size)]
-        self.generateRooms(nbrooms)
+        self._mat = [[self.empty for _ in range(size)] for _ in range(size)]
+        self.generateRooms(nbRooms)
         self.reachAllRooms()
         self.position = self._rooms[0].center()
         self.hero = hero or Hero()
@@ -318,7 +328,7 @@ class Map:
         if self._validCoord(coord):
             self._mat[coord.y][coord.x] = self.ground
         room = self.findRoom(coord)
-        if room != False:
+        if room:
             self._roomsToReach.remove(room)
             self._rooms.append(room)
         return room
@@ -355,7 +365,7 @@ class Map:
                 self.addRoom(room)
 
     def moveAllMonsters(self):
-        for e, pos in self._elem.items():
+        for e, pos in self._elem.copy().items():
             if e == self.hero or not isinstance(e, Creature) or not isinstance(pos, Coord):
                 continue
             if pos.distance(self.pos(self.hero)) >= 6:
@@ -397,12 +407,13 @@ class Game(object):
 
     def __init__(self, hero=None, level=1, floor=None, message=None):
         self.hero = hero or Hero()
-        self._level = level
+        self.level = level
         self.floor = floor
         self._message = message or []
 
     def buildFloor(self):
         self.floor = Map(hero=self.hero)
+        self.floor.put(self.floor._rooms[-1].center(), Stairs())
 
     def addMessage(self, msg):
         self._message.append(msg)
@@ -413,7 +424,7 @@ class Game(object):
         return text
 
     def randElement(self, collection):
-        X = random.expovariate(1 / self._level)
+        X = random.expovariate(1 / self.level)
         index = -1
         for x in collection:
             if x < X:
@@ -434,7 +445,6 @@ class Game(object):
         if len(items) <= 0:
             return None
         print("Choose item>", [str(i) + ": " + items[i].name for i in range(len(items))])
-        # noinspection PyUnresolvedReferences
         entered = getch()
         if not entered.isdigit():
             return None
@@ -456,21 +466,31 @@ class Game(object):
             print("Inventory: " + ", ".join([str(e) for e in self.hero.inventory]))
             print(self.readMessages())
             c = getch()
-            if c == b'\x1b' or c == b'\x03':  # Escape or Ctrl + C
-                print("Are you sure you want to quit the game ? [Y/N]")
-                while True:
-                    sure = getch()
-                    sureStr = sure.upper().decode("utf-8", 'ignore')
-                    if sureStr == "Y" or sure == b'\x03':
-                        sys.exit()
-                    elif sureStr == "N":
-                        c = None  # To skip the turn
-                        break
-            decodedC = None if c is None else c.decode("utf-8", "ignore")
-            if decodedC in Game._actions:
-                Game._actions[decodedC](self.hero)
+            if c in Game._actions:
+                Game._actions[c](self.hero)
                 self.floor.moveAllMonsters()
         print("--- Game Over ---")
+
+
+def getch():
+    """Single char input, only works on Mac/Linux/Windows OS terminals"""
+    try:
+        import termios
+        # POSIX system. Create and return a getch that manipulates the tty.
+        import sys
+        import tty
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+    except ImportError:
+        # Non-POSIX. Return msvcrt's (Windows') getch.
+        import msvcrt
+        return msvcrt.getch().decode('utf-8')
 
 
 def theGame(game=Game()):
