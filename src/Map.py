@@ -165,17 +165,24 @@ class Map:
             if self.intersectNone(room):
                 self.addRoom(room)
 
-    def moveAllMonsters(self):
-        from Creature import Creature
-        for e, pos in self._elem.copy().items():
-            if e == self.hero or not isinstance(e, Creature) or not isinstance(pos, Coord):
+    def getAllCreaturesInRadius(self, radius: int, searchType: type = Creature):
+        creatures = []
+        for e, pos in self._elem.items():
+            if e == self.hero or not isinstance(e, searchType) or not isinstance(pos, Coord):
                 continue
             posHero = self.pos(self.hero)
             if not posHero:  # The hero isn't on the map
                 continue  # TODO: Need to investigate this
-            if pos.distance(posHero) >= 6:
-                continue
-            self.move(e, pos.direction(posHero))
+            if pos.distance(posHero) < radius:
+                creatures.append(e)
+        return creatures
+
+    def moveAllMonsters(self):
+        from Monster import Monster
+        for e in self.getAllCreaturesInRadius(6, Monster):
+            self.move(e, self.pos(e).direction(self.pos(self.hero)))
+        if self.hero.weapon is not None:
+            self.hero.weapon.attackInRadius(self.hero, self)
 
     def randEmptyCoord(self):
         return random.choice(self._rooms).randEmptyCoord(self)

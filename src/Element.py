@@ -1,5 +1,10 @@
 class Element:
-    def __init__(self, name, abbrv=None, color=""):
+    def __init__(self, name: str, abbrv: str = None, color=""):
+        """
+        :param name: The name of the element
+        :param abbrv: The symbol used to represent the element on the map
+        :param color: The color of the element on the map
+        """
         self.name = name
         self.abbrv = color + (abbrv or name[0]) + "\033[00m"
 
@@ -10,4 +15,4 @@ class Element:
         return "<" + self.name + ">"
 
     def meet(self, hero):
-        raise NotImplementedError("Not implemented yet")
+        raise NotImplementedError("Abstract method")
