@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d054b4d7-6b84-45f1-90cb-01812e22cc9d" name="Changes" comment="Divide code into modules">
-      <change afterPath="$PROJECT_DIR$/run.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Coord.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Creature.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Element.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Equipment.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Game.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Hero.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Map.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Room.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Stairs.py" afterDir="false" />
+    <list default="true" id="d054b4d7-6b84-45f1-90cb-01812e22cc9d" name="Changes" comment="Run scripts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +44,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -95,7 +83,7 @@
       <workItem from="1652197208156" duration="64000" />
       <workItem from="1652199007743" duration="6546000" />
       <workItem from="1652214462404" duration="137000" />
-      <workItem from="1652278435259" duration="5412000" />
+      <workItem from="1652278435259" duration="6266000" />
     </task>
     <task id="LOCAL-00001" summary="PyCharm project">
       <created>1652127885725</created>
@@ -111,7 +99,21 @@
       <option name="project" value="LOCAL" />
       <updated>1652213111406</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Divide code into modules">
+      <created>1652285231450</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1652285231450</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Run scripts">
+      <created>1652285258235</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1652285258235</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +135,8 @@
     <MESSAGE value="PyCharm project" />
     <MESSAGE value="Stairs + code cleanup" />
     <MESSAGE value="Divide code into modules" />
-    <option name="LAST_COMMIT_MESSAGE" value="Divide code into modules" />
+    <MESSAGE value="Run scripts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Run scripts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
