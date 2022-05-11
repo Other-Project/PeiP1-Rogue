@@ -7,18 +7,18 @@ class Equipment(Element):
         self.usage = usage
 
     def meet(self, hero):
-        import main
+        import utils
         from Hero import Hero
         if isinstance(hero, Hero):
-            main.theGame().addMessage("You pick up a " + self.name)
+            utils.theGame().addMessage("You pick up a " + self.name)
             return hero.take(self)
         return None
 
     def use(self, creature):
-        import main
+        import utils
         if self.usage is None:
-            main.theGame().addMessage("The " + self.name + " is not usable")
+            utils.theGame().addMessage("The " + self.name + " is not usable")
             return False
 
-        main.theGame().addMessage("The " + creature.name + " uses the " + self.name)
+        utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
         return self.usage(self, creature)

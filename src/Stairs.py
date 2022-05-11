@@ -6,10 +6,10 @@ class Stairs(Element):
         Element.__init__(self, name, abbrv, color)
 
     def meet(self, hero):
-        import main
+        import utils
         from Hero import Hero
         if isinstance(hero, Hero):
-            main.theGame().addMessage("The " + hero.name + " goes down")
-            main.theGame().level += 1
-            main.theGame().buildFloor()
+            utils.theGame().addMessage("The " + hero.name + " goes down")
+            utils.theGame().level += 1
+            utils.theGame().buildFloor()
         return None

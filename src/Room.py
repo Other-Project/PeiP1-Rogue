@@ -1,5 +1,6 @@
-from Coord import Coord
 import random
+
+from Coord import Coord
 
 
 class Room:
@@ -36,6 +37,6 @@ class Room:
             return c
 
     def decorate(self, floor):
-        import main
-        floor.put(self.randEmptyCoord(floor), main.theGame().randEquipment())
-        floor.put(self.randEmptyCoord(floor), main.theGame().randMonster())
+        import utils
+        floor.put(self.randEmptyCoord(floor), utils.theGame().randEquipment())
+        floor.put(self.randEmptyCoord(floor), utils.theGame().randMonster())

@@ -11,8 +11,8 @@ class Creature(Element):
     def description(self):
         return Element.description(self) + "(" + str(self.hp) + ")"
 
-    def meet(self, other):
-        import main
-        self.hp -= other.strength - self.resistance
-        main.theGame().addMessage("The " + other.name + " hits the " + self.description())
+    def meet(self, other) -> bool:
+        import utils
+        self.hp -= other.strength
+        utils.theGame().addMessage("The " + other.name + " hits the " + self.description())
         return self.hp <= 0

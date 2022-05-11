@@ -1,15 +1,15 @@
-from Coord import Coord
-import random
 import copy
+import random
+
+from Coord import Coord
 
 
 def theGame():
-    import main
-    return main.theGame()
+    from utils import theGame
+    return theGame()
 
 
 class Game(object):
-
     _actions = {
         "z": lambda hero: theGame().floor.move(hero, Coord(0, -1)),
         "s": lambda hero: theGame().floor.move(hero, Coord(0, 1)),
@@ -55,19 +55,19 @@ class Game(object):
         return copy.copy(random.choice(collection[index]))
 
     def randEquipment(self):
-        import main
-        return self.randElement(main.equipments)
+        import config
+        return self.randElement(config.equipments)
 
     def randMonster(self):
-        import main
-        return self.randElement(main.monsters)
+        import config
+        return self.randElement(config.monsters)
 
     def select(self, items):
-        import main
+        import utils
         if len(items) <= 0:
             return None
         print("Choose item>", [str(i) + ": " + items[i].name for i in range(len(items))])
-        entered = main.getch()
+        entered = utils.getch()
         if not entered.isdigit():
             return None
 
@@ -77,10 +77,10 @@ class Game(object):
         return None
 
     def play(self):
-        import main
+        import utils
         """Main game loop"""
         self.buildFloor()
-        print("--- Welcome Hero! ---")
+        self.addMessage("--- Welcome Hero! ---")
         while self.hero.hp > 0:
             import os
             os.system("cls||clear")
@@ -88,7 +88,7 @@ class Game(object):
             print("\033[0;31m♥\033[00m" * self.hero.hp)
             print("Inventory: " + ", ".join([str(e) for e in self.hero.inventory]))
             print(self.readMessages())
-            c = main.getch()
+            c = utils.getch()
             if c in Game._actions:
                 Game._actions[c](self.hero)
                 self.floor.moveAllMonsters()

@@ -1,10 +1,13 @@
-from Coord import Coord
-from Element import Element
 import random
 from typing import Union
 
+from Coord import Coord
+from Element import Element
+
 
 class Map:
+    from Creature import Creature
+
     ground = '\033[0;90m.\033[00m'
     empty = " "
 
