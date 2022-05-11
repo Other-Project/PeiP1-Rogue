@@ -1,0 +1,1 @@
+wt powershell -NoExit .\run.ps1
