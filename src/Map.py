@@ -1,5 +1,8 @@
 from Coord import Coord
+from Element import Element
 import random
+from typing import Union
+
 
 class Map:
     ground = '\033[0;90m.\033[00m'
@@ -53,15 +56,14 @@ class Map:
             raise IndexError('Out of map coord')
 
     def checkElement(self, e):
-        from Element import Element
         if not isinstance(e, Element):
             raise TypeError('Not a Element')
 
-    def get(self, c):
+    def get(self, c) -> Union[str, Element]:
         self.checkCoord(c)
         return self._mat[c.y][c.x]
 
-    def pos(self, e):
+    def pos(self, e) -> Union[Coord, bool]:
         self.checkElement(e)
         return self._elem[e] if e in self._elem else False
 
@@ -96,6 +98,9 @@ class Map:
             self._elem[e] = dest
         elif self.get(dest) != Map.empty and self.get(dest).meet(e) and self.get(dest) != self.hero:
             self.rm(dest)
+
+    def getRoom(self, i: int):
+        return self._rooms[i]
 
     def addRoom(self, room):
         self._roomsToReach.append(room)

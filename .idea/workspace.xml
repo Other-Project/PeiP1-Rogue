@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d054b4d7-6b84-45f1-90cb-01812e22cc9d" name="Changes" comment="Run scripts">
+    <list default="true" id="d054b4d7-6b84-45f1-90cb-01812e22cc9d" name="Changes" comment="Add a (fairly basic) README">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Map.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Room.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Room.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +30,19 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="2fb5e5d5-20d4-410d-a341-f8d927ed320c" />
+        <option name="url" value="https://github.com/Other-Project/PeiP1-Rogue.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="28wTbuiCngELey8iX331AkqAMwm" />
   <component name="ProjectLevelVcsManager">
@@ -83,7 +97,7 @@
       <workItem from="1652197208156" duration="64000" />
       <workItem from="1652199007743" duration="6546000" />
       <workItem from="1652214462404" duration="137000" />
-      <workItem from="1652278435259" duration="6266000" />
+      <workItem from="1652278435259" duration="7626000" />
     </task>
     <task id="LOCAL-00001" summary="PyCharm project">
       <created>1652127885725</created>
@@ -113,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652285258235</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add a (fairly basic) README">
+      <created>1652286369416</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1652286369416</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,17 +157,7 @@
     <MESSAGE value="Stairs + code cleanup" />
     <MESSAGE value="Divide code into modules" />
     <MESSAGE value="Run scripts" />
-    <option name="LAST_COMMIT_MESSAGE" value="Run scripts" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Hero.py</url>
-          <line>5</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Add a (fairly basic) README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add a (fairly basic) README" />
   </component>
 </project>

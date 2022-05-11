@@ -12,12 +12,12 @@ class Hero(Creature):
         return Creature.description(self) + str(self.inventory)
 
     def fullDescription(self):
-        l = []
+        attributs = []
         for attr, val in self.__dict__.items():
             if not attr.startswith("_") and attr != "inventory":
-                l.append("> " + attr + " : " + str(val))
-        l.append("> INVENTORY : " + str([x.name for x in self.inventory]))
-        return "\n".join(l)
+                attributs.append("> " + attr + " : " + str(val))
+        attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
+        return "\n".join(attributs)
 
     def take(self, elem):
         from Equipment import Equipment

@@ -7,6 +7,7 @@ def theGame():
     import main
     return main.theGame()
 
+
 class Game(object):
 
     _actions = {
@@ -31,7 +32,7 @@ class Game(object):
         from Map import Map
         from Stairs import Stairs
         self.floor = Map(hero=self.hero)
-        self.floor.put(self.floor._rooms[-1].center(), Stairs())
+        self.floor.put(self.floor.getRoom(-1).center(), Stairs())
 
     def addMessage(self, msg):
         self._message.append(msg)
