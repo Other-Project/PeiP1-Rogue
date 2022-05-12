@@ -29,12 +29,5 @@ class Weapon(Equipment):
     def attackInRadius(self, creature: Creature, floor: Map):
         """Attack all ennemies in radius"""
         for m in floor.getAllCreaturesInRadius(self.radius + 1, creature.enemyType):
-            if self._attack(creature, m):
+            if m.meet(creature):
                 floor.rm(floor.pos(m))
-
-    def _attack(self, attacker: Creature, attacked: Creature):
-        """Attack an enemy"""
-        import utils
-        attacked.hp -= self.damage
-        utils.theGame().addMessage("The " + attacker.name + " hits the " + attacked.description())
-        return attacked.hp <= 0
