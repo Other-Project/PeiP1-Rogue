@@ -49,6 +49,8 @@ class Map:
             self.rm(item)
         self.rm(self.pos(item))
 
+    # region Validation
+
     def _validCoord(self, c):
         return 0 <= c.x < self.size and 0 <= c.y < self.size
 
@@ -61,6 +63,10 @@ class Map:
     def checkElement(self, e):
         if not isinstance(e, Element):
             raise TypeError('Not a Element')
+
+    # endregion
+
+    # region Mat operations
 
     def get(self, c) -> Union[str, Element]:
         self.checkCoord(c)
@@ -87,20 +93,9 @@ class Map:
             del self._elem[e]
             self._mat[c.y][c.x] = self.ground
 
-    def move(self, e, way):
-        """Moves the element e in the direction way."""
-        orig = self.pos(e)
-        if not orig:
-            return  # TODO: Investigate this
-        dest = orig + way
-        if dest not in self:
-            return
-        if self.get(dest) == Map.ground:
-            self._mat[orig.y][orig.x] = Map.ground
-            self._mat[dest.y][dest.x] = e
-            self._elem[e] = dest
-        elif self.get(dest) != Map.empty and self.get(dest).meet(e) and self.get(dest) != self.hero:
-            self.rm(dest)
+    # endregion
+
+    # region Rooms
 
     def getRoom(self, i: int):
         return self._rooms[i]
@@ -165,6 +160,28 @@ class Map:
             if self.intersectNone(room):
                 self.addRoom(room)
 
+    def randEmptyCoord(self):
+        return random.choice(self._rooms).randEmptyCoord(self)
+
+    # endregion
+
+    # region Movements
+
+    def move(self, e, way):
+        """Moves the element e in the direction way."""
+        orig = self.pos(e)
+        if not orig:
+            return  # TODO: Investigate this
+        dest = orig + way
+        if dest not in self:
+            return
+        if self.get(dest) == Map.ground:
+            self._mat[orig.y][orig.x] = Map.ground
+            self._mat[dest.y][dest.x] = e
+            self._elem[e] = dest
+        elif self.get(dest) != Map.empty and self.get(dest).meet(e) and self.get(dest) != self.hero:
+            self.rm(dest)
+
     def getAllCreaturesInRadius(self, radius: int, searchType: type = Creature):
         creatures = []
         for e, pos in self._elem.items():
@@ -184,5 +201,4 @@ class Map:
         if self.hero.weapon is not None:
             self.hero.weapon.attackInRadius(self.hero, self)
 
-    def randEmptyCoord(self):
-        return random.choice(self._rooms).randEmptyCoord(self)
+    # endregion
