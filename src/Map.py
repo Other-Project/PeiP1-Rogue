@@ -24,6 +24,7 @@ class Map:
         self.put(self.position, self.hero)
         for room in self._rooms:
             room.decorate(self)
+        self.reposEffectue = False
 
     def __repr__(self):
         return '\n'.join([''.join([str(x) for x in y]) for y in self._mat]) + '\n'
@@ -200,5 +201,18 @@ class Map:
             self.move(e, self.pos(e).direction(self.pos(self.hero)))
         if self.hero.weapon is not None:
             self.hero.weapon.attackInRadius(self.hero, self)
+
+    def repos(self, hero):
+        """Regain de 5hp et déplace 10 fois les monstres"""
+        from utils import theGame
+        if self.reposEffectue:
+            theGame().addMessage("The " + hero.name + " has already rested")
+            return
+        theGame().addMessage("The " + hero.name + " is resting")
+        hero.hp += 5
+        for i in range(10):
+            self.moveAllMonsters()
+        self.reposEffectue = True
+
 
     # endregion

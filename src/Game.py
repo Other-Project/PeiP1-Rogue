@@ -18,6 +18,7 @@ class Game(object):
         "i": lambda hero: theGame().addMessage(hero.fullDescription()),
         "k": lambda hero: hero.__setattr__("hp", 0),
         "u": lambda hero: hero.use(theGame().select(hero.inventory)),
+        "r": lambda hero: theGame().floor.repos(hero),
         " ": lambda hero: None
     }
 
