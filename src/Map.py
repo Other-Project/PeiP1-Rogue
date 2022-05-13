@@ -183,27 +183,40 @@ class Map:
         elif self.get(dest) != Map.empty and self.get(dest).meet(e) and self.get(dest) != self.hero:
             self.rm(dest)
 
-    def getAllCreaturesInRadius(self, radius: int, searchType: type = Creature):
+    def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature):
+        """
+        Gets all creatures from a certain type in a specific radius
+
+        :param caller: The center of the radius
+        :param radius: The maximum distance from the caller
+        :param searchType: The type that the creatures needs to match
+        """
         creatures = []
+        posCaller = self.pos(caller)
+        if not posCaller:  # The hero isn't on the map
+            return  # TODO: Need to investigate this
         for e, pos in self._elem.items():
-            if e == self.hero or not isinstance(e, searchType) or not isinstance(pos, Coord):
+            if e == caller or not isinstance(e, searchType) or not isinstance(pos, Coord):
                 continue
-            posHero = self.pos(self.hero)
-            if not posHero:  # The hero isn't on the map
-                continue  # TODO: Need to investigate this
-            if pos.distance(posHero) < radius:
+            if pos.distance(posCaller) < radius:
                 creatures.append(e)
         return creatures
 
-    def moveAllMonsters(self):
+    def moveAllMonsters(self, radius: int = 6):
+        """
+        Moves the monsters of the map
+
+        :param radius: The maximum distance from the hero in which to perform the movement
+        """
         from Monster import Monster
-        for e in self.getAllCreaturesInRadius(6, Monster):
+        for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
             self.move(e, self.pos(e).direction(self.pos(self.hero)))
         if self.hero.weapon is not None:
             self.hero.weapon.attackInRadius(self.hero, self)
 
-    def repos(self, hero):
-        """Regain de 5hp et déplace 10 fois les monstres"""
+    def rest(self, hero):
+        """The hero recovers 5 hp and the monsters move 10 times"""
+
         from utils import theGame
         if self.reposEffectue:
             theGame().addMessage("The " + hero.name + " has already rested")
@@ -213,6 +226,5 @@ class Map:
         for i in range(10):
             self.moveAllMonsters()
         self.reposEffectue = True
-
 
     # endregion
