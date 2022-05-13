@@ -39,7 +39,7 @@ class Game(object):
         self._message.append(msg)
 
     def readMessages(self):
-        text = ". ".join(self._message) + "." if len(self._message) > 0 else ""
+        text = ".\n".join(self._message) + "." if len(self._message) > 0 else ""
         self._message.clear()
         return text
 
@@ -78,8 +78,8 @@ class Game(object):
         return None
 
     def play(self):
-        import utils
         """Main game loop"""
+        import utils
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
         while self.hero.hp > 0:
