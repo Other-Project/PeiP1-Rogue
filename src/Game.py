@@ -94,7 +94,7 @@ class Game(object):
 
     def drawInterface(self):
         import os
-        os.system("cls||clear")
+        os.system('cls' if os.name == 'nt' else 'clear')
         print(self.floor)
         print("\033[0;31m♥\033[00m" * self.hero.hp)
         print("Inventory: " + ", ".join([str(e) for e in self.hero.inventory]))
