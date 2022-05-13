@@ -29,7 +29,7 @@ def teleport(creature, unique):
 equipments = {
     0: [
         Equipment("gold", "o"),
-        Weapon("sword", radius=1, damage=2),
+        Weapon("sword", radius=0, damage=2),
         Weapon("bow", radius=3),
         Equipment("potion", "!", lambda item, hero: heal(hero))
     ],

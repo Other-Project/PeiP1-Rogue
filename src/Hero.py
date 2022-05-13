@@ -39,3 +39,8 @@ class Hero(Creature):
             raise ValueError("Not in the inventory")
         if item.use(self):
             self.inventory.remove(item)
+
+    def attack(self, attacked):
+        attacked.hp -= self.strength
+        if self.weapon is not None:
+            attacked.hp -= self.weapon.damage

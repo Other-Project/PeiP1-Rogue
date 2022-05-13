@@ -16,6 +16,9 @@ class Creature(Element):
         import utils
         if not isinstance(attacker, self.enemyType):
             return False
-        self.hp -= attacker.strength
+        attacker.attack(self)
         utils.theGame().addMessage("The " + attacker.name + " hits the " + self.description())
         return self.hp <= 0
+
+    def attack(self, attacked):
+        attacked.hp -= self.strength
