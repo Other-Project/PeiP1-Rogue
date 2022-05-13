@@ -79,18 +79,18 @@ class Game(object):
 
     def play(self):
         """Main game loop"""
-        import utils
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
-        while self.hero.hp > 0:
-            self.drawInterface()
-            c = utils.getch()
-            if c in Game._actions:
-                Game._actions[c](self.hero)
-                self.floor.moveAllMonsters()
+        import GUI
+        GUI.main()
 
-        self.drawInterface()
-        print("--- Game Over ---")
+
+    def newTurn(self):
+        import utils
+        c = utils.getch()
+        if c in Game._actions:
+            Game._actions[c](self.hero)
+            self.floor.moveAllMonsters()
 
     def drawInterface(self):
         import os

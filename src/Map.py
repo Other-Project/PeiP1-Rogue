@@ -214,5 +214,4 @@ class Map:
             self.moveAllMonsters()
         self.reposEffectue = True
 
-
     # endregion
