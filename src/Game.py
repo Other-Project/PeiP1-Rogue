@@ -1,6 +1,8 @@
 import copy
 import random
 
+import pygame
+
 from Coord import Coord
 
 
@@ -11,15 +13,15 @@ def theGame():
 
 class Game(object):
     _actions = {
-        "z": lambda hero: theGame().floor.move(hero, Coord(0, -1)),
-        "s": lambda hero: theGame().floor.move(hero, Coord(0, 1)),
-        "d": lambda hero: theGame().floor.move(hero, Coord(1, 0)),
-        "q": lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
-        "i": lambda hero: theGame().addMessage(hero.fullDescription()),
-        "k": lambda hero: hero.__setattr__("hp", 0),
-        "u": lambda hero: hero.use(theGame().select(hero.inventory)),
-        "r": lambda hero: theGame().floor.repos(hero),
-        " ": lambda hero: None
+        pygame.K_z: lambda hero: theGame().floor.move(hero, Coord(0, -1)),
+        pygame.K_s: lambda hero: theGame().floor.move(hero, Coord(0, 1)),
+        pygame.K_d: lambda hero: theGame().floor.move(hero, Coord(1, 0)),
+        pygame.K_q: lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
+        pygame.K_i: lambda hero: theGame().addMessage(hero.fullDescription()),
+        pygame.K_k: lambda hero: hero.__setattr__("hp", 0),
+        pygame.K_u: lambda hero: hero.use(theGame().select(hero.inventory)),
+        pygame.K_r: lambda hero: theGame().floor.repos(hero),
+        pygame.K_SPACE: lambda hero: None
     }
 
     def __init__(self, hero=None, level=1, floor=None, message=None):
@@ -85,9 +87,7 @@ class Game(object):
         GUI.main(self)
 
 
-    def newTurn(self):
-        import utils
-        c = utils.getch()
+    def newTurn(self, c):
         if c in Game._actions:
             Game._actions[c](self.hero)
             self.floor.moveAllMonsters()
