@@ -1,6 +1,6 @@
 import random
 from typing import Union
-
+import pygame
 from Coord import Coord
 from Element import Element
 
@@ -8,8 +8,8 @@ from Element import Element
 class Map:
     from Creature import Creature
 
-    ground = '\033[0;90m.\033[00m'
-    empty = " "
+    ground = pygame.image.load("assets/other/ground.png")
+    empty = pygame.image.load("assets/other/lava.png")
 
     def __init__(self, size=20, hero=None, nbRooms=7):
         from Hero import Hero

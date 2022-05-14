@@ -2,8 +2,8 @@ from Element import Element
 
 
 class Creature(Element):
-    def __init__(self, name, hp, enemyType, abbrv=None, strength=1, color=""):
-        Element.__init__(self, name, abbrv, color)
+    def __init__(self, name, hp, enemyType, abbrv=None, strength=1, color="", image=None):
+        Element.__init__(self, name, abbrv, color, image)
         self.hp = hp
         self.strength = strength
         self.enemyType = enemyType

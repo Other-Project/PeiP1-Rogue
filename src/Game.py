@@ -82,7 +82,7 @@ class Game(object):
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
         import GUI
-        GUI.main()
+        GUI.main(self)
 
 
     def newTurn(self):
