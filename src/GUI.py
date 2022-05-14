@@ -13,6 +13,12 @@ def main(game):
         screen.fill(black)
         for y in range(len(game.floor)):
             for x in range(len(game.floor)):
-                screen.blit(pygame.transform.scale(pygame.image.load(game.floor._mat[y][x].image), (tileSize, tileSize)), (x*tileSize, y*tileSize))
+                e = game.floor._mat[y][x]
+                if e is None:
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lave.png"), (tileSize, tileSize)), (x*tileSize, y*tileSize))
+                else:
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), (tileSize, tileSize)), (x*tileSize, y*tileSize))
+                    if e.image is not None:
+                        screen.blit(pygame.transform.scale(pygame.image.load(e.image), (tileSize, tileSize)), (x*tileSize, y*tileSize))
         pygame.display.flip()
 
