@@ -45,7 +45,7 @@ equipments = {
 }
 
 monsters = {
-    0: [Monster("Goblin", 4), Monster("Bat", 2, "W")],
+    0: [Monster("Goblin", 4), Monster("Bat", 2, "W"), Monster("Archer", 1, "A", range=4)],
     1: [Monster("Ork", 6, strength=2), Monster("Blob", 10)],
     5: [Monster("Dragon", 20, strength=3)]
 }

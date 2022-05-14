@@ -210,7 +210,7 @@ class Map:
         """
         from Monster import Monster
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
-            self.move(e, self.pos(e).direction(self.pos(self.hero)))
+            e.doAction(self)
         if self.hero.weapon is not None:
             self.hero.weapon.attackInRadius(self.hero, self)
 

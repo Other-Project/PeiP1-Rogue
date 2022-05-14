@@ -41,6 +41,9 @@ class Hero(Creature):
             self.inventory.remove(item)
 
     def attack(self, attacked):
+        import utils
+
         attacked.hp -= self.strength
         if self.weapon is not None:
             attacked.hp -= self.weapon.damage
+        utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())

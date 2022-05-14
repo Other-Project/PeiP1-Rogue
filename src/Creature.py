@@ -13,12 +13,13 @@ class Creature(Element):
 
     def meet(self, attacker) -> bool:
         """Attacked by an enemy"""
-        import utils
         if not isinstance(attacker, self.enemyType):
             return False
         attacker.attack(self)
-        utils.theGame().addMessage("The " + attacker.name + " hits the " + self.description())
         return self.hp <= 0
 
     def attack(self, attacked):
+        import utils
+
         attacked.hp -= self.strength
+        utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
