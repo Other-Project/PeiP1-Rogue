@@ -81,6 +81,8 @@ class Game(object):
 
     def play(self):
         """Main game loop"""
+        import os
+        os.system('cls' if os.name == 'nt' else 'clear')
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
         import GUI

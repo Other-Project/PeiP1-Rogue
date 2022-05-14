@@ -1,6 +1,5 @@
 import random
 from typing import Union
-import pygame
 from Coord import Coord
 from Element import Element
 
