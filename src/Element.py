@@ -7,6 +7,7 @@ class Element:
         """
         self.name = name
         self.abbrv = color + (abbrv or name[0]) + "\033[00m"
+        self.image=image
 
     def __repr__(self):
         return self.abbrv

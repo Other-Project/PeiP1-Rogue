@@ -13,6 +13,7 @@ def main(game):
         screen.fill(black)
         for y in range(len(game.floor)):
             for x in range(len(game.floor)):
+                print(y, x, game.floor._mat[y][x])
                 screen.blit(pygame.image.load(game.floor._mat[y][x].image), (x*tileSize, y*tileSize))
         pygame.display.flip()
 

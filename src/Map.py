@@ -8,8 +8,8 @@ from Element import Element
 class Map:
     from Creature import Creature
 
-    ground = pygame.image.load("assets/other/ground.png")
-    empty = pygame.image.load("assets/other/lava.png")
+    ground = Element("ground", image="assets/other/ground.png")
+    empty = Element("ground", image="assets/other/lava.png")
 
     def __init__(self, size=20, hero=None, nbRooms=7):
         from Hero import Hero

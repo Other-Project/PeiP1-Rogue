@@ -14,7 +14,7 @@ class Weapon(Equipment):
         :param damage: The amount of damage that can be inflicted by using this weapon
         :param radius: The maximum distance at which the hero can attack
         """
-        Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=None)
+        Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
         self.damage = damage
         self.radius = radius
 
