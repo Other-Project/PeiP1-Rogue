@@ -9,7 +9,7 @@ class Map:
     from Creature import Creature
 
     ground = Element("ground", image="assets/other/ground.png")
-    empty = Element("ground", image="assets/other/lava.png")
+    empty = Element("ground", image="assets/other/lave.png")
 
     def __init__(self, size=20, hero=None, nbRooms=7):
         from Hero import Hero

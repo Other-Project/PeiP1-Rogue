@@ -2,7 +2,7 @@ from Creature import Creature
 import pygame
 
 class Hero(Creature):
-    def __init__(self, name="Hero", hp=10, abbrv="@", strength=2, color="\033[0;32m", image=pygame.image.load("assets/hero equipment/sword/sword1.png")):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", hp=10, abbrv="@", strength=2, color="\033[0;32m"):
         from Monster import Monster
         Creature.__init__(self, name, hp, Monster, abbrv, strength, color, image)
         self.inventory = []
