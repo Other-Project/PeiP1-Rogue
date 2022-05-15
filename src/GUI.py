@@ -5,7 +5,8 @@ def printMsg(game):
 
 
 def main(game):
-    import sys, pygame
+    import sys
+    import pygame
     from Coord import Coord
     pygame.init()
 

@@ -66,11 +66,11 @@ class Game(object):
         return self.randElement(config.monsters)
 
     def select(self, items):
-        import utils
+        # TODO: Fix this
         if len(items) <= 0:
             return None
         print("Choose item>", [str(i) + ": " + items[i].name for i in range(len(items))])
-        entered = utils.getch()
+        entered = "0"  # No longer working
         if not entered.isdigit():
             return None
 
@@ -87,7 +87,6 @@ class Game(object):
         self.addMessage("--- Welcome Hero! ---")
         import GUI
         GUI.main(self)
-
 
     def newTurn(self, c):
         if c in Game._actions:
