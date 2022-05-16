@@ -5,7 +5,7 @@ from Element import Element
 
 class Equipment(Element):
     """An object that can be collected by the hero"""
-    
+
     def __init__(self, name: str, abbrv: str = None, usage: Callable = None, color="\033[0;33m", image=None):
         """
         :param name: The name of the item
