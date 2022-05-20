@@ -28,7 +28,7 @@ def teleport(creature, unique):
 
 equipments = {
     0: [
-        Weapon("sword", radius=1, damage=2, image="assets/hero equipment/sword/sword1.png"),
+        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
         Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png")
     ],
@@ -46,7 +46,8 @@ equipments = {
 monsters = {
     0: [
         Monster("Goblin", 4, image="assets/monsters/skeleton/skeleton.png"),
-        Monster("Bat", 2, "W", image="assets/other/chest.png")
+        Monster("Bat", 2, "W", image="assets/other/chest.png"),
+        Monster("Archer", 1, "A", range=4, image="assets/hero equipment/bow/bow1.0.png")
     ],
     1: [
         Monster("Ork", 6, strength=2, image="assets/other/fountain.png"),

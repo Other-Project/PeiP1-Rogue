@@ -28,6 +28,6 @@ class Weapon(Equipment):
 
     def attackInRadius(self, creature: Creature, floor: Map):
         """Attack all ennemies in radius"""
-        for m in floor.getAllCreaturesInRadius(self.radius + 1, creature.enemyType):
+        for m in floor.getAllCreaturesInRadius(creature, self.radius + 1, creature.enemyType):
             if m.meet(creature):
                 floor.rm(floor.pos(m))
