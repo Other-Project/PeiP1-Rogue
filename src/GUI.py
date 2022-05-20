@@ -1,5 +1,5 @@
 import pygame
-
+import time
 
 # button class
 class Button():
@@ -28,8 +28,7 @@ class Button():
 def printMsg(game):
     msg = game.readMessages()
     if msg is not None and msg != "":
-        print(msg)
-
+        return msg
 
 def main(game):
     import sys
@@ -43,13 +42,21 @@ def main(game):
     screen.fill((255, 255, 255))
     screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (infoObject.current_w, infoObject.current_h)), (0, 0))
     start_button = Button((infoObject.current_w / 2) - 348 / 2, (infoObject.current_h / 2) + 149, pygame.image.load("assets/other/startButton.png"), 1)
+    close_button = Button(infoObject.current_w*(2/3)-75, (infoObject.current_h / 1.3), pygame.image.load("assets/other/exitButton.png"), 2)
+    replay_button = Button(infoObject.current_w*(4/5), (infoObject.current_h / 1.3), pygame.image.load("assets/other/restartButton.png"), 2)
     font = pygame.font.SysFont(None, 20)
-    img = font.render('hello', True, (255,255,255))
     img1 = font.render("strength:"+str(game.hero.strength), True, (255, 255, 255))
     img2 = font.render("armor:"+str(game.hero.armor), True, (255, 255, 255))
-    #img3 = font.render(game.hero.exp, True, (255, 255, 255))
-    # img4 = font.render(game.hero.level, True, (255, 255, 255))
+    img3 = font.render("xp:"+str(game.hero.exp), True, (255, 255, 255))
+    #img4 = font.render("level:"+str(game.hero.level), True, (255, 255, 255))
     img5 = font.render("move:", True, (255, 255, 255))
+    img6 = font.render("skip one turn:", True, (255, 255, 255))
+    img7 = font.render("destroy an object: right click", True, (255, 255, 255))
+    img8 = font.render("suicide:", True, (255, 255, 255))
+    font1 = pygame.font.SysFont(None, 75)
+    img9 = font1.render("---Game Over---", True, (255, 255, 255))
+
+
     x=0
     while 1:
         for event in pygame.event.get():
@@ -60,11 +67,13 @@ def main(game):
             if event.type == pygame.QUIT:
                 sys.exit()
         if start_button.clicked:
+            Startps=time.time()
             screen.fill((75,75,75))
             pygame.draw.rect(screen, (64, 64, 64),pygame.Rect(tileSize * game.floor.size + 20, 20, infoObject.current_w - tileSize * game.floor.size - 40, infoObject.current_h - 40))
             #boite de texte
+            img = font.render(str(printMsg(game)), True, (255, 255, 255))
             pygame.draw.rect(screen, (55, 55, 55), pygame.Rect(infoObject.current_w * (3 / 5), infoObject.current_h / 2+80, tileSize*13, tileSize*2))
-            screen.blit(img, (infoObject.current_w * (3 / 5)+5, infoObject.current_h / 2+80))
+            screen.blit(img, (infoObject.current_w * (3 / 5)+5, infoObject.current_h / 2+80, tileSize*13, tileSize*2+5))
             #dessine le héro de l'inventaire
             screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/frontHero.png"), (tileSize*5, tileSize*5)), (infoObject.current_w*(4/5), 40))
             #dessine les cases pour armes
@@ -78,17 +87,22 @@ def main(game):
             #caractéristiques du héro
             screen.blit(img1, (infoObject.current_w*(4.2/5), 280))
             screen.blit(img2, (infoObject.current_w*(4.2/5), 300))
-            #screen.blit(img3, (infoObject.current_w*(4/5), 220))
-            # screen.blit(img4, (infoObject.current_w*(4/5), 200))
+            screen.blit(img3, (infoObject.current_w*(4.2/5), 260))
+            #screen.blit(img4, (infoObject.current_w*(4.2/5), 240))
             #regles du jeu
             screen.blit(img5, (infoObject.current_w * (3 / 5), infoObject.current_h *(8.5/10)))
             screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize*0.7, tileSize*0.7)), (infoObject.current_w * (3 / 5)+100, infoObject.current_h *(8.5/10)-40))
             screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterQ.png"), (tileSize * 0.7, tileSize * 0.7)),
                         (infoObject.current_w * (3 / 5) + 60, infoObject.current_h * (8.5 / 10) ))
-            screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.7)),
+            screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.71)),
                         (infoObject.current_w * (3 / 5) + 100, infoObject.current_h * (8.5 / 10)))
             screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterD.png"), (tileSize * 0.7, tileSize * 0.7)),
                         (infoObject.current_w * (3 / 5) + 140, infoObject.current_h * (8.5 / 10) ))
+            screen.blit(img6, (infoObject.current_w * (4 / 5), infoObject.current_h * (9.3 / 10)))
+            screen.blit(pygame.transform.scale(pygame.image.load("assets/other/spaceBar.png"), (tileSize * 3, tileSize * 0.7)),
+                        (infoObject.current_w * (4.35 / 5), infoObject.current_h * (9.23 / 10)))
+            screen.blit(img7, (infoObject.current_w * (4 / 5), infoObject.current_h *(8.5/10)))
+            screen.blit(img8, (infoObject.current_w * (3 / 5), infoObject.current_h * (9.3 / 10)))
             for y in range(len(game.floor)):
                 for x in range(len(game.floor)):
                     e = game.floor.get(Coord(x, y))
@@ -134,8 +148,15 @@ def main(game):
             printMsg(game)
             pygame.display.flip()
             if game.hero.hp <= 0:
-                game.addMessage("--- Game Over! ---")
-                printMsg(game)
-                pygame.quit()
-                break
+                game.hero.image= "assets/other/graveHero.png"
+                pygame.draw.rect(screen, (0, 0, 0),
+                pygame.Rect(tileSize * game.floor.size + 20, 20, infoObject.current_w - tileSize * game.floor.size - 40, infoObject.current_h - 40))
+                screen.blit(img9, ((infoObject.current_w*(1.9/3)), (infoObject.current_h/10)))
+                close_button.draw(screen)
+                replay_button.draw(screen)
+                screen.blit(font.render("time:"+str(round(Startps-time.time())), True, (255,255,255)), (infoObject.current_w * (3 / 5), infoObject.current_h * (8.5 / 10)))
+                if close_button.clicked:
+                    pygame.quit()
+                if replay_button.clicked:
+                    pass
         pygame.display.flip()
