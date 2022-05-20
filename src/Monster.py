@@ -11,8 +11,13 @@ class Monster(Creature):
 
     def doAction(self, floor: Map):
         import random
+        from AStar import AStar
 
-        floor.move(self, floor.pos(self).direction(floor.pos(floor.hero)))
+        astar = AStar(floor, floor.pos(self), floor.pos(floor.hero))
+        path = astar.findPath()
+        if len(path) > 0:
+            floor.move(self, floor.pos(self).direction(path[0]))
+
         inRadius = floor.getAllCreaturesInRadius(self, self.range, self.enemyType)
         if len(inRadius) > 0:
             self.attack(random.choice(inRadius))
