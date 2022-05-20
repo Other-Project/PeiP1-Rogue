@@ -47,7 +47,7 @@ monsters = {
     0: [
         Monster("Goblin", 4, image="assets/monsters/skeleton/skeleton.png"),
         Monster("Bat", 2, "W", image="assets/other/chest.png"),
-        Monster("Archer", 1, "A", range=4, image="assets/hero equipment/bow/bow1.0.png")
+        Monster("Archer", 1, "A", radius=4, image="assets/hero equipment/bow/bow1.0.png")
     ],
     1: [
         Monster("Ork", 6, strength=2, image="assets/other/fountain.png"),

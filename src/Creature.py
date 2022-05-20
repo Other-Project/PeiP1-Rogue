@@ -19,6 +19,7 @@ class Creature(Element):
         return self.hp <= 0
 
     def attack(self, attacked):
+        """Attacks an enemy"""
         import utils
 
         attacked.hp -= self.strength
