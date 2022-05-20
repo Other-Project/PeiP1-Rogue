@@ -5,15 +5,15 @@ from Element import Element
 
 class Equipment(Element):
     """An object that can be collected by the hero"""
-    
-    def __init__(self, name: str, abbrv: str = None, usage: Callable = None, color="\033[0;33m"):
+
+    def __init__(self, name: str, abbrv: str = None, usage: Callable = None, color="\033[0;33m", image=None):
         """
         :param name: The name of the item
         :param abbrv: The symbol used to represent the item on the map
         :param color: The color of the item on the map
         :param usage: The function that will be called when the item is used by the hero
         """
-        Element.__init__(self, name, abbrv, color)
+        Element.__init__(self, name, abbrv, color, image)
         self.usage = usage
 
     def meet(self, hero):

@@ -1,6 +1,5 @@
 import random
 from typing import Union
-
 from Coord import Coord
 from Element import Element
 
@@ -8,8 +7,8 @@ from Element import Element
 class Map:
     from Creature import Creature
 
-    ground = '\033[0;90m.\033[00m'
-    empty = " "
+    ground = Element("ground")
+    empty = None
 
     def __init__(self, size=20, hero=None, nbRooms=7):
         from Hero import Hero

@@ -28,24 +28,32 @@ def teleport(creature, unique):
 
 equipments = {
     0: [
-        Equipment("gold", "o"),
-        Weapon("sword", radius=0, damage=2),
-        Weapon("bow", radius=3),
-        Equipment("potion", "!", lambda item, hero: heal(hero))
+        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
+        Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
+        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png")
     ],
     1: [
-        Equipment("potion", "!", lambda item, hero: teleport(hero, True))
+        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png")
     ],
     2: [
-        Equipment("chainmail")
+        Equipment("chainmail", image="assets/hero equipment/armor/armor1.png")
     ],
     3: [
-        Equipment("portoloin", "w", lambda item, hero: teleport(hero, False))
+        Equipment("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png")
     ]
 }
 
 monsters = {
-    0: [Monster("Goblin", 4), Monster("Bat", 2, "W"), Monster("Archer", 1, "A", range=4)],
-    1: [Monster("Ork", 6, strength=2), Monster("Blob", 10)],
-    5: [Monster("Dragon", 20, strength=3)]
+    0: [
+        Monster("Goblin", 4, image="assets/monsters/skeleton/skeleton.png"),
+        Monster("Bat", 2, "W", image="assets/other/chest.png"),
+        Monster("Archer", 1, "A", range=4, image="assets/hero equipment/bow/bow1.0.png")
+    ],
+    1: [
+        Monster("Ork", 6, strength=2, image="assets/other/fountain.png"),
+        Monster("Blob", 10, image="assets/other/cursor.png")
+    ],
+    5: [
+        Monster("Dragon", 20, strength=3, image="assets/other/tile.png")
+    ]
 }

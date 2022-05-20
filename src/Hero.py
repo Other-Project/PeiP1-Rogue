@@ -2,9 +2,9 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", hp=10, abbrv="@", strength=2, color="\033[0;32m"):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", hp=10, abbrv="@", strength=2, color="\033[0;32m"):
         from Monster import Monster
-        Creature.__init__(self, name, hp, Monster, abbrv, strength, color)
+        Creature.__init__(self, name, hp, Monster, abbrv, strength, color, image)
         self.inventory = []
         self.armor = None
         self.weapon = None

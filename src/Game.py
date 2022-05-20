@@ -1,6 +1,8 @@
 import copy
 import random
 
+import pygame
+
 from Coord import Coord
 from Element import Element
 
@@ -15,15 +17,15 @@ class Game(object):
     from Map import Map
 
     _actions = {
-        "z": lambda hero: theGame().floor.move(hero, Coord(0, -1)),
-        "s": lambda hero: theGame().floor.move(hero, Coord(0, 1)),
-        "d": lambda hero: theGame().floor.move(hero, Coord(1, 0)),
-        "q": lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
-        "i": lambda hero: theGame().addMessage(hero.fullDescription()),
-        "k": lambda hero: hero.__setattr__("hp", 0),
-        "u": lambda hero: hero.use(theGame().select(hero.inventory)),
-        "r": lambda hero: theGame().floor.rest(hero),
-        " ": lambda hero: None
+        pygame.K_z: lambda hero: theGame().floor.move(hero, Coord(0, -1)),
+        pygame.K_s: lambda hero: theGame().floor.move(hero, Coord(0, 1)),
+        pygame.K_d: lambda hero: theGame().floor.move(hero, Coord(1, 0)),
+        pygame.K_q: lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
+        pygame.K_i: lambda hero: theGame().addMessage(hero.fullDescription()),
+        pygame.K_k: lambda hero: hero.__setattr__("hp", 0),
+        pygame.K_u: lambda hero: hero.use(theGame().select(hero.inventory)),
+        pygame.K_r: lambda hero: theGame().floor.rest(hero),
+        pygame.K_SPACE: lambda hero: None
     }
 
     def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: [] = None):
@@ -78,12 +80,11 @@ class Game(object):
         return self.randElement(config.monsters)
 
     def select(self, items):
-        """Prompt the user to select an item from the list items"""
-        import utils
+        # TODO: Fix this
         if len(items) <= 0:
             return None
         print("Choose item>", [str(i) + ": " + items[i].name for i in range(len(items))])
-        entered = utils.getch()
+        entered = "0"  # No longer working
         if not entered.isdigit():
             return None
 
@@ -94,18 +95,17 @@ class Game(object):
 
     def play(self):
         """Main game loop"""
-        import utils
+        import os
+        os.system('cls' if os.name == 'nt' else 'clear')
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
-        while self.hero.hp > 0:
-            self.drawInterface()
-            c = utils.getch()
-            if c in Game._actions:
-                Game._actions[c](self.hero)
-                self.floor.moveAllMonsters()
+        import GUI
+        GUI.main(self)
 
-        self.drawInterface()
-        print("--- Game Over ---")
+    def newTurn(self, c):
+        if c in Game._actions:
+            Game._actions[c](self.hero)
+            self.floor.moveAllMonsters()
 
     def drawInterface(self):
         """draw the shell interface"""
