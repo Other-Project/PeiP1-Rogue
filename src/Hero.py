@@ -21,16 +21,18 @@ class Hero(Creature):
         attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
         return "\n".join(attributs)
 
-    def take(self, elem):
+    def take(self, item):
+        """Collects an item on the ground"""
         from Equipment import Equipment
-        if not isinstance(elem, Equipment):
+        if not isinstance(item, Equipment):
             raise TypeError('Not a Equipment')
-        if elem in self.inventory:
+        if item in self.inventory:
             return False
-        self.inventory.append(elem)
+        self.inventory.append(item)
         return True
 
     def use(self, item):
+        """Uses an item"""
         from Equipment import Equipment
         if item is None:
             return
@@ -42,6 +44,7 @@ class Hero(Creature):
             self.inventory.remove(item)
 
     def attack(self, attacked):
+        """Attacks a monster"""
         import utils
 
         attacked.hp -= self.strength
