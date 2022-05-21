@@ -101,7 +101,7 @@ class GUI:
         img1 = font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255))
         img2 = font.render("armor:" + str(self.game.hero.armor), True, (255, 255, 255))
         img3 = font.render("xp:" + str(self.game.hero.xp), True, (255, 255, 255))
-        img4 = font.render("level:" + str(self.game.hero.level), True, (255, 255, 255))
+        img4 = font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255))
         img5 = font.render("move:", True, (255, 255, 255))
         img6 = font.render("skip one turn:", True, (255, 255, 255))
         img7 = font.render("destroy an object: right click", True, (255, 255, 255))
