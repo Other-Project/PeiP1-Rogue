@@ -97,10 +97,10 @@ class Game(object):
         """Main game loop"""
         import os
         os.system('cls' if os.name == 'nt' else 'clear')
+        from GUI import GUI
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
-        import GUI
-        GUI.main(self)
+        GUI(self).main()
 
     def newTurn(self, c):
         if c in Game._actions:

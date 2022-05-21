@@ -11,9 +11,11 @@ def heal(creature):
     creature.hp += 3
     return True
 
+
 def eat(hero):
-        hero.satiety = min(hero.satiety + 1, hero.satietyMax)
-        return True
+    hero.satiety = min(hero.satiety + 1, hero.satietyMax)
+    return True
+
 
 def teleport(creature, unique):
     from utils import theGame
@@ -23,7 +25,6 @@ def teleport(creature, unique):
     floor.rm(c)
     floor.put(newC, creature)
     return unique
-
 
 
 ##################
