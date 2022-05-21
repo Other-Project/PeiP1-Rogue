@@ -1,8 +1,8 @@
 import pygame
 import time
 
-# button class
-class Button():
+class Button:
+    """Button class"""
     def __init__(self, x, y, image, scale):
         width = image.get_width()
         height = image.get_height()
@@ -25,10 +25,16 @@ class Button():
         return action
 
 
+messages = None
 def printMsg(game):
+    global messages
     msg = game.readMessages()
     if msg is not None and msg != "":
+        messages = msg
         return msg
+    else:
+        return messages
+
 
 def main(game):
     import sys
@@ -124,27 +130,23 @@ def main(game):
             y=infoObject.current_h / 20
             for nbrHeartMax in range(0, 11):
                 if nbrHeartMax<6:
-                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartGrey.png"), (tileSize*0.5, tileSize*0.5)),
-                            (tileSize * game.floor.size + 37 + x, y))
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartGrey.png"), (tileSize*0.5, tileSize*0.5)), (tileSize * game.floor.size + 37 + x, y))
                     x += 50
                 else:
                     y = infoObject.current_h / 20+50
-                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartGrey.png"), (tileSize*0.5, tileSize*0.5)),
-                            (tileSize * game.floor.size + 37 + xx, y))
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartGrey.png"), (tileSize*0.5, tileSize*0.5)), (tileSize * game.floor.size + 37 + xx, y))
                     xx += 50
             x = 0
             y = infoObject.current_h / 20
             xx = 0
             for nbrHeart in range(game.hero.hp):
                 if nbrHeart<6:
-                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartRed.png"), (tileSize*0.5, tileSize*0.5)),
-                                (tileSize * game.floor.size + 37 + x, y))
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartRed.png"), (tileSize*0.5, tileSize*0.5)), (tileSize * game.floor.size + 37 + x, y))
                     x += 50
                 else:
                     x = 0
                     y = infoObject.current_h / 20+50
-                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartRed.png"), (tileSize*0.5, tileSize*0.5)),
-                                (tileSize * game.floor.size + 37 + xx, y))
+                    screen.blit(pygame.transform.scale(pygame.image.load("assets/other/heartRed.png"), (tileSize*0.5, tileSize*0.5)), (tileSize * game.floor.size + 37 + xx, y))
             printMsg(game)
             pygame.display.flip()
             if game.hero.hp <= 0:
