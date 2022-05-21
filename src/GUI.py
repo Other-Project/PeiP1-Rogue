@@ -51,6 +51,9 @@ class GUI:
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
 
     def getTileSurface(self, e):
+        from Equipment import Equipment
+        if isinstance(e, Equipment):
+            return self.tileSize * 0.65, self.tileSize * 0.65
         return self.tileSize, self.tileSize
 
     def getTilePos(self, x, y):
@@ -75,9 +78,9 @@ class GUI:
                 for x in range(len(self.game.floor)):
                     e = self.game.floor.get(Coord(x, y))
                     if e is None:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(e)), self.getTilePos(x, y))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y))
                     else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(e)), self.getTilePos(x, y))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y))
                         if e.image is not None:
                             self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y))
             self.infoBox()
