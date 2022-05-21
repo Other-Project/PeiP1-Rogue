@@ -35,7 +35,7 @@ equipments = {
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
         Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Equipment("food", "f", lambda item, hero: eat(hero), image=" assets/food/chuck.png")
+        Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png")
     ],
     1: [
         Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png")
