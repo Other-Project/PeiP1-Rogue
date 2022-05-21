@@ -9,9 +9,10 @@ class Hero(Creature):
         self.inventory = []
         self.armor = None
         self.weapon = None
-        self.xp, self.lvl = 0, 0
+        self.xp, self.lvl = 0, 1
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.healthMax = healthMax
+        self.monstersKilled = 0
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -57,11 +58,12 @@ class Hero(Creature):
 
         if attacked.hp <= 0:
             self.xp += 1
+            self.monstersKilled += 1
             self.experience()
 
     def lvlSup(self):
         import math
-        return 30 * math.exp(self.lvl / 4)
+        return 30 * math.exp((self.lvl - 1) / 4)
 
     def experience(self):
         if self.xp >= self.lvlSup():
