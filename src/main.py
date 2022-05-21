@@ -3,7 +3,7 @@
 # -----------------------
 #           by
 #      Amrane Neil,
-#      Baillot Teo,
+#      Baillot Téo,
 #     Galli Evan and
 #     Lécard Maxence
 # -----------------------

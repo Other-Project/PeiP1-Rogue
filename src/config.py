@@ -60,6 +60,6 @@ monsters = {
         Monster("Blob", 10, image="assets/monsters/blob.png")
     ],
     5: [
-        Monster("Dragon", 20, strength=3, image="assets/monsters/drago,.png")
+        Monster("Dragon", 20, strength=3, image="assets/monsters/dragon.png")
     ]
 }
