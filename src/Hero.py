@@ -5,15 +5,13 @@ class Hero(Creature):
     def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, abbrv="@", strength=2, color="\033[0;32m",
                  satietyMax=10):
         from Monster import Monster
-        Creature.__init__(self, name, hp, Monster, abbrv, strength, color, image)
+        Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory = []
         self.armor = None
         self.weapon = None
         self.xp, self.lvl = 0, 0
-        self.satietyMax = satietyMax
-        self.satiety = satietyMax
-        self.healthMax = 10
-        self.hp = self.healthMax
+        self.satiety, self.satietyMax = satietyMax, satietyMax
+        self.healthMax = healthMax
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
