@@ -2,16 +2,16 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", hp=10, abbrv="@", strength=2, color="\033[0;32m", satietyMax=10, monstersKilled=0):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, abbrv="@", strength=2, color="\033[0;32m",
+                 satietyMax=10):
         from Monster import Monster
-        Creature.__init__(self, name, hp, Monster, abbrv, strength, color, image)
+        Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory = []
         self.armor = None
         self.weapon = None
-        self.xp, self.level = 0, 0
-        self.satietyMax = satietyMax
-        self.satiety = satietyMax
-        self.monstersKilled = monstersKilled
+        self.xp, self.lvl = 0, 0
+        self.satiety, self.satietyMax = satietyMax, satietyMax
+        self.healthMax = healthMax
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -58,29 +58,13 @@ class Hero(Creature):
         if attacked.hp <= 0:
             self.xp += 1
             self.experience()
-            self.monstersKilled += 1
+
+    def lvlSup(self):
+        import math
+        return 30 * math.exp(self.lvl / 4)
 
     def experience(self):
-        if 0 <= self.level <= 5:
-            if self.xp == 5:  # si le joueur à 20exp alors il gagne 1hp et son exp est réinitialisée à 0
-                self.hp += 1
-                self.xp = 0
-                self.level += 1
-        if 5 <= self.level <= 15:
-            if self.xp == 10:
-                self.hp += 1
-                self.xp = 0
-                self.level += 1
-        if 15 <= self.level <= 25:
-            if self.xp == 20:
-                self.hp += 1
-                self.xp = 0
-                self.level += 1
-        if 25 <= self.level <= 50:
-            if self.xp == 50:
-                self.xp = 0
-            self.level += 1
-        if 50 <= self.level:
-            if self.xp == 75:
-                self.xp = 0
-            self.level += 1
+        if self.xp >= self.lvlSup():
+            self.xp -= self.lvlSup()
+            self.lvl += 1
+            self.healthMax += 1

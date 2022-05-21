@@ -8,7 +8,7 @@ from Weapon import Weapon
 ##################
 
 def heal(creature):
-    creature.hp += 3
+    creature.hp = min(creature.hp+3, creature.healthMax)
     return True
 
 
