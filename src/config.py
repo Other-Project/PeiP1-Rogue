@@ -11,6 +11,9 @@ def heal(creature):
     creature.hp += 3
     return True
 
+def eat(hero):
+        hero.satiety = min(hero.satiety + 1, hero.satietyMax)
+        return True
 
 def teleport(creature, unique):
     from utils import theGame
@@ -22,6 +25,7 @@ def teleport(creature, unique):
     return unique
 
 
+
 ##################
 #     Config     #
 ##################
@@ -30,7 +34,8 @@ equipments = {
     0: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png")
+        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
+        Equipment("food", "f", lambda item, hero: eat(hero), image=" assets/food/chuck.png")
     ],
     1: [
         Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png")

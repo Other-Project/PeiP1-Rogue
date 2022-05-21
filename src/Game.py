@@ -105,6 +105,10 @@ class Game(object):
     def newTurn(self, c):
         if c in Game._actions:
             Game._actions[c](self.hero)
+            if self.hero.satiety > 0:
+                self.hero.satiety -= 0.25
+            else:
+                self.hero.hp -= 1
             self.floor.moveAllMonsters()
 
     def drawInterface(self):
