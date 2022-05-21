@@ -8,7 +8,7 @@ class Hero(Creature):
         self.inventory = []
         self.armor = None
         self.weapon = None
-        self.exp, self.niv = 0, 0
+        self.xp, self.level = 0, 0
         self.satietyMax = satietyMax
         self.satiety = satietyMax
 
@@ -55,30 +55,30 @@ class Hero(Creature):
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
 
         if attacked.hp <= 0:
-            self.exp += 1
+            self.xp += 1
             self.experience()
 
     def experience(self):
-        if 0 <= self.niv <= 5:
-            if self.exp == 5:  # si le joueur à 20exp alors il gagne 1hp et son exp est réinitialisée à 0
+        if 0 <= self.level <= 5:
+            if self.xp == 5:  # si le joueur à 20exp alors il gagne 1hp et son exp est réinitialisée à 0
                 self.hp += 1
-                self.exp = 0
-                self.niv += 1
-        if 5 <= self.niv <= 15:
-            if self.exp == 10:
+                self.xp = 0
+                self.level += 1
+        if 5 <= self.level <= 15:
+            if self.xp == 10:
                 self.hp += 1
-                self.exp = 0
-                self.niv += 1
-        if 15 <= self.niv <= 25:
-            if self.exp == 20:
+                self.xp = 0
+                self.level += 1
+        if 15 <= self.level <= 25:
+            if self.xp == 20:
                 self.hp += 1
-                self.exp = 0
-                self.niv += 1
-        if 25 <= self.niv <= 50:
-            if self.exp == 50:
-                self.exp = 0
-            self.niv += 1
-        if 50 <= self.niv:
-            if self.exp == 75:
-                self.exp = 0
-            self.niv += 1
+                self.xp = 0
+                self.level += 1
+        if 25 <= self.level <= 50:
+            if self.xp == 50:
+                self.xp = 0
+            self.level += 1
+        if 50 <= self.level:
+            if self.xp == 75:
+                self.xp = 0
+            self.level += 1
