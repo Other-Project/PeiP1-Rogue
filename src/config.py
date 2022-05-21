@@ -51,15 +51,15 @@ equipments = {
 
 monsters = {
     0: [
-        Monster("Goblin", 4, image="assets/monsters/skeleton/skeleton.png"),
-        Monster("Bat", 2, "W", image="assets/other/chest.png"),
-        Monster("Archer", 1, "A", radius=4, image="assets/hero equipment/bow/bow1.0.png")
+        Monster("Goblin", 4, image="assets/monsters/goblin.png"),
+        Monster("Bat", 2, "W", image="assets/monsters/bat.png"),
+        Monster("Archer", 1, "A", radius=4, image="assets/monsters/archer.png")
     ],
     1: [
-        Monster("Ork", 6, strength=2, image="assets/other/fountain.png"),
-        Monster("Blob", 10, image="assets/other/cursor.png")
+        Monster("Ork", 6, strength=2, image="assets/monsters/orc.png"),
+        Monster("Blob", 10, image="assets/monsters/blob.png")
     ],
     5: [
-        Monster("Dragon", 20, strength=3, image="assets/other/tile.png")
+        Monster("Dragon", 20, strength=3, image="assets/monsters/drago,.png")
     ]
 }

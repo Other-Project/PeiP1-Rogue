@@ -2,7 +2,7 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", hp=10, abbrv="@", strength=2, color="\033[0;32m", satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", hp=10, abbrv="@", strength=2, color="\033[0;32m", satietyMax=10, monstersKilled=0):
         from Monster import Monster
         Creature.__init__(self, name, hp, Monster, abbrv, strength, color, image)
         self.inventory = []
@@ -11,6 +11,7 @@ class Hero(Creature):
         self.xp, self.level = 0, 0
         self.satietyMax = satietyMax
         self.satiety = satietyMax
+        self.monstersKilled = monstersKilled
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -57,6 +58,7 @@ class Hero(Creature):
         if attacked.hp <= 0:
             self.xp += 1
             self.experience()
+            self.monstersKilled += 1
 
     def experience(self):
         if 0 <= self.level <= 5:
