@@ -58,7 +58,7 @@ class GUI:
 
         self.startScreen()
 
-        while True:
+        while self.game.hero.hp > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -76,12 +76,10 @@ class GUI:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(e)), self.getTilePos(x, y))
                         if e.image is not None:
                             self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y))
-
-            if self.game.hero.hp <= 0:
-                self.endScreen()
-            else:
-                self.infoBox()
+            self.infoBox()
             pygame.display.flip()
+
+        self.endScreen()
 
     def startScreen(self):
         self.screen.fill((255, 255, 255))
@@ -169,31 +167,42 @@ class GUI:
                              (x + (nbr - int(nbr / nbCol) * nbCol) * gap, y + int(nbr / nbCol) * gap))
 
     def endScreen(self):
-        buttonsY = self.infoObject.current_h / 1.3
-        close_button = Button(self.infoObject.current_w * (2 / 3) - 75, buttonsY, pygame.image.load("assets/other/exitButton.png"), 2)
-        replay_button = Button(self.infoObject.current_w * (4 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"), 2)
-        font = pygame.font.SysFont('comicsansms', 35)
-        font1 = pygame.font.SysFont('comicsansms', 65)
-        self.game.hero.image = "assets/other/graveHero.png"
-        pygame.draw.rect(self.screen, (0, 0, 0),
-                         pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.infoObject.current_w - self.tileSize * self.game.floor.size - 40,
-                                     self.infoObject.current_h - 40))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/gameOver.png"),
-                                                (self.infoObject.current_w - self.tileSize * self.game.floor.size - 40, self.infoObject.current_h * (1 / 3))),
-                         (self.tileSize * self.game.floor.size + 20, 20))
-        self.screen.blit(font1.render("SCORE:", True, (255, 255, 255)),
-                         (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (0.9 / 3)))
-        self.screen.blit(font.render("hero level: " + str(self.game.hero.level), True, (255, 255, 255)),
-                         (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.3 / 3)))
-        self.screen.blit(font.render("rooms visited: "+str(self.game.level), True, (255, 255, 255)),
-                         (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.6 / 3)))
-        self.screen.blit(font.render("monsters killed: "+str(self.game.hero.monstersKilled), True, (255, 255, 255)),
-                         (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.9 / 3)))
-        close_button.draw(self.screen)
-        replay_button.draw(self.screen)
-        if close_button.clicked:
-            pygame.quit()
-            import sys
-            sys.exit()
-        if replay_button.clicked:
-            pass  # TODO
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    import sys
+                    sys.exit()
+            buttonsY = self.infoObject.current_h / 1.3
+            close_button = Button(self.infoObject.current_w * (2 / 3) - 75, buttonsY, pygame.image.load("assets/other/exitButton.png"), 2)
+            replay_button = Button(self.infoObject.current_w * (4 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"), 2)
+            font = pygame.font.SysFont('comicsansms', 35)
+            font1 = pygame.font.SysFont('comicsansms', 65)
+            self.game.hero.image = "assets/other/graveHero.png"
+            pygame.draw.rect(self.screen, (0, 0, 0),
+                             pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.infoObject.current_w - self.tileSize * self.game.floor.size - 40,
+                                         self.infoObject.current_h - 40))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/gameOver.png"),
+                                                    (self.infoObject.current_w - self.tileSize * self.game.floor.size - 40, self.infoObject.current_h * (1 / 3))),
+                             (self.tileSize * self.game.floor.size + 20, 20))
+            self.screen.blit(font1.render("SCORE:", True, (255, 255, 255)),
+                             (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (0.9 / 3)))
+            self.screen.blit(font.render("hero level: " + str(self.game.hero.level), True, (255, 255, 255)),
+                             (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.3 / 3)))
+            self.screen.blit(font.render("rooms visited: "+str(self.game.level), True, (255, 255, 255)),
+                             (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.6 / 3)))
+            self.screen.blit(font.render("monsters killed: "+str(self.game.hero.monstersKilled), True, (255, 255, 255)),
+                             (self.infoObject.current_w * (3 / 5) + self.tileSize * self.game.floor.size * (1 / 55), self.infoObject.current_h * (1.9 / 3)))
+            close_button.draw(self.screen)
+            replay_button.draw(self.screen)
+
+            pygame.display.flip()
+
+            if close_button.clicked:
+                pygame.quit()
+                import sys
+                sys.exit()
+            if replay_button.clicked:
+                self.game.__init__()
+                self.game.buildFloor()
+                self.main()
+                break
