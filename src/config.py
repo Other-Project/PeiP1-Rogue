@@ -1,6 +1,7 @@
 from Equipment import Equipment
 from Monster import Monster
 from Weapon import Weapon
+from Ghost import Ghost
 
 
 ##################
@@ -13,7 +14,7 @@ def heal(creature):
 
 
 def eat(hero):
-    hero.satiety = min(hero.satiety + 1, hero.satietyMax)
+    hero.satiety = min(hero.satiety + 5, hero.satietyMax)
     return True
 
 
@@ -53,7 +54,8 @@ monsters = {
     0: [
         Monster("Goblin", 4, image="assets/monsters/goblin.png"),
         Monster("Bat", 2, "W", image="assets/monsters/bat.png"),
-        Monster("Archer", 1, "A", radius=4, image="assets/monsters/archer.png")
+        Monster("Archer", 1, "A", radius=4, image="assets/monsters/archer.png"),
+        Ghost("ghost")
     ],
     1: [
         Monster("Ork", 6, strength=2, image="assets/monsters/orc.png"),

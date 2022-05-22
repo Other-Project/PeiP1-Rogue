@@ -10,6 +10,6 @@ class Stairs(Element):
         from Hero import Hero
         if isinstance(hero, Hero):
             utils.theGame().addMessage("The " + hero.name + " goes down")
-            utils.theGame().lvl += 1
+            utils.theGame().level += 1
             utils.theGame().buildFloor()
         return None

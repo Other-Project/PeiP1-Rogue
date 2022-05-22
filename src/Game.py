@@ -106,7 +106,7 @@ class Game(object):
         if c in Game._actions:
             Game._actions[c](self.hero)
             if self.hero.satiety > 0:
-                self.hero.satiety -= 0.25
+                self.hero.satiety -= 0.05
             else:
-                self.hero.hp -= 1
+                self.hero.hp -= 0.2
             self.floor.moveAllMonsters()

@@ -50,8 +50,8 @@ class Hero(Creature):
     def attack(self, attacked):
         """Attacks a monster"""
         import utils
-
-        attacked.hp -= self.strength
+        if attacked.image is not None:
+            attacked.hp -= self.strength
         if self.weapon is not None:
             attacked.hp -= self.weapon.damage
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
