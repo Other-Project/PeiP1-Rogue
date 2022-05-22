@@ -83,7 +83,7 @@ class GUI:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y))
 
                         if e.image is not None:
-
+                            from Equipment import Equipment
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8:
@@ -174,6 +174,8 @@ class GUI:
                      lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", nbCol=10)
         self.drawBar(infoObject.current_w * (3 / 5) + tileSize * self.game.floor.size * (1 / 55), infoObject.current_h / 2, 10,
                      lambda i: "assets/other/backInventory.png", nbCol=10, sizeImage=1, padding=0.25)
+        self.drawBar(x - 10, y + self.tileSize * 3.5, self.game.hero.manaMax,
+                     lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", nbCol=10, sizeImage=0.5)
 
         size = self.tileSize
         gap = size + size * 0.25
@@ -183,7 +185,7 @@ class GUI:
         for nbr in range(self.game.hero.inventorySize):
             if nbr < len(self.game.hero.inventory):
                 elem = self.game.hero.inventory[nbr]
-                elemButton = Button(x - 2 + (nbr - int(nbr / columns) * columns) * gap, y + int(nbr / columns) * gap, pygame.image.load(elem.image), self.tileSize, self.tileSize)
+                elemButton = Button(x - 2 + (nbr - int(nbr / columns) * columns) * gap+self.tileSize*(1/6), y + int(nbr / columns) * gap+self.tileSize*(1/6), pygame.image.load(elem.image), self.tileSize*0.75, self.tileSize*0.75)
                 elemButton.draw(self.screen)
                 if elemButton.clicked:
                     self.game.hero.use(elem)

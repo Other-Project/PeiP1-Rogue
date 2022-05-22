@@ -1,6 +1,5 @@
 from Element import Element
 
-
 class Creature(Element):
     def __init__(self, name, hp, enemyType, abbrv=None, strength=1, color="", image=None):
         Element.__init__(self, name, abbrv, color, image)

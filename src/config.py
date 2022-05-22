@@ -40,7 +40,7 @@ def teleport(creature, unique):
 equipments = {
     0: [
         Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/potion/tile185.png")
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png")
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
