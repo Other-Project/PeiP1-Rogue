@@ -172,11 +172,11 @@ class GUI:
         gap = size + size * 0.25
         x = infoObject.current_w * (3 / 5) + tileSize * self.game.floor.size * (1 / 55)
         y = infoObject.current_h / 2
-        from Weapon import Weapon
-        for nbr in range(10):
+        columns = 10
+        for nbr in range(self.game.hero.inventorySize):
             if nbr < len(self.game.hero.inventory):
                 elem = self.game.hero.inventory[nbr]
-                elemButton = Button(x - 2 + (nbr - int(nbr / 10) * 10) * gap, y + int(nbr / 10) * gap, pygame.image.load(elem.image), self.tileSize, self.tileSize)
+                elemButton = Button(x - 2 + (nbr - int(nbr / columns) * columns) * gap, y + int(nbr / columns) * gap, pygame.image.load(elem.image), self.tileSize, self.tileSize)
                 elemButton.draw(self.screen)
                 if elemButton.clicked:
                     self.game.hero.use(elem)

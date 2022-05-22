@@ -2,11 +2,10 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, abbrv="@", strength=2, color="\033[0;32m",
-                 satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, abbrv="@", strength=2, color="\033[0;32m", satietyMax=10):
         from Monster import Monster
         Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
-        self.inventory = []
+        self.inventory, self.inventorySize = [], 10
         self.armor = None
         self.weapon = None
         self.xp, self.lvl = 0, 1
@@ -28,8 +27,12 @@ class Hero(Creature):
     def take(self, item):
         """Collects an item on the ground"""
         from Equipment import Equipment
+        import utils
         if not isinstance(item, Equipment):
             raise TypeError('Not a Equipment')
+        if len(self.inventory) >= self.inventorySize:
+            utils.theGame().addMessage("Your inventory is full")
+            return False
         if item in self.inventory:
             return False
         self.inventory.append(item)
