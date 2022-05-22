@@ -4,7 +4,7 @@ from Creature import Creature
 class Monster(Creature):
     from Map import Map
 
-    def __init__(self, name, hp, abbrv=None, image=None, strength=1, radius=0, manaGain=1, xpGain=1, movingSpeed=1, color="\033[0;31m"):
+    def __init__(self, name, hp, abbrv=None, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, color="\033[0;31m"):
         from Hero import Hero
         Creature.__init__(self, name, abbrv=abbrv, color=color, hp=hp, enemyType=Hero, strength=strength, image=image)
         self.range = radius

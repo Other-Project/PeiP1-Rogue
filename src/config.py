@@ -8,13 +8,18 @@ from Ghost import Ghost
 #     Usages     #
 ##################
 
-def heal(creature):
-    creature.hp = min(creature.hp+3, creature.healthMax)
+def heal(creature, hpGain=3):
+    creature.hp = min(creature.hp + hpGain, creature.healthMax)
     return True
 
 
-def eat(hero):
-    hero.satiety = min(hero.satiety + 5, hero.satietyMax)
+def eat(hero, satietyGain=2):
+    hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
+    return True
+
+
+def manaPotion(hero, manaGain=2):
+    hero.mana = min(hero.mana + manaGain, hero.manaMax)
     return True
 
 
@@ -34,7 +39,8 @@ def teleport(creature, unique):
 
 equipments = {
     0: [
-        Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png")
+        Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/potion/tile185.png")
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),

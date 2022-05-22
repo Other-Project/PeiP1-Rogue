@@ -12,6 +12,7 @@ class Hero(Creature):
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.healthMax = healthMax
         self.monstersKilled = 0
+        self.mana, self.manaMax = manaMax, manaMax
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -73,3 +74,4 @@ class Hero(Creature):
             self.xp -= self.lvlSup()
             self.lvl += 1
             self.healthMax += 1
+            self.manaMax = min(self.manaMax + 5, 50)

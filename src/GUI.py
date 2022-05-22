@@ -140,6 +140,7 @@ class GUI:
         screen.blit(font.render("armor:" + str(self.game.hero.armor), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.1 / 4)))
         screen.blit(font.render("xp:" + str(self.game.hero.xp), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.2 / 4)))
         screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.3 / 4)))
+        screen.blit(font.render("mana:" + str(self.game.hero.mana) + "/" + str(self.game.hero.manaMax), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.4 / 4)))
 
         # règles du jeu
         screen.blit(font.render("move:", True, (255, 255, 255)), (infoObject.current_w * (3 / 5), infoObject.current_h * (8.5 / 10)))
