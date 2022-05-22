@@ -61,7 +61,7 @@ class Hero(Creature):
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
 
         if attacked.hp <= 0:
-            self.xp += 1
+            self.xp += attacked.xpGain
             self.monstersKilled += 1
             self.experience()
 

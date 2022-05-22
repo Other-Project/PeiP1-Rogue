@@ -2,8 +2,8 @@ from Monster import Monster
 
 
 class Ghost(Monster):
-    def __init__(self, name, hp=5, abbrv="G", image=None, strength=1):
-        Monster.__init__(self, name, hp, abbrv=None, image=None, strength=1, radius=0, color="\033[0;31m")
+    def __init__(self, name, hp, xpGain=2, image=None, strength=1):
+        Monster.__init__(self, name, hp, abbrv=None, image=None, strength=strength, radius=0, xpGain=xpGain, color="\033[0;31m")
         self.image = image
 
     def meet(self, attacker) -> bool:
