@@ -23,6 +23,8 @@ class Coord:
 
     def __floordiv__(self, other):  # Quotient de la division euclidienne
         return Coord(self.x // other, self.y // other)
+    def __mul__(self, var):
+        return Coord(var*self.x, var*self.y)
 
     def distance(self, other):
         return math.sqrt(math.pow(other.x - self.x, 2) + math.pow(other.y - self.y, 2))

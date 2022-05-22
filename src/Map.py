@@ -3,7 +3,7 @@ from typing import Union
 
 from Coord import Coord
 from Element import Element
-
+from Creature import Creature
 
 class Map:
     from Creature import Creature
@@ -170,10 +170,15 @@ class Map:
 
     def move(self, e, way):
         """Moves the element e in the direction way."""
+        duble = ["Bat", "Goblin"]
         orig = self.pos(e)
+        dest = orig + way
         if not orig:
             return  # TODO: Investigate this
-        dest = orig + way
+
+        if e.name in duble and not isinstance(self.get(dest), Creature) : #CONDITION NE MARCHE PAS !!!
+            dest += way
+
         if dest not in self:
             return
         if self.get(dest) == Map.ground:

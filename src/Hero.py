@@ -8,10 +8,13 @@ class Hero(Creature):
         self.inventory = []
         self.armor = None
         self.weapon = None
-        self.exp, self.niv = 0, 0
+        self.niv = 0
+        self.exp = 0
+        self.mana = 0
+
 
     def description(self):
-        return Creature.description(self) + str(self.inventory)
+        return Creature.description(self) + str(self.inventory) + str(self.mana)
 
     def fullDescription(self):
         attributs = []
@@ -25,7 +28,7 @@ class Hero(Creature):
         from Equipment import Equipment
         if not isinstance(elem, Equipment):
             raise TypeError('Not a Equipment')
-        if elem in self.inventory:
+        if elem in self.inventory or len(self.inventory) == 12:
             return False
         self.inventory.append(elem)
         return True
@@ -43,6 +46,7 @@ class Hero(Creature):
 
     def attack(self, attacked):
         import utils
+        gainmana = {1: ["Goblin", "Bat", "Archer"], 2: ["Ork", "Blob"] ,3: ["Dragon"]}
 
         attacked.hp -= self.strength
         if self.weapon is not None:
@@ -52,6 +56,19 @@ class Hero(Creature):
         if attacked.hp <= 0:
             self.exp += 1
             self.experience()
+            manaMax = self.jaugeMana()              #On recupère la valeur de la quantité maximale de points de magie (PM)
+            for i in gainmana.keys():               #En fonction du monstre tué on récupère plus ou moins de PM
+                if attacked.name in gainmana[i]:
+                    if self.mana + i > manaMax:     #On bloque l'obtention de PM suplémentaires
+                        self.mana = manaMax
+                    else:
+                        self.mana += i
+
+        #Temporaire, à ajouter dans l'interface
+        utils.theGame().addMessage("niveau mana : "+str(self.mana))
+        utils.theGame().addMessage("niveau xp : " + str(self.exp))
+        utils.theGame().addMessage("niveau niveau : " + str(self.niv))
+
 
     def experience(self):
         if 0 <= self.niv <= 5:
@@ -77,3 +94,14 @@ class Hero(Creature):
             if self.exp == 75:
                 self.exp = 0
             self.niv += 1
+
+    def jaugeMana(self):                #renvoie la quatité de PM que peut contenir la jauge
+        lniv = [0, 5, 15, 25, 50]
+        manamax =[3,5,10,15,20]
+        for i in range(len(lniv)-1):
+            if lniv[i] <= self.niv <= lniv[i+1]:
+                return manamax[i]
+            if self.niv > 50:
+                return manamax[-1]
+
+
