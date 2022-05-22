@@ -4,7 +4,7 @@ import pygame
 class Button:
     """Button class"""
 
-    def __init__(self, x, y, image, w ,h):
+    def __init__(self, x, y, image, w, h):
         width = image.get_width()
         height = image.get_height()
         self.image = pygame.transform.scale(image, (w, h))
@@ -12,7 +12,6 @@ class Button:
         self.rect.topleft = (x, y)
         self.clicked = False
         self.rightClicked = False
-
 
     def draw(self, surface):
         # get mouse position
@@ -56,8 +55,10 @@ class GUI:
             return self.tileSize * 0.65, self.tileSize * 0.65
         return self.tileSize, self.tileSize
 
-    def getTilePos(self, x, y):
-        return x * self.tileSize, y * self.tileSize
+    def getTilePos(self, x, y, e):
+        tileSurface = self.getTileSurface(e)
+        tilePos = x * self.tileSize, y * self.tileSize
+        return tilePos[0] + (self.tileSize - tileSurface[0]) / 2, tilePos[1] + (self.tileSize - tileSurface[1]) / 2
 
     def main(self):
         import sys
@@ -78,16 +79,16 @@ class GUI:
                 for x in range(len(self.game.floor)):
                     e = self.game.floor.get(Coord(x, y))
                     if e is None:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                     else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
                         if e.image is not None:
                             from Equipment import Equipment
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8:
-                                self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y))
+                                self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
 
             self.infoBox()
             pygame.display.flip()
@@ -144,7 +145,8 @@ class GUI:
         # caractéristiques du héros
         screen.blit(font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1 / 4)))
         screen.blit(font.render("armor:" + str(self.game.hero.armor), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.1 / 4)))
-        screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.2 / 4)))
+        screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
+                    (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.2 / 4)))
         screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.3 / 4)))
 
         # règles du jeu
@@ -184,7 +186,8 @@ class GUI:
         for nbr in range(self.game.hero.inventorySize):
             if nbr < len(self.game.hero.inventory):
                 elem = self.game.hero.inventory[nbr]
-                elemButton = Button(x - 2 + (nbr - int(nbr / columns) * columns) * gap+self.tileSize*(1/6), y + int(nbr / columns) * gap+self.tileSize*(1/6), pygame.image.load(elem.image), self.tileSize*0.75, self.tileSize*0.75)
+                elemButton = Button(x - 2 + (nbr - int(nbr / columns) * columns) * gap + self.tileSize * (1 / 6), y + int(nbr / columns) * gap + self.tileSize * (1 / 6),
+                                    pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
                 elemButton.draw(self.screen)
                 if elemButton.clicked:
                     self.game.hero.use(elem)
@@ -209,9 +212,11 @@ class GUI:
             replay_button = Button(self.infoObject.current_w * (4 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"), 200, 84)
             font = pygame.font.SysFont('comicsansms', 35)
             font1 = pygame.font.SysFont('comicsansms', 65)
-            posHero= self.game.floor.pos(self.game.hero)
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y))
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/graveHero.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y))
+            posHero = self.game.floor.pos(self.game.hero)
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(self.game.hero)),
+                             self.getTilePos(posHero.x, posHero.y, self.game.hero))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/graveHero.png"), self.getTileSurface(self.game.hero)),
+                             self.getTilePos(posHero.x, posHero.y, self.game.hero))
             self.game.hero.image = "assets/other/graveHero.png"
             pygame.draw.rect(self.screen, (0, 0, 0),
                              pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.infoObject.current_w - self.tileSize * self.game.floor.size - 40,
