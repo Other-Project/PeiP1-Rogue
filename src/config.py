@@ -2,7 +2,7 @@ from Equipment import Equipment
 from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
-
+from Amulette import Amulette
 
 ##################
 #     Usages     #
@@ -40,7 +40,9 @@ def teleport(creature, unique):
 equipments = {
     0: [
         Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png")
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
+        Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp")
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
