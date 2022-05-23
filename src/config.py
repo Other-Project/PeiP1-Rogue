@@ -3,6 +3,8 @@ from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
 from Amulette import Amulette
+from Armor import Armor
+
 
 ##################
 #     Usages     #
@@ -40,14 +42,15 @@ def teleport(creature, unique):
 equipments = {
     0: [
         Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
-        Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
-        Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp")
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png")
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
         Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png")
+        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
+        Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
+        Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
+        Armor("shield", resistance=1, image="assets/hero equipment/shield/shield.png")
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
