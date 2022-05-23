@@ -41,15 +41,35 @@ class Hero(Creature):
 
     def use(self, item):
         """Uses an item"""
+        pricepotion = {0: ["manaPotion", "food", "chainmail"], 2: ["potion"], 3: ["portloin"], 4:["fireball"]}
         from Equipment import Equipment
+        from Weapon import Weapon
+        import utils
+
         if item is None:
             return
         if not isinstance(item, Equipment):
             raise TypeError("Not an equipment")
         if item not in self.inventory:
             raise ValueError("Not in the inventory")
-        if item.use(self):
-            self.inventory.remove(item)
+        if not isinstance(item, Weapon):
+            for price, name in pricepotion.items():
+                if item.name == name and self.mana >= price:
+                    if item.use(self):
+                        self.inventory.remove(item)
+                        self.mana -= price
+                        return
+                else :
+                    utils.theGame().addMessage("The " + item.name + " is not usable")
+                    utils.theGame().addMessage("You don't have enough magic point yet")
+        else:
+            if item.use(self):
+                self.inventory.remove(item)
+
+
+
+
+
 
     def attack(self, attacked):
         """Attacks a monster"""
