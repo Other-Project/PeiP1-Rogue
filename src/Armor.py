@@ -1,11 +1,9 @@
-from Item import Item
+from Equipment import Equipment
 
 
-class Armor(Item):
+class Armor(Equipment):
     """An item than can be used to protect"""
     from Hero import Hero
-    from Creature import Creature
-    from Map import Map
 
     def __init__(self, name: str, abbrv: str = None, resistance: int = 0, armorType=None, image=None):
         """
@@ -13,14 +11,19 @@ class Armor(Item):
         :param abbrv: The symbol used to represent the item on the map
 
         """
-        Item.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
+        Equipment.__init__(self, name=name, abbrv=abbrv, image=image)
         self.resistance = resistance
         self.armorType = armorType
 
-    @staticmethod
-    def equip(item: Item, hero: Hero):
+    def equip(self, hero: Hero):
         """Equip the armor"""
-        if getattr(hero, item.armorType) is not None:
-            hero.inventory.append(getattr(hero, item.armorType))  # Add the old armor to the inventory
-        setattr(hero, item.armorType, item)
+        equipped: Equipment = getattr(hero, self.armorType)
+        if equipped is not None:
+            equipped.deEquip(hero)
+        setattr(hero, self.armorType, self)
         return True  # Removes the armor from the inventory
+
+    def deEquip(self, hero: Hero):
+        """De-equip the armor"""
+        setattr(hero, self.armorType, None)  # Removes the armor from the equipped slot
+        hero.inventory.append(self)  # Add the armor to the inventory
