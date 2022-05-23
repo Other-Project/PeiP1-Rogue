@@ -22,7 +22,7 @@ class Hero(Creature):
         for attr, val in self.__dict__.items():
             if not attr.startswith("_") and attr != "inventory":
                 attributs.append("> " + attr + " : " + str(val))
-        attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
+        attributs.apspend("> INVENTORY : " + str([x.name for x in self.inventory]))
         return "\n".join(attributs)
 
     def take(self, item):
@@ -31,6 +31,15 @@ class Hero(Creature):
         import utils
         if not isinstance(item, Equipment):
             raise TypeError('Not a Equipment')
+        if item.name == "manaPotion" :
+            if self.mana == self.manaMax:
+                utils.theGame().addMessage("Your mana tank is full")
+                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
+                return False
+            else:
+                self.mana += 1
+                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
+                return True
         if len(self.inventory) >= self.inventorySize:
             utils.theGame().addMessage("Your inventory is full")
             return False
@@ -41,9 +50,9 @@ class Hero(Creature):
 
     def use(self, item):
         """Uses an item"""
-        pricepotion = {0: ["manaPotion", "food", "chainmail"], 2: ["potion"], 3: ["portloin"], 4:["fireball"]}
         from Equipment import Equipment
         from Weapon import Weapon
+        from Potion import Potion
         import utils
 
         if item is None:
@@ -52,32 +61,24 @@ class Hero(Creature):
             raise TypeError("Not an equipment")
         if item not in self.inventory:
             raise ValueError("Not in the inventory")
-        if not isinstance(item, Weapon):
-            for price, name in pricepotion.items():
-                if item.name == name and self.mana >= price:
-                    if item.use(self):
-                        self.inventory.remove(item)
-                        self.mana -= price
-                        return
-                else :
-                    utils.theGame().addMessage("The " + item.name + " is not usable")
-                    utils.theGame().addMessage("You don't have enough magic point yet")
-        else:
-            if item.use(self):
-                self.inventory.remove(item)
+        if isinstance(item, Potion):
+            return item.activate(self)
 
+        if item.use(self):
+            self.inventory.remove(item)
+            return
 
-
-
-
-
-    def attack(self, attacked):
+    def attack(self, attacked, speAttack = None):
         """Attacks a monster"""
         import utils
-        if attacked.image is not None:
-            attacked.hp -= self.strength
-        if self.weapon is not None:
-            attacked.hp -= self.weapon.damage
+
+        if speAttack is not None:
+            attacked.hp -= speAttack
+        else:
+            if attacked.image is not None:
+                attacked.hp -= self.strength
+            if self.weapon is not None:
+                attacked.hp -= self.weapon.damage
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
 
         if attacked.hp <= 0:

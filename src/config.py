@@ -2,6 +2,7 @@ from Equipment import Equipment
 from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
+from Potion import Potion
 
 
 ##################
@@ -32,6 +33,15 @@ def teleport(creature, unique):
     floor.put(newC, creature)
     return unique
 
+def FireBall(creature):
+    from utils import theGame
+
+    for i in theGame().floor._elem:
+        for monster in i:
+            if isinstance(monster, Monster) and creature.distance(monster) <= 2:
+                creature.attack(monster, 3)
+
+
 
 ##################
 #     Config     #
@@ -44,15 +54,17 @@ equipments = {
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
-        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png")
+        Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price = 1),
+        Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price = 1)
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
         Equipment("chainmail", image="assets/hero equipment/armor/armor1.png")
     ],
     3: [
-        Equipment("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png")
+        Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price = 3),
+        Potion("FireBall", "§", lambda item, hero, monster: FireBall(hero), image="assets/potion/potionPortoloin.png", price=4)
+
     ]
 }
 
