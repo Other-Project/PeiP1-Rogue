@@ -1,6 +1,7 @@
 from Equipment import Equipment
 from Monster import Monster
 from Weapon import Weapon
+from Armor import Armor
 from Ghost import Ghost
 
 
@@ -40,7 +41,8 @@ def teleport(creature, unique):
 equipments = {
     0: [
         Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png")
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Armor("shield", resistance=1, image="assets/hero equipment/shield/tile121.png")
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
@@ -49,7 +51,7 @@ equipments = {
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Equipment("chainmail", image="assets/hero equipment/armor/armor1.png")
+        Armor("chainmail", resistance=2, image="assets/hero equipment/armor/armor1.png")
     ],
     3: [
         Equipment("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png")
