@@ -31,9 +31,9 @@ class Hero(Creature):
 
     def take(self, item):
         """Collects an item on the ground"""
-        from Equipment import Equipment
+        from Item import Item
         import utils
-        if not isinstance(item, Equipment):
+        if not isinstance(item, Item):
             raise TypeError('Not a Equipment')
         if item.name == "manaPotion" :
             if self.mana == self.manaMax:
@@ -55,12 +55,12 @@ class Hero(Creature):
 
     def use(self, item):
         """Uses an item"""
-        from Equipment import Equipment
+        from Item import Item
         from Potion import Potion
 
         if item is None:
             return
-        if not isinstance(item, Equipment):
+        if not isinstance(item, Item):
             raise TypeError("Not an equipment")
         if item not in self.inventory:
             raise ValueError("Not in the inventory")

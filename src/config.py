@@ -1,4 +1,4 @@
-from Equipment import Equipment
+from Item import Item
 from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
@@ -51,13 +51,13 @@ def FireBall(creature):
 
 equipments = {
     0: [
-        Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Item("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
+        Item("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png")
     ],
     1: [
-        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
+        Item("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
+        Item("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
         Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
         Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
         Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=1),
