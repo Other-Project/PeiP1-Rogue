@@ -38,9 +38,7 @@ def teleport(creature, unique = False):
 
 def FireBall(creature):
     from utils import theGame
-
-    for i in theGame().floor._elem:
-        for monster in i:
+    for monster in theGame().floor._elem:
             if isinstance(monster, Monster) and creature.distance(monster) <= 2:
                 creature.attack(monster, 3)
 
