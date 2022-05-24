@@ -160,7 +160,7 @@ class GUI:
                          (20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
 
         # dessine le héros de l'inventaire
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/frontHero.png"), (tileSize * 5, tileSize * 5)), (20 * tileSize + sizeInventory * (3 / 5), 40))
+        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/frontHero.png"), (sizeInventory * (1.25 / 5), sizeInventory * (1.25/ 5))), (20 * tileSize + sizeInventory * (3 / 5), 40))
 
         # dessine les cases pour les équipements
         self.drawItem(self.game.hero.weapon, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (1.5 / 20))
@@ -180,7 +180,7 @@ class GUI:
         screen.blit(font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1 / 4)))
         screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.2 / 4)))
-        screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.3 / 4)))
+        screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.1 / 4)))
 
         # règles du jeu
         screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
