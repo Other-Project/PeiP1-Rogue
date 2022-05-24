@@ -137,8 +137,8 @@ class GUI:
                         (self.infoObject.current_w * (4.65 / 5), self.infoObject.current_h * (1.5 / 20)))
         # dessine la case amulette
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(self.infoObject.current_w * (4.65 / 5), self.infoObject.current_h * (3.9 / 20), tileSize, tileSize))
-        if self.game.hero.amulette is not None:
-            screen.blit(pygame.transform.scale(pygame.image.load(self.game.hero.amulette.image), (self.tileSize, self.tileSize)),
+        if self.game.hero.amulet is not None:
+            screen.blit(pygame.transform.scale(pygame.image.load(self.game.hero.amulet.image), (self.tileSize, self.tileSize)),
                         (self.infoObject.current_w * (4.65 / 5), self.infoObject.current_h * (3.9 / 20)))
         # dessine les cases pour les armures
         pygame.draw.rect(screen, (55, 55, 55), pygame.Rect(infoObject.current_w * (3.95 / 5), self.infoObject.current_h * (1 / 20), tileSize, tileSize))
@@ -148,7 +148,7 @@ class GUI:
 
         # caractéristiques du héros
         screen.blit(font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1 / 4)))
-        screen.blit(font.render("armor:" + str(self.game.hero.armor), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.1 / 4)))
+        screen.blit(font.render("armor:" + str(self.game.hero.chestplate), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.1 / 4)))
         screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
                     (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.2 / 4)))
         screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (infoObject.current_w * (4.2 / 5), infoObject.current_h * (1.3 / 4)))

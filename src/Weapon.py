@@ -21,13 +21,14 @@ class Weapon(Equipment):
     def equip(self, hero: Hero):
         """Equip the weapon"""
         if hero.weapon is not None:
-            self.unequip(hero)  # Add the old weapon to the inventory
+            hero.weapon.deEquip(hero)
         hero.weapon = self
         return True  # Removes the weapon from the inventory
 
-    def unequip(self, hero):
-        if hero.weapon is not None:
-            hero.inventory.append(hero.weapon)  # Add the old weapon to the inventory
+    def deEquip(self, hero):
+        """De-equip the armor"""
+        hero.weapon = None  # Removes the weapon from the equipped slot
+        hero.inventory.append(self)  # Add the weapon to the inventory
 
 
 

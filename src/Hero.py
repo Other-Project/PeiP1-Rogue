@@ -6,9 +6,12 @@ class Hero(Creature):
         from Monster import Monster
         Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory, self.inventorySize = [], 10
-        self.armor = None
+        self.chestplate = None
+        self.shield = None
+        self.boots = None
+        self.helmet = None
         self.weapon = None
-        self.amulette = None
+        self.amulet = None
         self.xp, self.lvl = 0, 1
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.healthMax = healthMax
@@ -19,12 +22,12 @@ class Hero(Creature):
         return Creature.description(self) + str(self.inventory)
 
     def fullDescription(self):
-        attributs = []
+        attributes = []
         for attr, val in self.__dict__.items():
             if not attr.startswith("_") and attr != "inventory":
-                attributs.append("> " + attr + " : " + str(val))
-        attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
-        return "\n".join(attributs)
+                attributes.append("> " + attr + " : " + str(val))
+        attributes.append("> INVENTORY : " + str([x.name for x in self.inventory]))
+        return "\n".join(attributes)
 
     def take(self, item):
         """Collects an item on the ground"""
@@ -32,7 +35,7 @@ class Hero(Creature):
         import utils
         if not isinstance(item, Item):
             raise TypeError('Not a Equipment')
-        if item.name == "manaPotion" :
+        if item.name == "manaPotion":
             if self.mana == self.manaMax:
                 utils.theGame().addMessage("Your mana tank is full")
                 utils.theGame().floor.rm(utils.theGame().floor.pos(item))
@@ -40,7 +43,7 @@ class Hero(Creature):
             else:
                 self.mana += 1
                 utils.theGame().floor.rm(utils.theGame().floor.pos(item))
-                utils.theGame().addMessage("niveau mana:"+str(self.mana))
+                utils.theGame().addMessage("niveau mana:" + str(self.mana))
                 return True
         if len(self.inventory) >= self.inventorySize:
             utils.theGame().addMessage("Your inventory is full")
@@ -53,9 +56,7 @@ class Hero(Creature):
     def use(self, item):
         """Uses an item"""
         from Item import Item
-        from Weapon import Weapon
         from Potion import Potion
-        import utils
 
         if item is None:
             return
@@ -70,7 +71,7 @@ class Hero(Creature):
             self.inventory.remove(item)
             return
 
-    def attack(self, attacked, speAttack = None):
+    def attack(self, attacked, speAttack=None):
         """Attacks a monster"""
         import utils
 
