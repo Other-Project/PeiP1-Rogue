@@ -132,9 +132,11 @@ class GUI:
                       Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=1),
                       Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
                       Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=4)]
+        k=0
         for potion in listPotion:
-            potionButton = Button(x, y, pygame.image.load(potion.image), self.tileSize * 0.7, self.tileSize * 0.7)
+            potionButton = Button(x+k, y, pygame.image.load(potion.image), self.tileSize * 0.7, self.tileSize * 0.7)
             potionButton.draw(self.screen)
+            k+=(self.infoObject.current_w - 20 * self.tileSize)*(1.19/5)
             if potionButton.clicked:
                 potion.activate(self.game.hero)
 
@@ -221,16 +223,13 @@ class GUI:
                      lambda i: "assets/hero equipment/armor/armor1.png" if i < 0 or None else "assets/hero equipment/armor/armor1Back.png", nbCol=10,
                      sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
         self.drawPotion(20 * tileSize + sizeInventory * (0.615 / 5), y * 7.55)
-        self.drawPotion(20 * tileSize + sizeInventory * (1.8 / 5), y * 7.55)
-        self.drawPotion(20 * tileSize + sizeInventory * (3 / 5), y * 7.55)
-        self.drawPotion(20 * tileSize + sizeInventory * (4.2 / 5), y * 7.55)
         font1 = pygame.font.SysFont('comicsansms', 13)
-        self.screen.blit(font1.render("heal: 3 mana", True, (255, 255, 255)),
+        self.screen.blit(font1.render("heal: 6 mana", True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.35))
-        self.screen.blit(font1.render("portoloin: 5 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (1.5 / 5), y * 8.35))
-        self.screen.blit(font1.render("teleportation: 7 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (2.6 / 5), y * 8.35))
+        self.screen.blit(font1.render("teleportation: 5 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (1.45 / 5), y * 8.35))
+        self.screen.blit(font1.render("portoloin: 7 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (2.75 / 5), y * 8.35))
         self.screen.blit(font1.render("fireball: 9 mana", True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (3.95 / 5), y * 8.35))
         '''
