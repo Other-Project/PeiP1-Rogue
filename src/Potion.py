@@ -2,8 +2,6 @@ from Equipment import Equipment
 
 class Potion(Equipment):
     from Hero import Hero
-    from Creature import Creature
-    from Map import Map
 
     def __init__(self, name: str, abbrv: str = None, usage=None, color="\033[0;33m", image=None, price=0):
         """
