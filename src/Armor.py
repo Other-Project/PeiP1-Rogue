@@ -18,9 +18,9 @@ class Armor(Equipment):
         self.armorType = armorType
 
     @staticmethod
-    def equip(item: Equipment, hero: Hero):
+    def equip(item, hero: Hero):
         """Equip the armor"""
-        if hero.armor is not None:
-            hero.inventory.append(hero.armor)  # Add the old armor to the inventory
-        hero.armor = item
+        if getattr(hero, item.armorType) is not None:
+            hero.inventory.append(getattr(hero, item.armorType))  # Add the old armor to the inventory
+        setattr(hero, item.armorType, item)
         return True  # Removes the armor from the inventory

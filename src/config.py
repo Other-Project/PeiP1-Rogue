@@ -65,10 +65,10 @@ equipments = {
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Armor("chainmail", resistance=4, armorType="chainmail", image="assets/hero equipment/armor/armor1.png"),
+        Armor("chainmail", resistance=4, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
         Armor("shield", resistance=3, armorType="shield", image="assets/hero equipment/shield/shield.png"),
         Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/tile152.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1.png")
     ],
     3: [
         Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),

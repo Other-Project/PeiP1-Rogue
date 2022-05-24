@@ -6,7 +6,10 @@ class Hero(Creature):
         from Monster import Monster
         Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory, self.inventorySize = [], 10
-        self.armor = None
+        self.chestplate = None
+        self.shield = None
+        self.boots = None
+        self.helmet = None
         self.weapon = None
         self.amulette = None
         self.xp, self.lvl = 0, 1
@@ -53,9 +56,7 @@ class Hero(Creature):
     def use(self, item):
         """Uses an item"""
         from Equipment import Equipment
-        from Weapon import Weapon
         from Potion import Potion
-        import utils
 
         if item is None:
             return
