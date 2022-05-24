@@ -35,6 +35,7 @@ def teleport(creature, unique = False):
     floor.put(newC, creature)
     return unique
 
+
 def FireBall(creature):
     from utils import theGame
 
@@ -44,7 +45,6 @@ def FireBall(creature):
                 creature.attack(monster, 3)
 
 
-
 ##################
 #     Config     #
 ##################
@@ -52,19 +52,23 @@ def FireBall(creature):
 equipments = {
     0: [
         Equipment("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png")
+        Equipment("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png")
     ],
     1: [
-        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
+        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
+        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
         Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
         Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
-        Armor("shield", resistance=1, image="assets/hero equipment/shield/shield.png"),
         Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price = 1),
         Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price = 1)
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Equipment("chainmail", image="assets/hero equipment/armor/armor1.png")
+        Armor("chainmail", resistance=4, armorType="chainmail", image="assets/hero equipment/armor/armor1.png"),
+        Armor("shield", resistance=3, armorType="shield", image="assets/hero equipment/shield/shield.png"),
+        Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/tile152.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/leg/leg.png"),
     ],
     3: [
         Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price = 3),

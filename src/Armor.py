@@ -7,7 +7,7 @@ class Armor(Equipment):
     from Creature import Creature
     from Map import Map
 
-    def __init__(self, name: str, abbrv: str = None, resistance: int = 0, image=None):
+    def __init__(self, name: str, abbrv: str = None, resistance: int = 0, armorType=None, image=None):
         """
         :param name: The name of the item
         :param abbrv: The symbol used to represent the item on the map
@@ -15,6 +15,7 @@ class Armor(Equipment):
         """
         Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
         self.resistance = resistance
+        self.armorType = armorType
 
     @staticmethod
     def equip(item: Equipment, hero: Hero):
