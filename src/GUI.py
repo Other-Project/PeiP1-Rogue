@@ -128,10 +128,10 @@ class GUI:
         from config import heal
         from config import teleport
         from config import FireBall
-        listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=1),
-                      Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=1),
-                      Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
-                      Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=4)]
+        listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
+                      Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
+                      Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
+                      Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=9)]
         k=0
         for potion in listPotion:
             potionButton = Button(x+k, y, pygame.image.load(potion.image), self.tileSize * 0.7, self.tileSize * 0.7)
@@ -178,7 +178,7 @@ class GUI:
 
         # caractéristiques du héros
         screen.blit(font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1 / 4)))
-        screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
+        screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(int(self.game.hero.lvlSup())), True, (255, 255, 255)),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.2 / 4)))
         screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.1 / 4)))
 
@@ -232,12 +232,6 @@ class GUI:
                          (20 * tileSize + sizeInventory * (2.75 / 5), y * 8.35))
         self.screen.blit(font1.render("fireball: 9 mana", True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (3.95 / 5), y * 8.35))
-        '''
-        for potion in range(len(self.game.hero.inventoryPotion)):
-            screen.blit(pygame.transform.scale(pygame.image.load(potion.image), (tileSize * 0.7, tileSize * 0.7)),
-                (x*1.05, y*8))
-            x+=(potion - int(4 / 4) * 4) * (size + size * 0.25)
-        '''
 
         size = self.tileSize
         gap = size + size * 0.25
