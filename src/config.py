@@ -35,6 +35,7 @@ def teleport(creature, unique):
     floor.put(newC, creature)
     return unique
 
+
 def FireBall(creature):
     from utils import theGame
 
@@ -42,7 +43,6 @@ def FireBall(creature):
         for monster in i:
             if isinstance(monster, Monster) and creature.distance(monster) <= 2:
                 creature.attack(monster, 3)
-
 
 
 ##################
