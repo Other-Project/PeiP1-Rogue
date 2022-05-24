@@ -23,7 +23,7 @@ class Hero(Creature):
         for attr, val in self.__dict__.items():
             if not attr.startswith("_") and attr != "inventory":
                 attributs.append("> " + attr + " : " + str(val))
-        attributs.apspend("> INVENTORY : " + str([x.name for x in self.inventory]))
+        attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
         return "\n".join(attributs)
 
     def take(self, item):
