@@ -1,11 +1,12 @@
-from Equipment import Equipment
+from Item import Item
 import utils
+from Equipment import Equipment
 
 
 class Amulette(Equipment):
     from Hero import Hero
     def __init__(self, name: str, abbrv: str = None, image=None, type=None):
-        Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
+        Item.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
         self.image = image
         self.type = type
 

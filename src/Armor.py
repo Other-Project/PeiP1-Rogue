@@ -1,7 +1,7 @@
-from Equipment import Equipment
+from Item import Item
 
 
-class Armor(Equipment):
+class Armor(Item):
     """An item than can be used to protect"""
     from Hero import Hero
     from Creature import Creature
@@ -13,12 +13,12 @@ class Armor(Equipment):
         :param abbrv: The symbol used to represent the item on the map
 
         """
-        Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
+        Item.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
         self.resistance = resistance
         self.armorType = armorType
 
     @staticmethod
-    def equip(item: Equipment, hero: Hero):
+    def equip(item: Item, hero: Hero):
         """Equip the armor"""
         if hero.armor is not None:
             hero.inventory.append(hero.armor)  # Add the old armor to the inventory
