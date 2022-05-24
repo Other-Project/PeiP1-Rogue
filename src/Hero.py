@@ -2,11 +2,12 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, abbrv="@", strength=2, color="\033[0;32m", satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, abbrv="@", strength=2, color="\033[0;32m", armorMax=10, satietyMax=10):
         from Monster import Monster
         Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory, self.inventorySize = [], 10
         self.armor = None
+        self.armorMax=armorMax
         self.weapon = None
         self.amulette = None
         self.xp, self.lvl = 0, 1
@@ -14,6 +15,7 @@ class Hero(Creature):
         self.healthMax = healthMax
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
+        self.equiped = []
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -23,7 +25,7 @@ class Hero(Creature):
         for attr, val in self.__dict__.items():
             if not attr.startswith("_") and attr != "inventory":
                 attributs.append("> " + attr + " : " + str(val))
-        attributs.apspend("> INVENTORY : " + str([x.name for x in self.inventory]))
+        attributs.append("> INVENTORY : " + str([x.name for x in self.inventory]))
         return "\n".join(attributs)
 
     def take(self, item):
