@@ -50,8 +50,8 @@ class GUI:
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
 
     def getTileSurface(self, e):
-        from Equipment import Equipment
-        if isinstance(e, Equipment):
+        from Item import Item
+        if isinstance(e, Item):
             return self.tileSize * 0.65, self.tileSize * 0.65
         return self.tileSize, self.tileSize
 
@@ -84,7 +84,7 @@ class GUI:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
                         if e.image is not None:
-                            from Equipment import Equipment
+                            from Item import Item
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8:

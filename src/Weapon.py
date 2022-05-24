@@ -14,17 +14,23 @@ class Weapon(Equipment):
         :param damage: The amount of damage that can be inflicted by using this weapon
         :param radius: The maximum distance at which the hero can attack
         """
-        Equipment.__init__(self, name=name, abbrv=abbrv, usage=self.equip, image=image)
+        Equipment.__init__(self, name=name, abbrv=abbrv, image=image)
         self.damage = damage
         self.radius = radius
 
-    @staticmethod
-    def equip(item: Equipment, hero: Hero):
+    def equip(self, hero: Hero):
         """Equip the weapon"""
         if hero.weapon is not None:
-            hero.inventory.append(hero.weapon)  # Add the old weapon to the inventory
-        hero.weapon = item
+            hero.weapon.deEquip(hero)
+        hero.weapon = self
         return True  # Removes the weapon from the inventory
+
+    def deEquip(self, hero):
+        """De-equip the armor"""
+        hero.weapon = None  # Removes the weapon from the equipped slot
+        hero.inventory.append(self)  # Add the weapon to the inventory
+
+
 
     def attackInRadius(self, creature: Creature, floor: Map):
         """Attack all ennemies in radius"""

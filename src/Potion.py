@@ -1,7 +1,6 @@
-from Equipment import Equipment
+from Item import Item
 
-
-class Potion(Equipment):
+class Potion(Item):
     from Hero import Hero
 
     def __init__(self, name: str, abbrv: str = None, usage=None, color="\033[0;33m", image=None, price=0):
@@ -11,7 +10,7 @@ class Potion(Equipment):
         :param usage: The function called by the potion to do something
         :param price: The price to use the potion
         """
-        Equipment.__init__(self, name, abbrv, usage, color, image)
+        Item.__init__(self, name, abbrv, usage, color, image)
         self.price = price
 
     def activate(self, creature: Hero):
