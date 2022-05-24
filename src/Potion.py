@@ -25,6 +25,7 @@ class Potion(Equipment):
         if self.usage is not None:
             utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
             creature.mana -= self.price
+            utils.theGame().addMessage("niveau de mana :"+str(creature.mana))
             return self.usage(creature)
 
 

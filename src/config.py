@@ -26,7 +26,7 @@ def manaPotion(hero, manaGain=2):
     return True
 
 
-def teleport(creature, unique):
+def teleport(creature, unique = False):
     from utils import theGame
     floor = theGame().floor
     newC = floor.randEmptyCoord()

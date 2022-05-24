@@ -40,6 +40,7 @@ class Hero(Creature):
             else:
                 self.mana += 1
                 utils.theGame().floor.rm(utils.theGame().floor.pos(item))
+                utils.theGame().addMessage("niveau mana:"+str(self.mana))
                 return True
         if len(self.inventory) >= self.inventorySize:
             utils.theGame().addMessage("Your inventory is full")
