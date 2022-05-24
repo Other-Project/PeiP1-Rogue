@@ -71,7 +71,7 @@ equipments = {
     ],
     3: [
         Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
-        Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/potionPortoloin.png", price=4)
+        Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=4)
 
     ]
 }
