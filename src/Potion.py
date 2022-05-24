@@ -1,11 +1,10 @@
 from Equipment import Equipment
 
+
 class Potion(Equipment):
     from Hero import Hero
-    from Creature import Creature
-    from Map import Map
 
-    def __init__(self, name: str, abbrv: str = None, usage = None, color="\033[0;33m", image=None, price = 0):
+    def __init__(self, name: str, abbrv: str = None, usage=None, color="\033[0;33m", image=None, price=0):
         """
         :param name: The name of the potion
         :param abbrv: The symbol used to represent the potion on the map
@@ -26,8 +25,3 @@ class Potion(Equipment):
             utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
             creature.mana -= self.price
             return self.usage(self, creature)
-
-
-
-
-
