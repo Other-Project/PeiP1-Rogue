@@ -56,8 +56,6 @@ equipments = {
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
-        Equipment("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Equipment("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
         Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
         Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
         Armor("shield", resistance=1, image="assets/hero equipment/shield/shield.png"),
