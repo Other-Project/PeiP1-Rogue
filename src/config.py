@@ -67,7 +67,7 @@ equipments = {
         Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/tile152.png"),
         Armor("chainmail", resistance=3, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
         Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1")
+        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/tile176.png")
     ],
     3: [
         Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
