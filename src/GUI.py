@@ -142,7 +142,7 @@ class GUI:
 
     def infoBox(self):
         sizeInventory = self.infoObject.current_w - 20 * self.tileSize
-        font = pygame.font.SysFont('comicsansms', 20)
+        font = pygame.font.SysFont('comicsansms', int(sizeInventory*0.03))
         screen = self.screen
         tileSize = self.tileSize
         infoObject = self.infoObject
@@ -152,7 +152,7 @@ class GUI:
                                      self.infoObject.current_h - 40))
 
         # boite de texte
-        font2 = pygame.font.SysFont('comicsansms', 20)
+        font2 = pygame.font.SysFont('comicsansms', int(sizeInventory*0.03))
         pygame.draw.rect(screen, (55, 55, 55),
                          pygame.Rect(20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, (20 * tileSize + sizeInventory * (2.8 / 5)) * (9.75 / 20),
                                      self.tileSize * 2))
@@ -187,18 +187,18 @@ class GUI:
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize * 0.7, tileSize * 0.7)),
                     (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (7.4 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterQ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1 / 5), infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + sizeInventory * (1.25 / 5)-tileSize * 0.75, infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.71)),
                     (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterD.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1.5 / 5), infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + sizeInventory * (1.5 / 5)+tileSize * 0.09, infoObject.current_h * (7.7 / 10)))
         screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/spaceBar .png"), (tileSize * 2.7, tileSize * 0.9)),
                     (20 * tileSize + sizeInventory * (3.7 / 5), infoObject.current_h * (9.2 / 10)))
         screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (8.8 / 10)))
         screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterK.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (infoObject.current_w * (3.3 / 5), infoObject.current_h * (9.25 / 10)))
+                    (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (9.25 / 10)))
         screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (8.3 / 10)))
         screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (8.5 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterR.png"), (tileSize * 0.7, tileSize * 0.7)),
@@ -223,7 +223,7 @@ class GUI:
                      lambda i: "assets/hero equipment/armor/armor1.png" if i < 0 or None else "assets/hero equipment/armor/armor1Back.png", nbCol=10,
                      sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
         self.drawPotion(20 * tileSize + sizeInventory * (0.615 / 5), y * 7.55)
-        font1 = pygame.font.SysFont('comicsansms', 13)
+        font1 = pygame.font.SysFont('comicsansms', int(sizeInventory*0.02))
         self.screen.blit(font1.render("heal: 6 mana", True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.35))
         self.screen.blit(font1.render("teleportation: 5 mana", True, (255, 255, 255)),
@@ -272,10 +272,10 @@ class GUI:
                     import sys
                     sys.exit()
             buttonsY = self.infoObject.current_h / 1.3
-            close_button = Button(self.infoObject.current_w * (2 / 3) - 75, buttonsY, pygame.image.load("assets/other/exitButton.png"), 200, 84)
-            replay_button = Button(self.infoObject.current_w * (4 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"), 200, 84)
-            font = pygame.font.SysFont('comicsansms', 35)
-            font1 = pygame.font.SysFont('comicsansms', 65)
+            close_button = Button(20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.7 / 5), buttonsY, pygame.image.load("assets/other/exitButton.png"),(self.infoObject.current_w - 20 * self.tileSize) * (1.5 / 5), self.infoObject.current_h*(1/10))
+            replay_button = Button(20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (2.8 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"), (self.infoObject.current_w - 20 * self.tileSize) * (1.5 / 5), self.infoObject.current_h*(1/10))
+            font = pygame.font.SysFont('comicsansms', int((self.infoObject.current_w - 20 * self.tileSize)*0.05))
+            font1 = pygame.font.SysFont('comicsansms', int((self.infoObject.current_w - 20 * self.tileSize)*0.07))
             posHero = self.game.floor.pos(self.game.hero)
             self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(self.game.hero)),
                              self.getTilePos(posHero.x, posHero.y, self.game.hero))
