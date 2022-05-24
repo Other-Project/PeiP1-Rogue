@@ -21,9 +21,7 @@ class Game(object):
         pygame.K_s: lambda hero: theGame().floor.move(hero, Coord(0, 1)),
         pygame.K_d: lambda hero: theGame().floor.move(hero, Coord(1, 0)),
         pygame.K_q: lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
-        pygame.K_i: lambda hero: theGame().addMessage(hero.fullDescription()),
         pygame.K_k: lambda hero: hero.__setattr__("hp", 0),
-        pygame.K_u: lambda hero: hero.use(theGame().select(hero.inventory)),
         pygame.K_r: lambda hero: theGame().floor.rest(hero),
         pygame.K_SPACE: lambda hero: None
     }

@@ -3,7 +3,7 @@ from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
 from Potion import Potion
-from Amulette import Amulette
+from Amulet import Amulet
 from Armor import Armor
 
 
@@ -38,9 +38,7 @@ def teleport(creature, unique = False):
 
 def FireBall(creature):
     from utils import theGame
-
-    for i in theGame().floor._elem:
-        for monster in i:
+    for monster in theGame().floor._elem:
             if isinstance(monster, Monster) and creature.distance(monster) <= 2:
                 creature.attack(monster, 3)
 
@@ -58,8 +56,8 @@ equipments = {
     1: [
         Item("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
         Item("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
-        Amulette("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
-        Amulette("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
+        Amulet("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
+        Amulet("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
         Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=1),
         Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=1)
     ],

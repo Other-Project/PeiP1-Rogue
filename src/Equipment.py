@@ -14,6 +14,6 @@ class Equipment(Item):
     def equip(self, hero):
         raise NotImplementedError("Abstract method")
 
-    def unequip(self, hero):
+    def deEquip(self, hero):
         raise NotImplementedError("Abstract method")
 
