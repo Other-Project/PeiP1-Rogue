@@ -21,5 +21,9 @@ class Creature(Element):
         """Attacks an enemy"""
         import utils
 
-        attacked.hp -= self.strength
+        if attacked.armor is None:
+            attacked.hp -= self.strength
+        else:
+            attacked.hp -= max(self.strength - attacked.armor.resistance, 1)
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
+

@@ -8,6 +8,7 @@ class Hero(Creature):
         self.inventory, self.inventorySize = [], 10
         self.armor = None
         self.weapon = None
+        self.amulette = None
         self.xp, self.lvl = 0, 1
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.healthMax = healthMax
