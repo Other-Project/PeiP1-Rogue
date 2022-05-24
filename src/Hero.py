@@ -9,6 +9,7 @@ class Hero(Creature):
         self.chestplate = None
         self.shield = None
         self.boots = None
+        self.legs = None
         self.helmet = None
         self.weapon = None
         self.amulette = None

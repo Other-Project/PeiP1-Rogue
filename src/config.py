@@ -53,7 +53,7 @@ equipments = {
     0: [
         Item("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
         Item("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
-        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png")
+        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
     ],
     1: [
         Item("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
@@ -65,10 +65,11 @@ equipments = {
     ],
     2: [
         Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Armor("chainmail", resistance=4, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
-        Armor("shield", resistance=3, armorType="shield", image="assets/hero equipment/shield/shield.png"),
+        Armor("shield", resistance=2, armorType="shield", image="assets/hero equipment/shield/shield.png"),
         Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/tile152.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1.png")
+        Armor("chainmail", resistance=3, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
+        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1")
     ],
     3: [
         Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
