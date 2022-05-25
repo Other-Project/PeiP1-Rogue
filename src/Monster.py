@@ -4,7 +4,7 @@ from Creature import Creature
 class Monster(Creature):
     from Map import Map
 
-    def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1):
+    def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, visibility=True):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -21,6 +21,7 @@ class Monster(Creature):
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed
         self.hpMax = hp
+        self.visibility = visibility
 
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""

@@ -87,19 +87,20 @@ class GUI:
                         if e.image is not None:
                             from Monster import Monster
                             from Item import Item
-                            if isinstance(e, Monster):
-                                pygame.draw.rect(self.screen, (0, 0, 0),
-                                                 pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
-                                                             self.tileSize, self.tileSize * (0.75 / 5)))
-                                pygame.draw.rect(self.screen, (25, 172, 38),
-                                                 pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
-                                                             self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8 or e in self.visited:
                                 self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
                                 if e not in self.visited:
                                     self.visited.append(e)
+                                if isinstance(e, Monster):
+                                    if e.visibility:
+                                        pygame.draw.rect(self.screen, (0, 0, 0),
+                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
+                                                                     self.tileSize, self.tileSize * (0.75 / 5)))
+                                        pygame.draw.rect(self.screen, (25, 172, 38),
+                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
+                                                                     self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
 
             self.infoBox()
             pygame.display.flip()
