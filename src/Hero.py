@@ -1,4 +1,5 @@
 from Creature import Creature
+import utils
 
 
 class Hero(Creature):
@@ -29,19 +30,17 @@ class Hero(Creature):
     def take(self, item):
         """Collects an item on the ground"""
         from Item import Item
-        import utils
         if not isinstance(item, Item):
             raise TypeError('Not a Equipment')
+        return self.addInventory(item)
+
+    def addInventory(self, item):
         if item.name == "manaPotion":
             if self.mana == self.manaMax:
                 utils.theGame().addMessage("Your mana tank is full")
-                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
-                return False
             else:
-                self.mana += 1
-                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
-                utils.theGame().addMessage("niveau mana:" + str(self.mana))
-                return True
+                return item.use(self)
+
         if len(self.inventory) >= self.inventorySize:
             utils.theGame().addMessage("Your inventory is full")
             return False
