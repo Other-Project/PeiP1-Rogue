@@ -6,6 +6,7 @@ from Ghost import Ghost
 from Amulet import Amulet
 from Armor import Armor
 from Hero import Hero
+from utils import theGame
 
 
 ##################
@@ -22,13 +23,16 @@ def eat(hero, satietyGain=2):
     return True
 
 
-def manaPotion(hero, manaGain=2):
-    hero.mana = min(hero.mana + manaGain, hero.manaMax)
-    return True
+def manaPotion(hero, manaGain=1):
+    if hero.mana < hero.manaMax:
+        hero.mana = min(hero.mana + manaGain, hero.manaMax)
+        return True
+    else:
+        theGame().addMessage("Your inventory is already full")
+        return False
 
 
 def teleport(creature, unique = False):
-    from utils import theGame
     floor = theGame().floor
     newC = floor.randEmptyCoord()
     c = floor.pos(creature)
@@ -38,7 +42,6 @@ def teleport(creature, unique = False):
 
 
 def fireBall(creature: Hero):
-    from utils import theGame
     for m in floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
         if m.meet(creature):
             theGame().floor.rm(floor.pos(m))
