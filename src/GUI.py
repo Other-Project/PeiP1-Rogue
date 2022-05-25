@@ -150,6 +150,7 @@ class GUI:
             if elemButton.clicked:
                 elem.deEquip(self.game.hero)
 
+
     def drawPotion(self, x, y):
         from Potion import Potion
         from config import heal
@@ -274,7 +275,16 @@ class GUI:
         x = 20 * tileSize + sizeInventory * (0.45 / 5)
         y = infoObject.current_h / 2.01
         columns = 10
+        '''
+        font4 = pygame.font.SysFont('comicsansms', int(#taille case*qqc))
+        '''
+        a, b = pygame.mouse.get_pos()
         for nbr in range(self.game.hero.inventorySize):
+            from Item import Item
+            from Armor import Armor
+            from Weapon import Weapon
+            from Amulet import Amulet
+
             if nbr < len(self.game.hero.inventory):
                 elem = self.game.hero.inventory[nbr]
                 elemButton = Button(x + (nbr - int(nbr / columns) * columns) * gap + self.tileSize * (1 / 6), y + int(nbr / columns) * gap + self.tileSize * (1 / 6),
@@ -284,6 +294,24 @@ class GUI:
                     self.game.hero.use(elem)
                 if elemButton.rightClicked:
                     self.game.hero.inventory.remove(elem)
+                '''
+                if isinstance(elem, Item):
+                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
+                            pygame.Rect(elem.x, elem.y, #taille de la case, #taille de la case)):
+                        if isinstance(elem, Armor):
+                            self.screen.blit(font4.render("resistance: " + str(elem.resistance), True, (255, 255, 255)),
+                                             (elem.x, elem.y- #taille cases * qqc))
+                        if isinstance(elem, Weapon):
+                            self.screen.blit(font4.render("damage: " + str(elem.damage), True, (255, 255, 255)),
+                                             (elem.x #- taille case*qqc, elem.y# - taille case *qqc ))
+                        if isinstance(elem, Amulet):
+                            if elem.type == "strength":
+                                self.screen.blit(font4.render("damage+2", True, (255, 255, 255)),
+                                                 (elem.x# - taille case*qqc, elem.y# - self.tileSize * (3 / 5)))
+                            if elem.type == "xp":
+                                self.screen.blit(font4.render("xp*1.5", True, (255, 255, 255)),
+                                                 (elem.x# - taille case*qqc, elem.y#- taille case*qqc))
+                '''
 
     def drawBar(self, x, y, valueMax, image, nbCol=5, padding=0.5, sizeImage=None):
         if sizeImage is None:
