@@ -1,9 +1,11 @@
+import utils
 from Item import Item
 from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
 from Amulet import Amulet
 from Armor import Armor
+from Hero import Hero
 
 
 ##################
@@ -35,11 +37,11 @@ def teleport(creature, unique = False):
     return unique
 
 
-def FireBall(creature):
+def fireBall(creature: Hero):
     from utils import theGame
-    for monster in theGame().floor._elem:
-            if isinstance(monster, Monster) and creature.distance(monster) <= 2:
-                creature.attack(monster, 3)
+    for m in floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
+        if m.meet(creature):
+            theGame().floor.rm(floor.pos(m))
 
 
 ##################
