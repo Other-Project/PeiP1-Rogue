@@ -168,10 +168,13 @@ class GUI:
         self.drawItem(self.game.hero.amulet, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (3.9 / 20))
 
         # caractéristiques du héros
-        screen.blit(font.render("strength:" + str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1 / 4)))
-        screen.blit(font.render("xp:" + str(self.game.hero.xp) + "/" + str(int(self.game.hero.lvlSup())), True, (255, 255, 255)),
-                    (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.2 / 4)))
-        screen.blit(font.render("level:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.1 / 4)))
+        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (tileSize * 0.7, tileSize * 0.7)),
+                    (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
+        screen.blit(font.render(str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
+        #screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield1.png"), (tileSize * 0.7, tileSize * 0.7)),
+         #           (20 * tileSize + sizeInventory * (3.6 / 5), infoObject.current_h * (1.05 / 4)))
+        #screen.blit(font.render(str(self.game.hero.resistance()) + "/" + str(int(self.game.hero.lvlSup())), True, (255, 255, 255)),
+         #           (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.2 / 4)))
 
         # règles du jeu
         screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
@@ -210,13 +213,10 @@ class GUI:
         self.drawBar(20 * tileSize + sizeInventory * (0.6 / 5), y * 7.5, 4,
                      lambda i: "assets/other/backPotion.png", nbCol=4, padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5,
                      sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
-        self.drawBar(20 * tileSize + sizeInventory * (0.25 / 5), y + self.tileSize * 4.7, self.game.hero.armorMax,
-                     lambda i: "assets/hero equipment/armor/armor1.png" if i < 0 or None else "assets/hero equipment/armor/armor1Back.png", nbCol=10,
-                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
         self.drawPotion(20 * tileSize + sizeInventory * (0.615 / 5), y * 7.55)
         font1 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
         self.screen.blit(font1.render("heal: 6 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.35))
+                         (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.4))
         self.screen.blit(font1.render("teleportation: 5 mana", True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (1.45 / 5), y * 8.35))
         self.screen.blit(font1.render("portoloin: 7 mana", True, (255, 255, 255)),
