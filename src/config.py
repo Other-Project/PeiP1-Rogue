@@ -64,7 +64,7 @@ equipments = {
         Armor("shield", resistance=2, armorType="shield", image="assets/hero equipment/shield/shield2.png"),
         Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/helmet3.png"),
         Armor("chainmail", resistance=2, armorType="chestplate", image="assets/hero equipment/armor/armor3.png"),
-        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg3.png"),
+        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg2.png"),
         Armor("boots", resistance=2, armorType="boots", image="assets/hero equipment/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/hero equipment/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/hero equipment/bow/bow1.0.png"),
