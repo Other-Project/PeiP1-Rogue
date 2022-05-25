@@ -40,11 +40,17 @@ def teleport(creature, unique = False):
     floor.put(newC, creature)
     return unique
 
-
+"""""
 def fireBall(creature: Hero):
-    for m in floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
+    for m in utils.theGame().floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
         if m.meet(creature):
-            theGame().floor.rm(floor.pos(m))
+            theGame().floor.rm(theGame().floor.pos(m))
+"""""
+def fireBall(creature: Hero):
+    import copy
+    for monsters in copy.copy(theGame().floor._elem):
+        if isinstance(monsters, Monster) and theGame().floor.pos(monsters).distance(theGame().floor.pos(creature)) <= 3:
+            theGame().floor.rm(theGame().floor.pos(monsters))
 
 
 ##################
@@ -79,6 +85,7 @@ equipments = {
         Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
         Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
         Amulet("Amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png")
     ]
 }
 

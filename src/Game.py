@@ -39,11 +39,15 @@ class Game(object):
         from Chest import Chest
         self.floor = Map(hero=self.hero)
         self.floor.put(self.floor.getRoom(-1).center(), Stairs())
-        position = self.floor.randRoom().center()
-        print(position, type(position))
-        while self.floor.get(position) != Map.ground:
+        self.putChest()
+
+    def putChest(self):
+        from Chest import Chest
+        if self.level % 5 == 0:
             position = self.floor.randRoom().center()
-        self.floor.put(position, Chest("Chest"))
+            while self.floor.get(position) != self.floor.ground:
+                position = self.floor.randRoom().center()
+            self.floor.put(position, Chest("Chest"))
 
     def addMessage(self, msg):
         """Adds a message to be print at the end of the turn"""
