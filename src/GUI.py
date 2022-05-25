@@ -42,12 +42,16 @@ def printMsg(game):
 class GUI:
     from Game import Game
 
-    def __init__(self, game: Game):
+    def __init__(self, game: Game, findedObj = None):
         self.game = game
         pygame.init()
         self.infoObject = pygame.display.Info()
         self.tileSize = min(self.infoObject.current_w, self.infoObject.current_h) / game.floor.size
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
+        if findedObj is None:
+            self.findedObj =[]
+        else:
+            self.findedObj = findedObj
 
     def getTileSurface(self, e):
         from Item import Item
@@ -122,7 +126,7 @@ class GUI:
         from Potion import Potion
         from config import heal
         from config import teleport
-        from config import FireBall
+        from config import fireBall
         listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
                       Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
                       Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),

@@ -37,11 +37,11 @@ def teleport(creature, unique = False):
     return unique
 
 
-def FireBall(creature: Hero):
+def fireBall(creature: Hero):
     from utils import theGame
-    for monster in theGame().floor._elem:
-            if isinstance(monster, Monster) and theGame().floor.pos(creature).distance(monster) <= 2:
-                creature.attack(monster, 3)
+    for m in floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
+        if m.meet(creature):
+            theGame().floor.rm(floor.pos(m))
 
 
 ##################
