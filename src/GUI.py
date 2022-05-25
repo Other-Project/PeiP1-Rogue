@@ -5,8 +5,6 @@ class Button:
     """Button class"""
 
     def __init__(self, x, y, image, w, h):
-        width = image.get_width()
-        height = image.get_height()
         self.image = pygame.transform.scale(image, (w, h))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
@@ -24,6 +22,22 @@ class Button:
                 self.rightClicked = True
         # draw button on screen
         surface.blit(self.image, (self.rect.x, self.rect.y))
+
+
+def drawImage(screen, path, x, y, w, h):
+    image = pygame.image.load(path)
+    imgW = image.get_width()
+    imgH = image.get_height()
+
+    ratio = max(imgW / w, imgH / h)
+    width = imgW / ratio
+    height = imgH / ratio
+    xPos = x + (w - width) / 2
+    yPos = y + (h - height) / 2
+
+    image = pygame.transform.scale(image, (width, height))
+    screen.blit(image, (xPos, yPos))
+    return xPos, yPos, width, height
 
 
 messages = None
@@ -150,7 +164,6 @@ class GUI:
             if elemButton.clicked:
                 elem.deEquip(self.game.hero)
 
-
     def drawPotion(self, x, y):
         from Potion import Potion
         from config import heal
@@ -169,17 +182,76 @@ class GUI:
                 listPotion[potion].activate(self.game.hero)
 
     def infoBox(self):
-        sizeInventory = self.infoObject.current_w - 20 * self.tileSize
+        inventoryX = self.game.floor.size * self.tileSize + 20
+        inventoryY = 20
+        sizeInventory = self.infoObject.current_w - inventoryX - 20  # Window's size - Position of the panel - Margin right of the panel
+        inventoryH = self.infoObject.current_h - inventoryY - 20
+        pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(inventoryX, inventoryY, sizeInventory, inventoryH))  # Draw the panel
+
         font = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.03))
         screen = self.screen
         tileSize = self.tileSize
         infoObject = self.infoObject
 
-        pygame.draw.rect(screen, (64, 64, 64),
-                         pygame.Rect(tileSize * self.game.floor.size + 20, 20, self.infoObject.current_w - self.tileSize * self.game.floor.size - 40,
-                                     self.infoObject.current_h - 40))
+        statsX, statsY = inventoryX + 20, inventoryY + 20
+        statsW, statsH = sizeInventory / 2, 300
+        equipmentX, equipmentY = statsX + statsW + 20, statsY
+        equipmentW, equipmentH = inventoryX + sizeInventory - equipmentX - 20, statsH
 
-        # boite de texte
+        # debug rects
+        # pygame.draw.rect(self.screen, (20, 80, 20), pygame.Rect(statsX, statsY, statsW, statsH))
+        # pygame.draw.rect(self.screen, (20, 20, 80), pygame.Rect(equipmentX, equipmentY, equipmentW, equipmentH))
+
+        self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH)
+
+        # Stats: bars of hp, satiety, etc
+        x = 20 * tileSize + sizeInventory * (0.25 / 5)
+        y = infoObject.current_h / 20
+        self.drawBar(x, y, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW,
+                     padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.75, sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
+        self.drawBar(x, y + self.tileSize * 2.7, self.game.hero.satietyMax,
+                     lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10,
+                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
+        self.drawBar(x, y + self.tileSize * 3.7, self.game.hero.manaMax,
+                     lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10,
+                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
+
+        # Spells
+        self.drawBar(20 * tileSize + sizeInventory * (0.6 / 5), y * 7.5, 4,
+                     lambda i: "assets/other/backPotion.png", sizeInventory, nbCol=4, padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5,
+                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
+        self.drawPotion(20 * tileSize + sizeInventory * (0.615 / 5), y * 7.55)
+        font1 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
+        self.screen.blit(font1.render("heal: 6 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.4))
+        self.screen.blit(font1.render("teleportation: 5 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (1.45 / 5), y * 8.35))
+        self.screen.blit(font1.render("portoloin: 7 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (2.75 / 5), y * 8.35))
+        self.screen.blit(font1.render("fireball: 9 mana", True, (255, 255, 255)),
+                         (20 * tileSize + sizeInventory * (3.95 / 5), y * 8.35))
+
+        # Inventory
+        self.drawBar(20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h / 2, 10,
+                     lambda i: "assets/other/backInventory.png", sizeInventory, nbCol=10, padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.15,
+                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
+        size = self.tileSize
+        gap = size + size * 0.25
+        x = 20 * tileSize + sizeInventory * (0.45 / 5)
+        y = infoObject.current_h / 2.01
+        columns = 10
+        for nbr in range(self.game.hero.inventorySize):
+            if nbr < len(self.game.hero.inventory):
+                elem = self.game.hero.inventory[nbr]
+                elemButton = Button(x + (nbr - int(nbr / columns) * columns) * gap + self.tileSize * (1 / 6), y + int(nbr / columns) * gap + self.tileSize * (1 / 6),
+                                    pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
+                elemButton.draw(self.screen)
+                if elemButton.clicked:
+                    self.game.hero.use(elem)
+                if elemButton.rightClicked:
+                    self.game.hero.inventory.remove(elem)
+
+        # Messages
         font2 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.03))
         pygame.draw.rect(screen, (55, 55, 55),
                          pygame.Rect(20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, sizeInventory * (4.5 / 5),
@@ -187,42 +259,7 @@ class GUI:
         self.screen.blit(font2.render(str(printMsg(self.game)), True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
 
-        # dessine le héros de l'inventaire
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/frontHero.png"), (sizeInventory * (1.25 / 5), sizeInventory * (1.25 / 5))),
-                         (20 * tileSize + sizeInventory * (3 / 5), 40))
-
-        # dessine les cases pour les équipements
-        self.drawItem(self.game.hero.weapon, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (1.5 / 20))
-        self.drawItem(self.game.hero.helmet, 20 * tileSize + sizeInventory * (2.8 / 5), self.infoObject.current_h * (1 / 20))
-        self.drawItem(self.game.hero.chestplate, 20 * tileSize + sizeInventory * (2.8 / 5), self.infoObject.current_h * (2.2 / 20))
-        self.drawItem(self.game.hero.legs, 20 * tileSize + sizeInventory * (2.8 / 5), self.infoObject.current_h * (3.4 / 20))
-        self.drawItem(self.game.hero.boots, 20 * tileSize + sizeInventory * (2.8 / 5), self.infoObject.current_h * (4.6 / 20))
-        self.drawItem(self.game.hero.shield, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (2.7 / 20))
-        self.drawItem(self.game.hero.amulet, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (3.9 / 20))
-
-        # caractéristiques du héros
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
-                    (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
-        screen.blit(font.render(str(self.game.hero.strength + (self.game.hero.weapon.damage if self.game.hero.weapon is not None else 0)), True, (255, 255, 255)),
-                    (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
-                    (20 * tileSize + sizeInventory * (3.75 / 5), infoObject.current_h * (1.05 / 4)))
-        screen.blit(font.render(str(self.game.hero.resistance()), True, (255, 255, 255)),
-                    (20 * tileSize + sizeInventory * (3.835 / 5), infoObject.current_h * (1.15 / 4)))
-
-        # barre xp
-        pygame.draw.rect(screen, (0, 0, 0),
-                         pygame.Rect(20 * tileSize + sizeInventory * (3.2 / 5), infoObject.current_h * (0.15 / 4),
-                                     sizeInventory * (1 / 5), sizeInventory * (0.05 / 5)))
-        pygame.draw.rect(screen, (25, 172, 38),
-                         pygame.Rect(20 * tileSize + sizeInventory * (3.2 / 5), infoObject.current_h * (0.15 / 4),
-                                     sizeInventory * (1 / 5) * (self.game.hero.xp / self.game.hero.lvlSup()), sizeInventory * (0.05 / 5)))
-        font3 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
-        screen.blit(font3.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3 / 5), infoObject.current_h * (0.12 / 4)))
-        screen.blit(font3.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
-                    (20 * tileSize + sizeInventory * (4.25 / 5), infoObject.current_h * (0.12 / 4)))
-
-        # règles du jeu
+        # Controls
         screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize * 0.7, tileSize * 0.7)),
                     (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (7.4 / 10)))
@@ -244,83 +281,58 @@ class GUI:
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterR.png"), (tileSize * 0.7, tileSize * 0.7)),
                     (infoObject.current_w * (3.75 / 5), infoObject.current_h * (8.5 / 10)))
 
-        y = infoObject.current_h / 20
-        self.drawBar(20 * tileSize + sizeInventory * (0.25 / 5), y, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png",
-                     padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.75, sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
-        self.drawBar(20 * tileSize + sizeInventory * (0.25 / 5), y + self.tileSize * 2.7, self.game.hero.satietyMax,
-                     lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", nbCol=10,
-                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
-        self.drawBar(20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h / 2, 10,
-                     lambda i: "assets/other/backInventory.png", nbCol=10, padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.15,
-                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
-        self.drawBar(20 * tileSize + sizeInventory * (0.25 / 5), y + self.tileSize * 3.7, self.game.hero.manaMax,
-                     lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", nbCol=10,
-                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.1)
-        self.drawBar(20 * tileSize + sizeInventory * (0.6 / 5), y * 7.5, 4,
-                     lambda i: "assets/other/backPotion.png", nbCol=4, padding=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5,
-                     sizeImage=((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9)
-        self.drawPotion(20 * tileSize + sizeInventory * (0.615 / 5), y * 7.55)
-        font1 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
-        self.screen.blit(font1.render("heal: 6 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (0.45 / 5), y * 8.4))
-        self.screen.blit(font1.render("teleportation: 5 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (1.45 / 5), y * 8.35))
-        self.screen.blit(font1.render("portoloin: 7 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (2.75 / 5), y * 8.35))
-        self.screen.blit(font1.render("fireball: 9 mana", True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (3.95 / 5), y * 8.35))
+    def drawEquipment(self, x, y, w, h):
+        equipmentTileGap = 15
+        equipmentTileW, equipmentTileH = self.tileSize, self.tileSize + equipmentTileGap
 
-        size = self.tileSize
-        gap = size + size * 0.25
-        x = 20 * tileSize + sizeInventory * (0.45 / 5)
-        y = infoObject.current_h / 2.01
-        columns = 10
-        '''
-        font4 = pygame.font.SysFont('comicsansms', int(#taille case*qqc))
-        '''
-        a, b = pygame.mouse.get_pos()
-        for nbr in range(self.game.hero.inventorySize):
-            from Item import Item
-            from Armor import Armor
-            from Weapon import Weapon
-            from Amulet import Amulet
+        equipmentLeftTiles = [self.game.hero.helmet, self.game.hero.chestplate, self.game.hero.legs, self.game.hero.boots]
+        equipmentTileLeftW, equipmentTileLeftH = equipmentTileW, equipmentTileH * len(equipmentLeftTiles) - equipmentTileGap
+        equipmentTileLeftX, equipmentTileLeftY = x, y + (h - equipmentTileLeftH) / 2
+        for equipmentI in range(len(equipmentLeftTiles)):
+            self.drawItem(equipmentLeftTiles[equipmentI], equipmentTileLeftX, equipmentTileLeftY + equipmentTileH * equipmentI)
 
-            if nbr < len(self.game.hero.inventory):
-                elem = self.game.hero.inventory[nbr]
-                elemButton = Button(x + (nbr - int(nbr / columns) * columns) * gap + self.tileSize * (1 / 6), y + int(nbr / columns) * gap + self.tileSize * (1 / 6),
-                                    pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
-                elemButton.draw(self.screen)
-                if elemButton.clicked:
-                    self.game.hero.use(elem)
-                if elemButton.rightClicked:
-                    self.game.hero.inventory.remove(elem)
-                '''
-                if isinstance(elem, Item):
-                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
-                            pygame.Rect(elem.x, elem.y, #taille de la case, #taille de la case)):
-                        if isinstance(elem, Armor):
-                            self.screen.blit(font4.render("resistance: " + str(elem.resistance), True, (255, 255, 255)),
-                                             (elem.x, elem.y- #taille cases * qqc))
-                        if isinstance(elem, Weapon):
-                            self.screen.blit(font4.render("damage: " + str(elem.damage), True, (255, 255, 255)),
-                                             (elem.x #- taille case*qqc, elem.y# - taille case *qqc ))
-                        if isinstance(elem, Amulet):
-                            if elem.type == "strength":
-                                self.screen.blit(font4.render("damage+2", True, (255, 255, 255)),
-                                                 (elem.x# - taille case*qqc, elem.y# - self.tileSize * (3 / 5)))
-                            if elem.type == "xp":
-                                self.screen.blit(font4.render("xp*1.5", True, (255, 255, 255)),
-                                                 (elem.x# - taille case*qqc, elem.y#- taille case*qqc))
-                '''
+        # Image of the hero
+        heroX = equipmentTileLeftX + equipmentTileW + 20
+        heroY = y
+        heroW = w - (equipmentTileW + 20) * 2
+        heroH = h - 50
+        heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/frontHero.png", heroX, heroY, heroW, heroH)
 
-    def drawBar(self, x, y, valueMax, image, nbCol=5, padding=0.5, sizeImage=None):
+        # XP bar
+        xpH = 15
+        xpY = heroImgY - 20
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(heroX, xpY, heroW, xpH))
+        pygame.draw.rect(self.screen, (25, 172, 38), pygame.Rect(heroX, xpY, heroW * (self.game.hero.xp / self.game.hero.lvlSup()), xpH))
+        font = pygame.font.SysFont('comicsansms', int(xpH * 0.75))
+        self.screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (heroX + 5, xpY))
+        xpTxt = font.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255))
+        self.screen.blit(xpTxt, (heroX + heroW - xpTxt.get_width() - 5, xpY))
+
+        equipmentRightTiles = [self.game.hero.weapon, self.game.hero.shield, self.game.hero.amulet]
+        equipmentTileRightW, equipmentTileRightH = equipmentTileW, equipmentTileH * len(equipmentRightTiles) - equipmentTileGap
+        equipmentTileRightX, equipmentTileRightY = heroX + heroW + 20, y + (h - equipmentTileRightH) / 2
+        for equipmentI in range(len(equipmentRightTiles)):
+            self.drawItem(equipmentRightTiles[equipmentI], equipmentTileRightX, equipmentTileRightY + equipmentTileH * equipmentI)
+
+        # caractéristiques du héros
+        statsX, statsY = heroX, heroImgY + heroImgH + 5
+        statsW, statsH = heroW / 2 - 20, 30
+        statsFont = pygame.font.SysFont('comicsansms', 20)
+        drawImage(self.screen, "assets/hero equipment/sword/sword1.png", statsX, statsY, statsW, statsH)
+        strengthTxt = statsFont.render(str(self.game.hero.strengthTot()), True, (255, 255, 255))
+        self.screen.blit(strengthTxt, (statsX + (statsW - strengthTxt.get_width()) / 2, statsY + statsH))
+        drawImage(self.screen, "assets/hero equipment/shield/shield2.png", statsX + statsW + 40, statsY, statsW, statsH)
+        resistanceTxt = statsFont.render(str(self.game.hero.resistance()), True, (255, 255, 255))
+        self.screen.blit(resistanceTxt, (statsX + statsW + 40 + (statsW - resistanceTxt.get_width()) / 2, statsY + statsH))
+
+    def drawBar(self, x, y, valueMax, image, width, nbCol=5, padding=0.5, sizeImage=None):
+        gap = width / nbCol
         if sizeImage is None:
             sizeImage = (self.infoObject.current_w - 20 * self.tileSize) / 1500
-        size = self.tileSize * sizeImage
-        gap = size + size * padding
+        size = min(self.tileSize * sizeImage, gap - padding)
+        x += abs(gap - size) / 2  # Center the bar
         for nbr in range(valueMax):
-            self.screen.blit(pygame.transform.scale(pygame.image.load(image(nbr)), (size, size)),
-                             (x + (nbr - int(nbr / nbCol) * nbCol) * gap, y + int(nbr / nbCol) * gap))
+            self.screen.blit(pygame.transform.scale(pygame.image.load(image(nbr)), (size, size)), (x + (nbr - int(nbr / nbCol) * nbCol) * gap, y + int(nbr / nbCol) * gap))
 
     def endScreen(self):
         while True:

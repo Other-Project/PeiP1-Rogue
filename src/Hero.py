@@ -108,3 +108,6 @@ class Hero(Creature):
         from Armor import Armor
         armor: list[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
         return sum([0 if equipment is None else equipment.resistance for equipment in armor])
+
+    def strengthTot(self):
+        return self.strength + (self.weapon.damage if self.weapon is not None else 0)
