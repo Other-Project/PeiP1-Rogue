@@ -14,7 +14,7 @@ class Hero(Creature):
         self.helmet = None
         self.weapon = None
         self.amulet = None
-        self.xp, self.lvl = 0, 1
+        self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.healthMax = healthMax
         self.monstersKilled = 0
@@ -88,13 +88,13 @@ class Hero(Creature):
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
 
         if attacked.hp <= 0:
-            self.xp += attacked.xpGain
+            self.xp += attacked.xpGain*self.xpMultiplier
             self.monstersKilled += 1
             self.experience()
 
     def lvlSup(self):
         import math
-        return 30 * math.exp((self.lvl - 1) / 4)
+        return int(30 * math.exp((self.lvl - 1) / 4))
 
     def experience(self):
         if self.xp >= self.lvlSup():

@@ -3,7 +3,6 @@ from Item import Item
 from Monster import Monster
 from Weapon import Weapon
 from Ghost import Ghost
-from Potion import Potion
 from Amulet import Amulet
 from Armor import Armor
 from Hero import Hero
@@ -53,28 +52,30 @@ equipments = {
     0: [
         Item("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
         Item("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
-        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
     ],
     1: [
-        Item("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png"),
-        Item("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png"),
-        Amulet("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
-        Amulet("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
-        Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=1),
-        Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=1)
+        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
+        Weapon("bow", radius=3, damage=2, image="assets/hero equipment/bow/bow1.0.png"),
+        Armor("shield", resistance=1, armorType="shield", image="assets/hero equipment/shield/shield1.png"),
+        Armor("helmet", resistance=1, armorType="helmet", image="assets/hero equipment/helmet/helmet1.png"),
+        Armor("chainmail", resistance=1, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
+        Armor("Legs", resistance=1, armorType="legs", image="assets/hero equipment/leg/leg1.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1.png"),
     ],
     2: [
-        Weapon("bow", radius=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Armor("shield", resistance=2, armorType="shield", image="assets/hero equipment/shield/shield.png"),
-        Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/tile152.png"),
-        Armor("chainmail", resistance=3, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
-        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/tile176.png")
+        Armor("shield", resistance=2, armorType="shield", image="assets/hero equipment/shield/shield2.png"),
+        Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/helmet3.png"),
+        Armor("chainmail", resistance=2, armorType="chestplate", image="assets/hero equipment/armor/armor3.png"),
+        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg3.png"),
+        Armor("boots", resistance=2, armorType="boots", image="assets/hero equipment/boot/boot3.png"),
+        Weapon("sword", radius=0, damage=3, image="assets/hero equipment/sword/sword2.png"),
+        Weapon("bow", radius=3, damage=3, image="assets/hero equipment/bow/bow1.0.png"),
+        Amulet("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
     ],
     3: [
-        Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=3),
-        Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=4)
-
+        Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
+        Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
+        Amulet("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
     ]
 }
 
