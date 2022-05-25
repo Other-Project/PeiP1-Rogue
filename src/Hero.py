@@ -6,7 +6,7 @@ class Hero(Creature):
         from Monster import Monster
         Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
         self.inventory, self.inventorySize = [], 10
-        self.armorMax=armorMax
+        self.armorMax = armorMax
         self.chestplate = None
         self.shield = None
         self.boots = None
@@ -88,7 +88,7 @@ class Hero(Creature):
         utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
 
         if attacked.hp <= 0:
-            self.xp += attacked.xpGain*self.xpMultiplier
+            self.xp += attacked.xpGain * self.xpMultiplier
             self.monstersKilled += 1
             self.experience()
 
@@ -102,3 +102,8 @@ class Hero(Creature):
             self.lvl += 1
             self.healthMax += 1
             self.manaMax = min(self.manaMax + 5, 50)
+
+    def resistance(self):
+        from Armor import Armor
+        armor: list[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
+        return sum([equipment for equipment in armor])
