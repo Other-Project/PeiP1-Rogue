@@ -101,7 +101,6 @@ class GUI:
                                         pygame.draw.rect(self.screen, (25, 172, 38),
                                                          pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
                                                                      self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
-
             self.infoBox()
             pygame.display.flip()
 
@@ -182,7 +181,7 @@ class GUI:
         # caractéristiques du héros
         screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
-        screen.blit(font.render(str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
+        screen.blit(font.render(str(self.game.hero.strength+(self.game.hero.weapon.damage if self.game.hero.weapon is not None else 0)), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.75 / 5), infoObject.current_h * (1.05 / 4)))
         screen.blit(font.render(str(self.game.hero.resistance()), True, (255, 255, 255)),
