@@ -136,10 +136,10 @@ class GUI:
         from config import fireBall
         size = self.tileSize * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9
         gap = size + size * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5
-        listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
-                      Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
-                      Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
-                      Potion("FireBall", "§", lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)]
+        listPotion = [Potion("potion", usage=lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
+                      Potion("potion", usage=lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
+                      Potion("portoloin", usage=lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
+                      Potion("FireBall", usage=lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)]
         for potion in range(len(listPotion)):
             potionButton = Button(x + (potion - int(potion / 4) * 4) * gap, y, pygame.image.load(listPotion[potion].image), self.tileSize * 0.7, self.tileSize * 0.7)
             potionButton.draw(self.screen)

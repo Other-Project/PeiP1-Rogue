@@ -1,8 +1,17 @@
 from Creature import Creature
+import utils
 
 
 class Hero(Creature):
     def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
+        """
+        :param name: The name of the element
+        :param image: The image of the element
+        :param healthMax: The initial health of the hero
+        :param manaMax: The initial mana tank of the hero
+        :param strength: The initial strength of the hero
+        :param satietyMax: The maximum satiety value
+        """
         from Monster import Monster
         Creature.__init__(self, name=name, hp=healthMax, enemyType=Monster, strength=strength, image=image)
         self.healthMax = healthMax
@@ -29,19 +38,17 @@ class Hero(Creature):
     def take(self, item):
         """Collects an item on the ground"""
         from Item import Item
-        import utils
         if not isinstance(item, Item):
             raise TypeError('Not a Equipment')
+        return self.addInventory(item)
+
+    def addInventory(self, item):
         if item.name == "manaPotion":
             if self.mana == self.manaMax:
                 utils.theGame().addMessage("Your mana tank is full")
-                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
-                return False
             else:
-                self.mana += 1
-                utils.theGame().floor.rm(utils.theGame().floor.pos(item))
-                utils.theGame().addMessage("niveau mana:" + str(self.mana))
-                return True
+                return item.use(self)
+
         if len(self.inventory) >= self.inventorySize:
             utils.theGame().addMessage("Your inventory is full")
             return False

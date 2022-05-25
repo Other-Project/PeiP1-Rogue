@@ -1,8 +1,16 @@
 from Element import Element
 
+
 class Creature(Element):
-    def __init__(self, name, hp, enemyType, abbrv=None, strength=1, color="", image=None):
-        Element.__init__(self, name, abbrv, color, image)
+    def __init__(self, name, hp, enemyType, strength=1, image=None):
+        """
+        :param name: The name of the element
+        :param image: The image of the element
+        :param hp: The health of the monster
+        :param enemyType: The type to attack
+        :param strength: The strength of the monster
+        """
+        Element.__init__(self, name, image)
         self.hp = hp
         self.strength = strength
         self.enemyType = enemyType

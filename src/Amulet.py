@@ -4,10 +4,15 @@ from Equipment import Equipment
 class Amulet(Equipment):
     from Hero import Hero
 
-    def __init__(self, name: str, image=None, type=None):
+    def __init__(self, name: str, image=None, effectType=None):
+        """
+        :param name: The name of the element
+        :param image: The image of the element
+        :param effectType: The type of effect
+        """
         Equipment.__init__(self, name=name, image=image)
         self.image = image
-        self.type = type
+        self.type = effectType
 
     def equip(self, hero: Hero):
         """Equip the amulet"""

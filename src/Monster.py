@@ -4,9 +4,19 @@ from Creature import Creature
 class Monster(Creature):
     from Map import Map
 
-    def __init__(self, name, hp, abbrv=None, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, color="\033[0;31m"):
+    def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1):
+        """
+        :param name: The name of the element
+        :param image: The image of the element
+        :param hp: The health of the monster
+        :param strength: The strength of the monster
+        :param radius: The attack radius of the monster
+        :param strength: The strength of the monster
+        :param xpGain: The quantity of XP that the hero will gain
+        :param movingSpeed: The number of moves the monster can make in one turn
+        """
         from Hero import Hero
-        Creature.__init__(self, name, abbrv=abbrv, color=color, hp=hp, enemyType=Hero, strength=strength, image=image)
+        Creature.__init__(self, name, hp=hp, enemyType=Hero, strength=strength, image=image)
         self.range = radius
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed

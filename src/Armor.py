@@ -5,13 +5,14 @@ class Armor(Equipment):
     """An item than can be used to protect"""
     from Hero import Hero
 
-    def __init__(self, name: str, abbrv: str = None, resistance: int = 0, armorType=None, image=None):
+    def __init__(self, name: str, resistance: int = 0, armorType=None, image=None):
         """
-        :param name: The name of the item
-        :param abbrv: The symbol used to represent the item on the map
-
+        :param name: The name of the element
+        :param image: The image of the element
+        :param resistance: The resistance provided by the armor
+        :param armorType: The type of armor
         """
-        Equipment.__init__(self, name=name, abbrv=abbrv, image=image)
+        Equipment.__init__(self, name=name, image=image)
         self.resistance = resistance
         self.armorType = armorType
 

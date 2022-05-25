@@ -1,16 +1,14 @@
 class Element:
-    def __init__(self, name: str, abbrv: str = None, color="", image=None):
+    def __init__(self, name: str, image=None):
         """
         :param name: The name of the element
-        :param abbrv: The symbol used to represent the element on the map
-        :param color: The color of the element on the map
+        :param image: The image of the element
         """
         self.name = name
-        self.abbrv = color + (abbrv or name[0]) + "\033[00m"
         self.image = image
 
     def __repr__(self):
-        return self.abbrv
+        return self.name
 
     def description(self):
         return "<" + self.name + ">"

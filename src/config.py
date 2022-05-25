@@ -6,6 +6,7 @@ from Ghost import Ghost
 from Amulet import Amulet
 from Armor import Armor
 from Hero import Hero
+from utils import theGame
 
 
 ##################
@@ -22,13 +23,16 @@ def eat(hero, satietyGain=2):
     return True
 
 
-def manaPotion(hero, manaGain=2):
-    hero.mana = min(hero.mana + manaGain, hero.manaMax)
-    return True
+def manaPotion(hero, manaGain=1):
+    if hero.mana < hero.manaMax:
+        hero.mana = min(hero.mana + manaGain, hero.manaMax)
+        return True
+    else:
+        theGame().addMessage("Your inventory is already full")
+        return False
 
 
 def teleport(creature, unique = False):
-    from utils import theGame
     floor = theGame().floor
     newC = floor.randEmptyCoord()
     c = floor.pos(creature)
@@ -38,7 +42,6 @@ def teleport(creature, unique = False):
 
 
 def fireBall(creature: Hero):
-    from utils import theGame
     for m in floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
         if m.meet(creature):
             theGame().floor.rm(floor.pos(m))
@@ -50,8 +53,8 @@ def fireBall(creature: Hero):
 
 equipments = {
     0: [
-        Item("food", "f", lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Item("manaPotion", "!", lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png"),
+        Item("manaPotion", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
@@ -70,19 +73,19 @@ equipments = {
         Armor("boots", resistance=2, armorType="boots", image="assets/hero equipment/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/hero equipment/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("Amulette of strength", image="assets/hero equipment/amulet/strength.png", type="strength"),
+        Amulet("Amulet of strength", image="assets/hero equipment/amulet/strength.png", effectType="strength"),
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
         Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("Amulette of xp", image="assets/hero equipment/amulet/xp.png", type="xp"),
+        Amulet("Amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
     ]
 }
 
 monsters = {
     0: [
-        Monster("Archer", 1, "A", radius=4, image="assets/monsters/archer.png"),
-        Monster("Bat", 2, "W", movingSpeed=2, image="assets/monsters/bat.png"),
+        Monster("Archer", 1, radius=4, image="assets/monsters/archer.png"),
+        Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 5, xpGain=3)
     ],
