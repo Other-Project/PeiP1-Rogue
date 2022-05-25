@@ -3,14 +3,14 @@ from Item import Item
 class Potion(Item):
     from Hero import Hero
 
-    def __init__(self, name: str, abbrv: str = None, usage=None, color="\033[0;33m", image=None, price=0):
+    def __init__(self, name: str, usage=None, image=None, price=0):
         """
-        :param name: The name of the potion
-        :param abbrv: The symbol used to represent the potion on the map
+        :param name: The name of the element
+        :param image: The image of the element
         :param usage: The function called by the potion to do something
         :param price: The price to use the potion
         """
-        Item.__init__(self, name, abbrv, usage, color, image)
+        Item.__init__(self, name, usage, image)
         self.price = price
 
     def activate(self, creature: Hero):
