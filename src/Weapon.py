@@ -30,6 +30,9 @@ class Weapon(Equipment):
         hero.weapon = None  # Removes the weapon from the equipped slot
         hero.inventory.append(self)  # Add the weapon to the inventory
 
+    def description(self) -> str:
+        return "Bonus strength: +" + str(self.damage)
+
     def attackInRadius(self, creature: Creature, floor: Map):
         """Attack all ennemies in radius"""
         for m in floor.getAllCreaturesInRadius(creature, self.radius + 1, creature.enemyType):

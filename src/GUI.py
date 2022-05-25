@@ -122,19 +122,8 @@ class GUI:
                                 if isinstance(e, Item):
                                     if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
                                             pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
-                                        if isinstance(e, Armor):
-                                            self.screen.blit(font4.render("resistance: " + str(e.resistance), True, (255, 255, 255)),
+                                        self.screen.blit(font4.render(e.description(), True, (255, 255, 255)),
                                                              (self.getTilePos(x, y, e)[0]-self.tileSize*(3/5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
-                                        if isinstance(e, Weapon):
-                                            self.screen.blit(font4.render("damage: " + str(e.damage), True, (255, 255, 255)),
-                                                             (self.getTilePos(x, y, e)[0]-self.tileSize*(3/5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
-                                        if isinstance(e,Amulet):
-                                            if e.type=="strength":
-                                                self.screen.blit(font4.render("damage+2", True, (255, 255, 255)),
-                                                                 (self.getTilePos(x, y, e)[0] - self.tileSize * (1.9 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
-                                            if e.type=="xp":
-                                                self.screen.blit(font4.render("xp*1.5", True, (255, 255, 255)),
-                                                                 (self.getTilePos(x, y, e)[0] - self.tileSize * (1.5 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
 
             self.infoBox()
             pygame.display.flip()

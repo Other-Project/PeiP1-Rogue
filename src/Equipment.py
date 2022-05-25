@@ -14,4 +14,3 @@ class Equipment(Item):
 
     def deEquip(self, hero):
         raise NotImplementedError("Abstract method")
-

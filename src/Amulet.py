@@ -34,3 +34,9 @@ class Amulet(Equipment):
             hero.strength -= 2
         elif self.type == "xp":
             hero.xpMultiplier = 1
+
+    def description(self) -> str:
+        if self.type == "strength":
+            return "Bonus strength: +2"
+        elif self.type == "xp":
+            return "XP: x1.5"

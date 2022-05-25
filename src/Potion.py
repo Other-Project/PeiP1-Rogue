@@ -1,5 +1,6 @@
 from Item import Item
 
+
 class Potion(Item):
     from Hero import Hero
 
@@ -12,6 +13,9 @@ class Potion(Item):
         """
         Item.__init__(self, name, usage, image)
         self.price = price
+
+    def description(self) -> str:
+        return "Mana usage: " + str(self.price)
 
     def activate(self, creature: Hero):
         """ Use a potion or a power"""

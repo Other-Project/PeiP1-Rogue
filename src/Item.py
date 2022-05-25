@@ -30,3 +30,6 @@ class Item(Element):
 
         utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
         return self.usage(self, creature)
+
+    def description(self) -> str:
+        return ""

@@ -28,3 +28,6 @@ class Armor(Equipment):
         """De-equip the armor"""
         setattr(hero, self.armorType, None)  # Removes the armor from the equipped slot
         hero.inventory.append(self)  # Add the armor to the inventory
+
+    def description(self) -> str:
+        return "Bonus resistance: +" + str(self.resistance)
