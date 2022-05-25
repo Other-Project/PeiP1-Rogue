@@ -99,4 +99,4 @@ class Hero(Creature):
     def resistance(self):
         from Armor import Armor
         armor: list[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
-        return sum([equipment or 0 for equipment in armor])
+        return sum([0 if equipment is None else equipment.resistance for equipment in armor])

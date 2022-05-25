@@ -116,7 +116,7 @@ class GUI:
     def drawItem(self, elem, x, y):
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, self.tileSize, self.tileSize))
         if elem is not None:
-            elemButton = Button(x+self.tileSize*0.125, y+self.tileSize*0.125, pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
+            elemButton = Button(x + self.tileSize * 0.125, y + self.tileSize * 0.125, pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
             elemButton.draw(self.screen)
             if elemButton.clicked:
                 elem.deEquip(self.game.hero)
@@ -131,7 +131,7 @@ class GUI:
         listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
                       Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
                       Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
-                      Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=9)]
+                      Potion("FireBall", "§", lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)]
         for potion in range(len(listPotion)):
             potionButton = Button(x + (potion - int(potion / 4) * 4) * gap, y, pygame.image.load(listPotion[potion].image), self.tileSize * 0.7, self.tileSize * 0.7)
             potionButton.draw(self.screen)
@@ -171,13 +171,25 @@ class GUI:
         self.drawItem(self.game.hero.amulet, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (3.9 / 20))
 
         # caractéristiques du héros
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (tileSize * 0.7, tileSize * 0.7)),
+        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1/20), sizeInventory * (1/20))),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
         screen.blit(font.render(str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
-        #screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield1.png"), (tileSize * 0.7, tileSize * 0.7)),
-         #           (20 * tileSize + sizeInventory * (3.6 / 5), infoObject.current_h * (1.05 / 4)))
-        #screen.blit(font.render(str(self.game.hero.resistance()) + "/" + str(int(self.game.hero.lvlSup())), True, (255, 255, 255)),
-         #           (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.2 / 4)))
+        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1/20), sizeInventory * (1/20))),
+                    (20 * tileSize + sizeInventory * (3.75 / 5), infoObject.current_h * (1.05 / 4)))
+        screen.blit(font.render(str(self.game.hero.resistance()), True, (255, 255, 255)),
+                    (20 * tileSize + sizeInventory * (3.85 / 5), infoObject.current_h * (1.15 / 4)))
+
+        # barre xp
+        pygame.draw.rect(screen, (0, 0, 0),
+                         pygame.Rect(20 * tileSize + sizeInventory * (3.2 / 5), infoObject.current_h * (0.15 / 4),
+                                     sizeInventory * (1 / 5), sizeInventory * (0.05 / 5)))
+        pygame.draw.rect(screen, (25, 172, 38),
+                         pygame.Rect(20 * tileSize + sizeInventory * (3.2 / 5), infoObject.current_h * (0.15 / 4),
+                                     sizeInventory * (1 / 5) * ((self.game.hero.xp) / self.game.hero.lvlSup()), sizeInventory * (0.05 / 5)))
+        font = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
+        screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3 / 5), infoObject.current_h * (0.12 / 4)))
+        screen.blit(font.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
+                    (20 * tileSize + sizeInventory * (4.25 / 5), infoObject.current_h * (0.12 / 4)))
 
         # règles du jeu
         screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
