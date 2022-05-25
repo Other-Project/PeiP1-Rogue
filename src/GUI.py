@@ -42,16 +42,12 @@ def printMsg(game):
 class GUI:
     from Game import Game
 
-    def __init__(self, game: Game, findedObj = None):
+    def __init__(self, game: Game):
         self.game = game
         pygame.init()
         self.infoObject = pygame.display.Info()
         self.tileSize = min(self.infoObject.current_w, self.infoObject.current_h) / game.floor.size
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
-        if findedObj is None:
-            self.findedObj =[]
-        else:
-            self.findedObj = findedObj
 
     def getTileSurface(self, e):
         from Item import Item
@@ -126,18 +122,18 @@ class GUI:
         from Potion import Potion
         from config import heal
         from config import teleport
-        from config import fireBall
+        from config import FireBall
+        size = self.tileSize * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9
+        gap = size + size * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5
         listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
                       Potion("potion", "!", lambda item, hero: teleport(hero, True), image="assets/potion/potionTeleportation.png", price=5),
                       Potion("portoloin", "w", lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
                       Potion("FireBall", "§", lambda item, hero: FireBall(hero), image="assets/potion/fireball.png", price=9)]
-        k = 0
-        for potion in listPotion:
-            potionButton = Button(x + k, y, pygame.image.load(potion.image), self.tileSize * 0.7, self.tileSize * 0.7)
+        for potion in range(len(listPotion)):
+            potionButton = Button(x + (potion - int(potion / 4) * 4) * gap, y, pygame.image.load(listPotion[potion].image), self.tileSize * 0.7, self.tileSize * 0.7)
             potionButton.draw(self.screen)
-            k += (self.infoObject.current_w - 20 * self.tileSize) * (1.19 / 5)
             if potionButton.clicked:
-                potion.activate(self.game.hero)
+                listPotion[potion].activate(self.game.hero)
 
     def infoBox(self):
         sizeInventory = self.infoObject.current_w - 20 * self.tileSize
@@ -153,7 +149,7 @@ class GUI:
         # boite de texte
         font2 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.03))
         pygame.draw.rect(screen, (55, 55, 55),
-                         pygame.Rect(20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, (20 * tileSize + sizeInventory * (2.8 / 5)) * (9.75 / 20),
+                         pygame.Rect(20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, sizeInventory * (4.5 / 5),
                                      self.tileSize * 2))
         self.screen.blit(font2.render(str(printMsg(self.game)), True, (255, 255, 255)),
                          (20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
