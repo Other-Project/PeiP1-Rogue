@@ -2,24 +2,18 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, abbrv="@", strength=2, color="\033[0;32m", armorMax=10, satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
         from Monster import Monster
-        Creature.__init__(self, name, healthMax, Monster, abbrv, strength, color, image)
+        Creature.__init__(self, name=name, hp=healthMax, enemyType=Monster, strength=strength, image=image)
+        self.healthMax = healthMax
+        self.satiety, self.satietyMax = satietyMax, satietyMax
         self.inventory, self.inventorySize = [], 10
-        self.armorMax = armorMax
-        self.chestplate = None
-        self.shield = None
-        self.boots = None
-        self.legs = None
-        self.helmet = None
+        self.chestplate, self.shield, self.boots, self.legs, self.helmet = None, None, None, None, None
         self.weapon = None
         self.amulet = None
         self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
-        self.satiety, self.satietyMax = satietyMax, satietyMax
-        self.healthMax = healthMax
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
-        self.equiped = []
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
@@ -106,4 +100,4 @@ class Hero(Creature):
     def resistance(self):
         from Armor import Armor
         armor: list[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
-        return sum([equipment for equipment in armor])
+        return sum([equipment or 0 for equipment in armor])
