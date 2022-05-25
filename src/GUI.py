@@ -64,9 +64,9 @@ class GUI:
     def main(self):
         import sys
         from Coord import Coord
+        from Armor import Armor
 
         self.startScreen()
-        sizeInventory = self.infoObject.current_w - 20 * self.tileSize
         while self.game.hero.hp > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -75,7 +75,8 @@ class GUI:
                     self.game.newTurn(event.key)
 
             self.screen.fill((75, 75, 75))
-
+            font4 = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
+            a, b = pygame.mouse.get_pos()
             for y in range(len(self.game.floor)):
                 for x in range(len(self.game.floor)):
                     e = self.game.floor.get(Coord(x, y))
@@ -87,6 +88,9 @@ class GUI:
                         if e.image is not None:
                             from Monster import Monster
                             from Item import Item
+                            from Weapon import Weapon
+                            from Amulet import Amulet
+
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8 or e in self.visited:
@@ -101,6 +105,23 @@ class GUI:
                                         pygame.draw.rect(self.screen, (25, 172, 38),
                                                          pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
                                                                      self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
+                                if isinstance(e, Item):
+                                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
+                                            pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
+                                        if isinstance(e, Armor):
+                                            self.screen.blit(font4.render("resistance: " + str(e.resistance), True, (255, 255, 255)),
+                                                             (self.getTilePos(x, y, e)[0]-self.tileSize*(3/5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+                                        if isinstance(e, Weapon):
+                                            self.screen.blit(font4.render("damage: " + str(e.damage), True, (255, 255, 255)),
+                                                             (self.getTilePos(x, y, e)[0]-self.tileSize*(3/5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+                                        if isinstance(e,Amulet):
+                                            if e.type=="strength":
+                                                self.screen.blit(font4.render("damage+2", True, (255, 255, 255)),
+                                                                 (self.getTilePos(x, y, e)[0] - self.tileSize * (1.9 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+                                            if e.type=="xp":
+                                                self.screen.blit(font4.render("xp*1.5", True, (255, 255, 255)),
+                                                                 (self.getTilePos(x, y, e)[0] - self.tileSize * (1.5 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+
             self.infoBox()
             pygame.display.flip()
 
@@ -181,7 +202,8 @@ class GUI:
         # caractéristiques du héros
         screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
-        screen.blit(font.render(str(self.game.hero.strength+(self.game.hero.weapon.damage if self.game.hero.weapon is not None else 0)), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
+        screen.blit(font.render(str(self.game.hero.strength + (self.game.hero.weapon.damage if self.game.hero.weapon is not None else 0)), True, (255, 255, 255)),
+                    (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.75 / 5), infoObject.current_h * (1.05 / 4)))
         screen.blit(font.render(str(self.game.hero.resistance()), True, (255, 255, 255)),
