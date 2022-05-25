@@ -48,6 +48,7 @@ class GUI:
         self.infoObject = pygame.display.Info()
         self.tileSize = min(self.infoObject.current_w, self.infoObject.current_h) / game.floor.size
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
+        self.visited = []
 
     def getTileSurface(self, e):
         from Item import Item
@@ -87,8 +88,10 @@ class GUI:
                             from Item import Item
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
-                            if distanceX <= 8 and distanceY <= 8:
+                            if distanceX <= 8 and distanceY <= 8 or e in self.visited:
                                 self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
+                                if e not in self.visited:
+                                    self.visited.append(e)
 
             self.infoBox()
             pygame.display.flip()
@@ -122,7 +125,7 @@ class GUI:
         from Potion import Potion
         from config import heal
         from config import teleport
-        from config import FireBall
+        from config import fireBall
         size = self.tileSize * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 1.9
         gap = size + size * ((self.infoObject.current_w - 20 * self.tileSize) / 1500) * 7.5
         listPotion = [Potion("potion", "!", lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
