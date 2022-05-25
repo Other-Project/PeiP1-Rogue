@@ -10,6 +10,7 @@ class Monster(Creature):
         self.range = radius
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed
+        self.hpMax = hp
 
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""

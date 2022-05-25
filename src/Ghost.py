@@ -6,6 +6,7 @@ class Ghost(Monster):
         Monster.__init__(self, name, hp, abbrv=None, image=None, strength=strength, radius=0, xpGain=xpGain, color="\033[0;31m")
         self.image = image
 
+
     def meet(self, attacker) -> bool:
         """Attacked by an enemy"""
         if not isinstance(attacker, self.enemyType):

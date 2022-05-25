@@ -66,7 +66,7 @@ class GUI:
         from Coord import Coord
 
         self.startScreen()
-
+        sizeInventory = self.infoObject.current_w - 20 * self.tileSize
         while self.game.hero.hp > 0:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -85,7 +85,15 @@ class GUI:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
                         if e.image is not None:
+                            from Monster import Monster
                             from Item import Item
+                            if isinstance(e, Monster):
+                                pygame.draw.rect(self.screen, (0, 0, 0),
+                                                 pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
+                                                             self.tileSize, self.tileSize * (0.75 / 5)))
+                                pygame.draw.rect(self.screen, (25, 172, 38),
+                                                 pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
+                                                             self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
                             distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
                             distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
                             if distanceX <= 8 and distanceY <= 8 or e in self.visited:
@@ -171,13 +179,13 @@ class GUI:
         self.drawItem(self.game.hero.amulet, 20 * tileSize + sizeInventory * (4.3 / 5), self.infoObject.current_h * (3.9 / 20))
 
         # caractéristiques du héros
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1/20), sizeInventory * (1/20))),
+        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/sword/sword1.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.3 / 5), infoObject.current_h * (1.05 / 4)))
         screen.blit(font.render(str(self.game.hero.strength), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3.4 / 5), infoObject.current_h * (1.15 / 4)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1/20), sizeInventory * (1/20))),
+        screen.blit(pygame.transform.scale(pygame.image.load("assets/hero equipment/shield/shield2.png"), (sizeInventory * (1 / 20), sizeInventory * (1 / 20))),
                     (20 * tileSize + sizeInventory * (3.75 / 5), infoObject.current_h * (1.05 / 4)))
         screen.blit(font.render(str(self.game.hero.resistance()), True, (255, 255, 255)),
-                    (20 * tileSize + sizeInventory * (3.85 / 5), infoObject.current_h * (1.15 / 4)))
+                    (20 * tileSize + sizeInventory * (3.835 / 5), infoObject.current_h * (1.15 / 4)))
 
         # barre xp
         pygame.draw.rect(screen, (0, 0, 0),
@@ -185,10 +193,10 @@ class GUI:
                                      sizeInventory * (1 / 5), sizeInventory * (0.05 / 5)))
         pygame.draw.rect(screen, (25, 172, 38),
                          pygame.Rect(20 * tileSize + sizeInventory * (3.2 / 5), infoObject.current_h * (0.15 / 4),
-                                     sizeInventory * (1 / 5) * ((self.game.hero.xp) / self.game.hero.lvlSup()), sizeInventory * (0.05 / 5)))
-        font = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
-        screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3 / 5), infoObject.current_h * (0.12 / 4)))
-        screen.blit(font.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
+                                     sizeInventory * (1 / 5) * (self.game.hero.xp / self.game.hero.lvlSup()), sizeInventory * (0.05 / 5)))
+        font3 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.02))
+        screen.blit(font3.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * tileSize + sizeInventory * (3 / 5), infoObject.current_h * (0.12 / 4)))
+        screen.blit(font3.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255)),
                     (20 * tileSize + sizeInventory * (4.25 / 5), infoObject.current_h * (0.12 / 4)))
 
         # règles du jeu
