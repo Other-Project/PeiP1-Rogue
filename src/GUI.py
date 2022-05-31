@@ -121,7 +121,7 @@ class GUI:
                     else:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
-            self.infoBox()
+            self.sidePanel()
             pygame.display.flip()
 
         self.endScreen()
@@ -158,31 +158,30 @@ class GUI:
         txt = spellsFont.render(spell.name + ": " + str(spell.price) + " mana", True, (255, 255, 255))
         self.screen.blit(txt, (x + (self.tileSize - txt.get_width()) / 2, y + self.tileSize + 5))
 
-    def infoBox(self, debug=False):
-        inventoryX = self.game.floor.size * self.tileSize + 20
-        inventoryY = 20
-        sizeInventory = self.screen.get_width() - inventoryX - 20  # Window's size - Position of the panel - Margin right of the panel
-        inventoryH = self.screen.get_height() - inventoryY - 20
-        pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(inventoryX, inventoryY, sizeInventory, inventoryH))  # Draw the panel
+    def sidePanel(self, debug=False):
+        boxX = self.game.floor.size * self.tileSize + 20
+        boxY = 20
+        boxW = self.screen.get_width() - boxX - 20  # Window's size - Position of the panel - Margin right of the panel
+        boxH = self.screen.get_height() - boxY - 20
+        pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(boxX, boxY, boxW, boxH))  # Draw the panel
 
-        font = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.03))
+        font = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
         screen = self.screen
         tileSize = self.tileSize
         infoObject = self.infoObject
 
-        statsX, statsY = inventoryX + 20, inventoryY + 20
-        statsW, statsH = sizeInventory / 2, self.tileSize * 4 + 20 * 3
+        statsX, statsY = boxX + 20, boxY + 20
+        equipmentW, equipmentH = max(self.tileSize * 2 + 40 + 100, boxW / 2 - 30), self.tileSize * 4 + 20 * 3
+        statsW, statsH = boxX + boxW - statsX - equipmentW - 40, equipmentH
         equipmentX, equipmentY = statsX + statsW + 20, statsY
-        equipmentW, equipmentH = inventoryX + sizeInventory - equipmentX - 20, statsH
-
-        if debug: # debug rects
+        if debug:  # debug rects
             pygame.draw.rect(self.screen, (20, 80, 20), pygame.Rect(statsX, statsY, statsW, statsH))
             pygame.draw.rect(self.screen, (20, 20, 80), pygame.Rect(equipmentX, equipmentY, equipmentW, equipmentH))
 
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH)
 
         # Stats: bars of hp, satiety, etc
-        x = 20 * tileSize + sizeInventory * (0.25 / 5)
+        x = 20 * tileSize + boxW * (0.25 / 5)
         y = infoObject.current_h / 20
         self.drawBarImage(x, y, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
         self.drawBarImage(x, y + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10)
@@ -191,9 +190,9 @@ class GUI:
         # Spells
         from config import potions
         spellsX, spellsY = statsX, statsY + statsH + 40
-        spellsW, spellsH = sizeInventory - 40, self.tileSize + 25
+        spellsW, spellsH = boxW - 40, self.tileSize + 25
         if debug:  # debug rects
-            pygame.draw.rect(self.screen, (80, 20, 20), pygame.Rect(spellsX, spellsY, spellsW, spellsH)) # debug rect
+            pygame.draw.rect(self.screen, (80, 20, 20), pygame.Rect(spellsX, spellsY, spellsW, spellsH))  # debug rect
         self.drawBar(spellsX, spellsY, len(potions), self.drawPotion, spellsW, spellsH, nbCol=len(potions), sizeImage=self.tileSize)
 
         # Inventory
@@ -211,32 +210,32 @@ class GUI:
                      inventoryW, inventoryH, nbCol=inventoryColumns, sizeImage=self.tileSize)
 
         # Messages
-        font2 = pygame.font.SysFont('comicsansms', int(sizeInventory * 0.03))
+        font2 = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
         pygame.draw.rect(screen, (55, 55, 55),
-                         pygame.Rect(20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, sizeInventory * (4.5 / 5),
+                         pygame.Rect(20 * tileSize + boxW * (0.25 / 5), self.infoObject.current_h / 2 + 80, boxW * (4.5 / 5),
                                      self.tileSize * 2))
         self.screen.blit(font2.render(str(printMsg(self.game)), True, (255, 255, 255)),
-                         (20 * tileSize + sizeInventory * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
+                         (20 * tileSize + boxW * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
 
         # Controls
-        screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
+        screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (7.4 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (7.4 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterQ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1.25 / 5) - tileSize * 0.75, infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5) - tileSize * 0.75, infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.71)),
-                    (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterD.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1.5 / 5) + tileSize * 0.09, infoObject.current_h * (7.7 / 10)))
-        screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (9.3 / 10)))
+                    (20 * tileSize + boxW * (1.5 / 5) + tileSize * 0.09, infoObject.current_h * (7.7 / 10)))
+        screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/spaceBar .png"), (tileSize * 2.7, tileSize * 0.9)),
-                    (20 * tileSize + sizeInventory * (3.7 / 5), infoObject.current_h * (9.2 / 10)))
-        screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (8.8 / 10)))
-        screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (9.3 / 10)))
+                    (20 * tileSize + boxW * (3.7 / 5), infoObject.current_h * (9.2 / 10)))
+        screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (8.8 / 10)))
+        screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterK.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + sizeInventory * (1.25 / 5), infoObject.current_h * (9.25 / 10)))
-        screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (2.7 / 5), infoObject.current_h * (8.3 / 10)))
-        screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + sizeInventory * (0.5 / 5), infoObject.current_h * (8.5 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (9.25 / 10)))
+        screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (8.3 / 10)))
+        screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (8.5 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterR.png"), (tileSize * 0.7, tileSize * 0.7)),
                     (infoObject.current_w * (3.75 / 5), infoObject.current_h * (8.5 / 10)))
 
