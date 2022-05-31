@@ -1,4 +1,5 @@
 import pygame
+import math
 
 
 class Button:
@@ -199,7 +200,7 @@ class GUI:
         inventoryX, inventoryY = spellsX, spellsY + spellsH + 40
         inventoryW = spellsW
         inventoryColumns = int(inventoryW / (self.tileSize + 20))
-        inventoryLines = int(self.game.hero.inventorySize / inventoryColumns) + 1
+        inventoryLines = math.ceil(self.game.hero.inventorySize / inventoryColumns)
         inventoryH = self.tileSize * inventoryLines + 20 * (inventoryLines - 1)
         if debug:  # debug rects
             pygame.draw.rect(self.screen, (80, 80, 20), pygame.Rect(inventoryX, inventoryY, inventoryW, inventoryH))
@@ -290,7 +291,7 @@ class GUI:
 
     def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
         gapX = width / nbCol
-        gapY = gapX if height is None else height / (int(valueMax / nbCol) + 1)
+        gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
         size = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
         x += abs(gapX - size) / 2  # Center the bar
         for nbr in range(valueMax):
