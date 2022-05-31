@@ -91,26 +91,22 @@ class GUI:
             self.screen.fill((75, 75, 75))
             font4 = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
             a, b = pygame.mouse.get_pos()
+            posHero = self.game.floor.pos(self.game.hero)
             for y in range(len(self.game.floor)):
                 for x in range(len(self.game.floor)):
                     e = self.game.floor.get(Coord(x, y))
-                    if e is None:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-                    else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                    if posHero.distance(Coord(x, y)) <= 7 or Coord(x, y) in self.visited:
+                        if Coord(x, y) not in self.visited:
+                            self.visited.append(Coord(x, y))
+                        if e is None:
+                            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                        else:
+                            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
-                        if e.image is not None:
-                            from Monster import Monster
-                            from Item import Item
-                            from Weapon import Weapon
-                            from Amulet import Amulet
-
-                            distanceX = abs(self.game.floor.pos(self.game.hero).x - self.game.floor.pos(e).x)
-                            distanceY = abs(self.game.floor.pos(self.game.hero).y - self.game.floor.pos(e).y)
-                            if distanceX <= 8 and distanceY <= 8 or e in self.visited:
+                            if e.image is not None:
+                                from Monster import Monster
+                                from Item import Item
                                 self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
-                                if e not in self.visited:
-                                    self.visited.append(e)
                                 if isinstance(e, Monster):
                                     if e.visibility:
                                         pygame.draw.rect(self.screen, (0, 0, 0),
@@ -123,8 +119,9 @@ class GUI:
                                     if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
                                             pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                                         self.screen.blit(font4.render(e.description(), True, (255, 255, 255)),
-                                                             (self.getTilePos(x, y, e)[0]-self.tileSize*(3/5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
-
+                                                         (self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+                    else:
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
             self.infoBox()
             pygame.display.flip()
 
