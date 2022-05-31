@@ -112,3 +112,12 @@ class Hero(Creature):
 
     def strengthTot(self):
         return self.strength + (self.weapon.damage if self.weapon is not None else 0)
+
+    def equippedArmor(self):
+        """returns equipped armor"""
+        potentialArmor = [self.chestplate, self.shield, self.boots, self.legs, self.helmet]
+        equippedArmor = []
+        for armor in potentialArmor:
+            if armor is not None:
+                equippedArmor.append(armor)
+        return equippedArmor
