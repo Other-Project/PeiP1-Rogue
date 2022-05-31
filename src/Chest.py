@@ -13,6 +13,8 @@ class Chest(Element):
         else:
             self.contain = contain
 
+    def open(self):
+        return ".\n".join(self.contain)
 
 
 
