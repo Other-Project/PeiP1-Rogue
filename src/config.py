@@ -1,4 +1,3 @@
-import utils
 from Item import Item
 from Monster import Monster
 from Weapon import Weapon
@@ -7,6 +6,7 @@ from Amulet import Amulet
 from Armor import Armor
 from Hero import Hero
 from utils import theGame
+from Potion import Potion
 
 
 ##################
@@ -32,30 +32,32 @@ def manaPotion(hero, manaGain=1):
         return False
 
 
-def teleport(creature, unique = False):
+def teleport(creature):
     floor = theGame().floor
     newC = floor.randEmptyCoord()
     c = floor.pos(creature)
     floor.rm(c)
     floor.put(newC, creature)
-    return unique
+    return False
 
-"""""
-def fireBall(creature: Hero):
-    for m in utils.theGame().floor.getAllCreaturesInRadius(creature, 6, creature.enemyType):
-        if m.meet(creature):
-            theGame().floor.rm(theGame().floor.pos(m))
-"""""
+
 def fireBall(creature: Hero):
     import copy
-    for monsters in copy.copy(theGame().floor._elem):
-        if isinstance(monsters, Monster) and theGame().floor.pos(monsters).distance(theGame().floor.pos(creature)) <= 3:
-            theGame().floor.rm(theGame().floor.pos(monsters))
+    for monster in copy.copy(theGame().floor._elem):
+        if isinstance(monster, Monster) and theGame().floor.pos(monster).distance(theGame().floor.pos(creature)) <= 3:
+            theGame().floor.rm(theGame().floor.pos(monster))
 
 
 ##################
 #     Config     #
 ##################
+
+potions = [
+    Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
+    Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potion/potionTeleportation.png", price=5),
+    # Potion("portoloin", usage=lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
+    Potion("range attack", usage=lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)
+]
 
 equipments = {
     0: [
@@ -79,19 +81,19 @@ equipments = {
         Armor("boots", resistance=2, armorType="boots", image="assets/hero equipment/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/hero equipment/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("Amulet of strength", image="assets/hero equipment/amulet/strength.png", effectType="strength"),
+        Amulet("amulet of strength", image="assets/hero equipment/amulet/strength.png", effectType="strength"),
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
         Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("Amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
+        Amulet("amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
         Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png")
     ]
 }
 
 monsters = {
     0: [
-        Monster("Archer", 1, radius=4, image="assets/monsters/archer.png"),
+        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
         Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 5, xpGain=3)
