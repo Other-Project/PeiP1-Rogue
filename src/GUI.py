@@ -62,7 +62,6 @@ class GUI:
         self.infoObject = pygame.display.Info()
         self.tileSize = min(self.infoObject.current_w, self.infoObject.current_h) / game.floor.size
         self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
-        self.visited = []
 
     def getTileSurface(self, e):
         from Item import Item
@@ -95,9 +94,9 @@ class GUI:
             for y in range(len(self.game.floor)):
                 for x in range(len(self.game.floor)):
                     e = self.game.floor.get(Coord(x, y))
-                    if posHero.distance(Coord(x, y)) <= 7 or Coord(x, y) in self.visited:
-                        if Coord(x, y) not in self.visited:
-                            self.visited.append(Coord(x, y))
+                    if posHero.distance(Coord(x, y)) <= 6 or Coord(x, y) in self.game.floor.visited:
+                        if Coord(x, y) not in self.game.floor.visited:
+                            self.game.floor.visited.append(Coord(x, y))
                         if e is None:
                             self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                         else:
@@ -122,6 +121,7 @@ class GUI:
                                                          (self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
                     else:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+
             self.infoBox()
             pygame.display.flip()
 

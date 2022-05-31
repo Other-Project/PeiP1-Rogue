@@ -21,6 +21,7 @@ class Map:
         self.hero = hero or Hero()
         self._elem = {}
         self.put(self.position, self.hero)
+        self.visited=[]
         for room in self._rooms:
             room.decorate(self)
         self.reposEffectue = False
