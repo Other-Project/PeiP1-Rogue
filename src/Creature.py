@@ -51,4 +51,5 @@ class Creature(Element):
             if self.weapon is not None:
                 self.weapon.solidity -= 1
                 if self.weapon.solidity <= 0:
+                    # noinspection PyAttributeOutsideInit
                     self.weapon = None
