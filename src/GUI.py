@@ -60,9 +60,14 @@ class GUI:
     def __init__(self, game: Game):
         self.game = game
         pygame.init()
-        self.infoObject = pygame.display.Info()
-        self.tileSize = min(self.infoObject.current_w, self.infoObject.current_h) / game.floor.size
-        self.screen = pygame.display.set_mode((self.infoObject.current_w, self.infoObject.current_h))
+        self.updateScreenSize(900, 500)
+
+    # noinspection PyAttributeOutsideInit
+    def updateScreenSize(self, w, h):
+        w, h = max(900, w), max(500, h)
+        self.screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
+        self.w, self.h = w, h
+        self.tileSize = min(self.w, self.h) / self.game.floor.size
 
     def getTileSurface(self, e):
         from Item import Item
@@ -86,6 +91,8 @@ class GUI:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.game.newTurn(event.key)
+                if event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
 
             self.screen.fill((75, 75, 75))
             font4 = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
@@ -128,18 +135,22 @@ class GUI:
         self.endScreen()
 
     def startScreen(self):
-        self.screen.fill((255, 255, 255))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/back.png"), (self.infoObject.current_w, self.infoObject.current_h)), (0, 0))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (self.infoObject.current_w / 2, self.infoObject.current_h)),
-                         (self.infoObject.current_w * (1 / 4), 0))
-        start_button = Button((self.infoObject.current_w / 2) - 348 / 2, (self.infoObject.current_h * (4 / 5)), pygame.image.load("assets/other/startButton.png"), 348, 149)
-        while not start_button.clicked:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     import sys
                     sys.exit()
+                if event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
+            self.screen.fill((255, 255, 255))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/back.png"), (self.w, self.h)), (0, 0))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (self.w / 2, self.h)),
+                             (self.w * (1 / 4), 0))
+            start_button = Button((self.w / 2) - 348 / 2, (self.h * (4 / 5)), pygame.image.load("assets/other/startButton.png"), 348, 149)
             start_button.draw(self.screen)
             pygame.display.flip()
+            if start_button.clicked:
+                break
 
     def drawItem(self, elem, x, y, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None):
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, self.tileSize, self.tileSize))
@@ -169,7 +180,6 @@ class GUI:
         font = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
         screen = self.screen
         tileSize = self.tileSize
-        infoObject = self.infoObject
 
         statsX, statsY = boxX + 20, boxY + 20
         equipmentW, equipmentH = max(self.tileSize * 2 + 40 + 100, boxW / 2 - 30), self.tileSize * 4 + 20 * 3
@@ -183,7 +193,7 @@ class GUI:
 
         # Stats: bars of hp, satiety, etc
         x = 20 * tileSize + boxW * (0.25 / 5)
-        y = infoObject.current_h / 20
+        y = self.h / 20
         self.drawBarImage(x, y, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
         self.drawBarImage(x, y + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10)
         self.drawBarImage(x, y + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10)
@@ -211,34 +221,35 @@ class GUI:
                      inventoryW, inventoryH, nbCol=inventoryColumns, sizeImage=self.tileSize)
 
         # Messages
-        font2 = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
-        pygame.draw.rect(screen, (55, 55, 55),
-                         pygame.Rect(20 * tileSize + boxW * (0.25 / 5), self.infoObject.current_h / 2 + 80, boxW * (4.5 / 5),
-                                     self.tileSize * 2))
-        self.screen.blit(font2.render(str(printMsg(self.game)), True, (255, 255, 255)),
-                         (20 * tileSize + boxW * (0.25 / 5), self.infoObject.current_h / 2 + 80, self.tileSize * 13, self.tileSize * 2 + 5))
+        messagesX, messagesY = inventoryX, inventoryY + inventoryH + 40
+        messagesW, messagesH = inventoryW, 100
+        messagesFont = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
+        pygame.draw.rect(screen, (55, 55, 55), pygame.Rect(messagesX, messagesY, messagesW, messagesH))
+        self.screen.blit(messagesFont.render(str(printMsg(self.game)), True, (255, 255, 255)), (messagesX, messagesY, messagesW, messagesH))
 
         # Controls
-        screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (7.7 / 10)))
+        controlsX, controlsY = messagesX, messagesY + messagesH + 40
+        controlsW, controlsH = messagesW, 200
+        screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (7.4 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), self.h * (7.4 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterQ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5) - tileSize * 0.75, infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5) - tileSize * 0.75, self.h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.71)),
-                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (7.7 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), self.h * (7.7 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterD.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.5 / 5) + tileSize * 0.09, infoObject.current_h * (7.7 / 10)))
-        screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (9.3 / 10)))
+                    (20 * tileSize + boxW * (1.5 / 5) + tileSize * 0.09, self.h * (7.7 / 10)))
+        screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/spaceBar .png"), (tileSize * 2.7, tileSize * 0.9)),
-                    (20 * tileSize + boxW * (3.7 / 5), infoObject.current_h * (9.2 / 10)))
-        screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (8.8 / 10)))
-        screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (9.3 / 10)))
+                    (20 * tileSize + boxW * (3.7 / 5), self.h * (9.2 / 10)))
+        screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (8.8 / 10)))
+        screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (9.3 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterK.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5), infoObject.current_h * (9.25 / 10)))
-        screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), infoObject.current_h * (8.3 / 10)))
-        screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), infoObject.current_h * (8.5 / 10)))
+                    (20 * tileSize + boxW * (1.25 / 5), self.h * (9.25 / 10)))
+        screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (8.3 / 10)))
+        screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (8.5 / 10)))
         screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterR.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (infoObject.current_w * (3.75 / 5), infoObject.current_h * (8.5 / 10)))
+                    (self.w * (3.75 / 5), self.h * (8.5 / 10)))
 
     def drawEquipment(self, x, y, w, h):
         equipmentTileGap = 15
@@ -286,7 +297,7 @@ class GUI:
 
     def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
         self.drawBar(x, y, valueMax,
-                     lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (w, h)), (_x, _y)),
+                     lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (max(w, 0), max(h, 0))), (_x, _y)),
                      width, height, nbCol, padding, sizeImage)
 
     def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
@@ -303,13 +314,15 @@ class GUI:
                 if event.type == pygame.QUIT:
                     import sys
                     sys.exit()
-            buttonsY = self.infoObject.current_h / 1.3
-            close_button = Button(20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.7 / 5), buttonsY, pygame.image.load("assets/other/exitButton.png"),
-                                  (self.infoObject.current_w - 20 * self.tileSize) * (1.5 / 5), self.infoObject.current_h * (1 / 10))
-            replay_button = Button(20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (2.8 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"),
-                                   (self.infoObject.current_w - 20 * self.tileSize) * (1.5 / 5), self.infoObject.current_h * (1 / 10))
-            font = pygame.font.SysFont('comicsansms', int((self.infoObject.current_w - 20 * self.tileSize) * 0.05))
-            font1 = pygame.font.SysFont('comicsansms', int((self.infoObject.current_w - 20 * self.tileSize) * 0.07))
+                if event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
+            buttonsY = self.h / 1.3
+            close_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.7 / 5), buttonsY, pygame.image.load("assets/other/exitButton.png"),
+                                  (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
+            replay_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (2.8 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"),
+                                   (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
+            font = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.05))
+            font1 = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.07))
             posHero = self.game.floor.pos(self.game.hero)
             self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(self.game.hero)),
                              self.getTilePos(posHero.x, posHero.y, self.game.hero))
@@ -317,19 +330,18 @@ class GUI:
                              self.getTilePos(posHero.x, posHero.y, self.game.hero))
             self.game.hero.image = "assets/other/graveHero.png"
             pygame.draw.rect(self.screen, (0, 0, 0),
-                             pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.infoObject.current_w - self.tileSize * self.game.floor.size - 40,
-                                         self.infoObject.current_h - 40))
+                             pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.w - self.tileSize * self.game.floor.size - 40, self.h - 40))
             self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/gameOver.png"),
-                                                    (self.infoObject.current_w - self.tileSize * self.game.floor.size - 40, self.infoObject.current_h * (1 / 3))),
+                                                    (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
                              (self.tileSize * self.game.floor.size + 20, 20))
             self.screen.blit(font1.render("SCORE:", True, (255, 255, 255)),
-                             (20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.5 / 5), self.infoObject.current_h * (0.9 / 3)))
+                             (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
             self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (255, 255, 255)),
-                             (20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.5 / 5), self.infoObject.current_h * (1.3 / 3)))
+                             (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
             self.screen.blit(font.render("rooms visited: " + str(self.game.level), True, (255, 255, 255)),
-                             (20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.5 / 5), self.infoObject.current_h * (1.6 / 3)))
+                             (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.6 / 3)))
             self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (255, 255, 255)),
-                             (20 * self.tileSize + (self.infoObject.current_w - 20 * self.tileSize) * (0.5 / 5), self.infoObject.current_h * (1.9 / 3)))
+                             (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
             close_button.draw(self.screen)
             replay_button.draw(self.screen)
             pygame.display.flip()
