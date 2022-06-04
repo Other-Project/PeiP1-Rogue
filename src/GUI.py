@@ -67,7 +67,7 @@ class GUI:
         w, h = max(900, w), max(500, h)
         self.screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
         self.w, self.h = w, h
-        self.tileSize = min(self.w, self.h) / self.game.floor.size
+        self.tileSize = min(self.w * 0.7, self.w - 400, self.h) / self.game.floor.size
 
     def getTileSurface(self, e):
         from Item import Item
@@ -209,7 +209,7 @@ class GUI:
         # Inventory
         inventoryX, inventoryY = spellsX, spellsY + spellsH + 40
         inventoryW = spellsW
-        inventoryColumns = int(inventoryW / (self.tileSize + 20))
+        inventoryColumns = max(int(inventoryW / (self.tileSize + 20)), 1)
         inventoryLines = math.ceil(self.game.hero.inventorySize / inventoryColumns)
         inventoryH = self.tileSize * inventoryLines + 20 * (inventoryLines - 1)
         if debug:  # debug rects
