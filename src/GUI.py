@@ -176,7 +176,6 @@ class GUI:
         boxH = self.screen.get_height() - boxY - 20
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(boxX, boxY, boxW, boxH))  # Draw the panel
 
-        font = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
         screen = self.screen
         tileSize = self.tileSize
 
@@ -199,14 +198,14 @@ class GUI:
 
         # Spells
         from config import potions
-        spellsX, spellsY = statsX, statsY + statsH + 40
+        spellsX, spellsY = statsX, statsY + statsH + 20
         spellsW, spellsH = boxW - 40, self.tileSize + 25
         if debug:  # debug rects
             pygame.draw.rect(self.screen, (80, 20, 20), pygame.Rect(spellsX, spellsY, spellsW, spellsH))  # debug rect
         self.drawBar(spellsX, spellsY, len(potions), self.drawPotion, spellsW, spellsH, nbCol=len(potions), sizeImage=self.tileSize)
 
         # Inventory
-        inventoryX, inventoryY = spellsX, spellsY + spellsH + 40
+        inventoryX, inventoryY = spellsX, spellsY + spellsH + 20
         inventoryW = spellsW
         inventoryColumns = max(int(inventoryW / (self.tileSize + 20)), 1)
         inventoryLines = math.ceil(self.game.hero.inventorySize / inventoryColumns)
@@ -219,6 +218,19 @@ class GUI:
                                                          rightAction=lambda elem, hero: hero.inventory.remove(elem)),
                      inventoryW, inventoryH, nbCol=inventoryColumns, sizeImage=self.tileSize)
 
+        # Controls
+        controlsW, controlsH = inventoryW, min(150, boxH * 0.15)
+        controlsX, controlsY = inventoryX, boxY + boxH + - controlsH - 20
+        controls = [
+            ("move", "assets/other/zqsd.png", 1.25),
+            ("destroy", "assets/other/mouseRight.png", 0.7),
+            ("heal", "assets/other/letterR.png", 0.7),
+            ("use", "assets/other/mouseLeft.png", 0.7),
+            ("suicide", "assets/other/letterK.png", 0.7),
+            ("skip", "assets/other/spaceBar.png", 0.7)
+        ]
+        self.drawBar(controlsX, controlsY, len(controls), lambda x, y, w, h, i: self.drawControl(x, y, w, h, controls[i][0], controls[i][1], controls[i][2]), controlsW, controlsH, nbCol=2)
+
         # Messages
         messagesX, messagesY = inventoryX, inventoryY + inventoryH + 20
         messagesW, messagesH = inventoryW, controlsY - messagesY - 20
@@ -228,29 +240,13 @@ class GUI:
         for msgI in range(len(msgs)):
             self.screen.blit(messagesFont.render(msgs[msgI], True, (255, 255, 255)), (messagesX, messagesY + messagesFont.get_linesize() * msgI, messagesW, messagesFont.get_linesize()))
 
-        # Controls
-        controlsX, controlsY = messagesX, messagesY + messagesH + 40
-        controlsW, controlsH = messagesW, 200
-        screen.blit(font.render("move:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (7.7 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterZ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5), self.h * (7.4 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterQ.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5) - tileSize * 0.75, self.h * (7.7 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterS.png"), (tileSize * 0.7, tileSize * 0.71)),
-                    (20 * tileSize + boxW * (1.25 / 5), self.h * (7.7 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterD.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.5 / 5) + tileSize * 0.09, self.h * (7.7 / 10)))
-        screen.blit(font.render("skip one turn:", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (9.3 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/spaceBar .png"), (tileSize * 2.7, tileSize * 0.9)),
-                    (20 * tileSize + boxW * (3.7 / 5), self.h * (9.2 / 10)))
-        screen.blit(font.render("destroy an object: right click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (8.8 / 10)))
-        screen.blit(font.render("suicide:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (9.3 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterK.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (20 * tileSize + boxW * (1.25 / 5), self.h * (9.25 / 10)))
-        screen.blit(font.render("use an object: left click", True, (255, 255, 255)), (20 * tileSize + boxW * (2.7 / 5), self.h * (8.3 / 10)))
-        screen.blit(font.render("get 5 hp for 10 turns:", True, (255, 255, 255)), (20 * tileSize + boxW * (0.5 / 5), self.h * (8.5 / 10)))
-        screen.blit(pygame.transform.scale(pygame.image.load("assets/other/letterR.png"), (tileSize * 0.7, tileSize * 0.7)),
-                    (self.w * (3.75 / 5), self.h * (8.5 / 10)))
+    def drawControl(self, x: int, y: int, w: int, h: int, text: str, image: str, scale: float):
+        font = pygame.font.SysFont('comicsansms', 14)
+        imgSize = h * 2
+        txt = font.render(text, True, (255, 255, 255))
+        x += (w - imgSize - txt.get_width()) / 2
+        drawImage(self.screen, image, x, y - h * (scale - 1) / 2, imgSize, h * scale)
+        self.screen.blit(txt, (x + imgSize + 20, y + (h - txt.get_height()) / 2))
 
     def drawEquipment(self, x, y, w, h):
         equipmentTileGap = 15
