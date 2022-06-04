@@ -60,13 +60,12 @@ class GUI:
     def __init__(self, game: Game):
         self.game = game
         pygame.init()
-        self.updateScreenSize(900, 500)
+        self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
-    def updateScreenSize(self, w, h):
-        w, h = max(900, w), max(500, h)
-        self.screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
-        self.w, self.h = w, h
+    def updateScreenSize(self, w=0, h=0):
+        self.w, self.h = max(1200, w), max(700, h)
+        self.screen = pygame.display.set_mode((self.w, self.h), pygame.RESIZABLE)
         self.tileSize = min(self.w * 0.7, self.w - 400, self.h) / self.game.floor.size
 
     def getTileSurface(self, e):
@@ -221,11 +220,13 @@ class GUI:
                      inventoryW, inventoryH, nbCol=inventoryColumns, sizeImage=self.tileSize)
 
         # Messages
-        messagesX, messagesY = inventoryX, inventoryY + inventoryH + 40
-        messagesW, messagesH = inventoryW, 100
-        messagesFont = pygame.font.SysFont('comicsansms', int(boxW * 0.03))
+        messagesX, messagesY = inventoryX, inventoryY + inventoryH + 20
+        messagesW, messagesH = inventoryW, controlsY - messagesY - 20
+        messagesFont = pygame.font.SysFont('comicsansms', int(max(messagesH / 15, 12)))
         pygame.draw.rect(screen, (55, 55, 55), pygame.Rect(messagesX, messagesY, messagesW, messagesH))
-        self.screen.blit(messagesFont.render(str(printMsg(self.game)), True, (255, 255, 255)), (messagesX, messagesY, messagesW, messagesH))
+        msgs = self.game.readMessages(int(messagesH / messagesFont.get_linesize()))
+        for msgI in range(len(msgs)):
+            self.screen.blit(messagesFont.render(msgs[msgI], True, (255, 255, 255)), (messagesX, messagesY + messagesFont.get_linesize() * msgI, messagesW, messagesFont.get_linesize()))
 
         # Controls
         controlsX, controlsY = messagesX, messagesY + messagesH + 40
@@ -303,10 +304,11 @@ class GUI:
     def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
         gapX = width / nbCol
         gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
-        size = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
-        x += abs(gapX - size) / 2  # Center the bar
+        sizeW = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
+        sizeH = gapY - padding if sizeImage is None else min(sizeImage, gapY - padding)
+        x += abs(gapX - sizeW) / 2  # Center the bar
         for nbr in range(valueMax):
-            drawFct(x + (nbr - int(nbr / nbCol) * nbCol) * gapX, y + int(nbr / nbCol) * gapY, size, size, nbr)
+            drawFct(x + (nbr - int(nbr / nbCol) * nbCol) * gapX, y + int(nbr / nbCol) * gapY, sizeW, sizeH, nbr)
 
     def endScreen(self):
         while True:

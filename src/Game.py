@@ -1,5 +1,6 @@
 import copy
 import random
+
 import pygame
 
 from Coord import Coord
@@ -36,7 +37,6 @@ class Game(object):
         """Generates a new floor"""
         from Map import Map
         from Stairs import Stairs
-        from Chest import Chest
         self.floor = Map(hero=self.hero)
         self.floor.put(self.floor.getRoom(-1).center(), Stairs())
         self.putChest()
@@ -53,11 +53,12 @@ class Game(object):
         """Adds a message to be print at the end of the turn"""
         self._message.append(msg)
 
-    def readMessages(self):
-        """Prints all the messages"""
-        text = ".\n".join(self._message) + "." if len(self._message) > 0 else ""
-        self._message.clear()
-        return text
+    def readMessages(self, nbr=-1):
+        """Gets `nbr` latest messages"""
+        msgs = []
+        for i in range(min(nbr, len(self._message))):
+            msgs.append(self._message[(i + 1) * -1])
+        return msgs
 
     def randElement(self, collection: {int: [Element]}) -> Element:
         """
@@ -86,20 +87,6 @@ class Game(object):
         import config
         return self.randElement(config.monsters)
 
-    def select(self, items):
-        # TODO: Fix this
-        if len(items) <= 0:
-            return None
-        print("Choose item>", [str(i) + ": " + items[i].name for i in range(len(items))])
-        entered = "0"  # No longer working
-        if not entered.isdigit():
-            return None
-
-        n = int(entered)
-        if 0 <= n < len(items):
-            return items[n]
-        return None
-
     def play(self):
         """Main game loop"""
         import os
@@ -111,6 +98,7 @@ class Game(object):
 
     def newTurn(self, c):
         if c in Game._actions:
+            self._message.clear()
             Game._actions[c](self.hero)
             if self.hero.satiety > 0:
                 self.hero.satiety -= 0.05

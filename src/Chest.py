@@ -1,8 +1,5 @@
 import utils
 from Element import Element
-from utils import theGame
-from Weapon import Weapon
-from Equipment import Equipment
 
 
 class Chest(Element):
