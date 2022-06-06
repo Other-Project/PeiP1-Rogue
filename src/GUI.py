@@ -114,9 +114,8 @@ class GUI:
                                 if isinstance(e, Monster):
                                     if e.visibility:
                                         pygame.draw.rect(self.screen, (0, 0, 0),
-                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
-                                                                     self.tileSize, self.tileSize * (0.75 / 5)))
-                                        pygame.draw.rect(self.screen, (25, 172, 38),
+                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * 0.2, self.tileSize, self.tileSize * 0.2))
+                                        pygame.draw.rect(self.screen, self.getHpColor(e.hp, e.hpMax),
                                                          pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
                                                                      self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
                                 if isinstance(e, Item):
@@ -129,6 +128,15 @@ class GUI:
             pygame.display.flip()
 
         self.endScreen()
+
+    @staticmethod
+    def getHpColor(hp, hpMax):
+        relativeHp = hp / hpMax
+        if relativeHp > 0.67:  # 2/3 of life remaining
+            return 25, 172, 38
+        elif relativeHp > 0.34:  # 1/3 of life remaining
+            return 255, 216, 0
+        return 255, 0, 0
 
     def startScreen(self):
         while True:
