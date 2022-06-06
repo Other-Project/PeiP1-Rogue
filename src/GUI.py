@@ -151,10 +151,11 @@ class GUI:
             if start_button.clicked:
                 break
 
-    def drawItem(self, elem, x, y, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None):
-        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, self.tileSize, self.tileSize))
+    def drawItem(self, elem, x, y, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None, size=None):
+        size = size or self.tileSize
+        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
         if elem is not None:
-            elemButton = Button(x + self.tileSize * 0.125, y + self.tileSize * 0.125, pygame.image.load(elem.image), self.tileSize * 0.75, self.tileSize * 0.75)
+            elemButton = Button(x + size * 0.125, y + size * 0.125, pygame.image.load(elem.image), size * 0.75, size * 0.75)
             elemButton.draw(self.screen)
             if elemButton.clicked:
                 action(elem, self.game.hero)
@@ -170,14 +171,9 @@ class GUI:
         self.screen.blit(txt, (x + (self.tileSize - txt.get_width()) / 2, y + self.tileSize + 5))
 
     def sidePanel(self, debug=False):
-        boxX = self.game.floor.size * self.tileSize + 20
-        boxY = 20
-        boxW = self.screen.get_width() - boxX - 20  # Window's size - Position of the panel - Margin right of the panel
-        boxH = self.screen.get_height() - boxY - 20
+        boxX, boxY = self.game.floor.size * self.tileSize + 20, 20
+        boxW, boxH = self.screen.get_width() - boxX - 20, self.screen.get_height() - boxY - 20  # Window's size - Position of the panel - Margin right/bottom of the panel
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(boxX, boxY, boxW, boxH))  # Draw the panel
-
-        screen = self.screen
-        tileSize = self.tileSize
 
         statsX, statsY = boxX + 20, boxY + 20
         equipmentW, equipmentH = max(self.tileSize * 2 + 40 + 100, boxW / 2 - 30), self.tileSize * 4 + 20 * 3
@@ -190,11 +186,9 @@ class GUI:
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH)
 
         # Stats: bars of hp, satiety, etc
-        x = 20 * tileSize + boxW * (0.25 / 5)
-        y = self.h / 20
-        self.drawBarImage(x, y, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(x, y + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10)
-        self.drawBarImage(x, y + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10)
+        self.drawBarImage(statsX, statsY, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
+        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10)
+        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10)
 
         # Spells
         from config import potions
@@ -207,13 +201,13 @@ class GUI:
         # Inventory
         inventoryX, inventoryY = spellsX, spellsY + spellsH + 20
         inventoryW = spellsW
-        inventoryColumns = max(int(inventoryW / (self.tileSize + 20)), 1)
+        inventoryColumns = max(min(int(inventoryW / (self.tileSize + 20)), 10), 1)
         inventoryLines = math.ceil(self.game.hero.inventorySize / inventoryColumns)
         inventoryH = self.tileSize * inventoryLines + 20 * (inventoryLines - 1)
         if debug:  # debug rects
             pygame.draw.rect(self.screen, (80, 80, 20), pygame.Rect(inventoryX, inventoryY, inventoryW, inventoryH))
         self.drawBar(inventoryX, inventoryY, self.game.hero.inventorySize,
-                     lambda x, y, w, h, i: self.drawItem(self.game.hero.inventory[i] if i < len(self.game.hero.inventory) else None, x, y,
+                     lambda x, y, w, h, i: self.drawItem(self.game.hero.inventory[i] if i < len(self.game.hero.inventory) else None, x, y, size=min(w, h),
                                                          action=lambda elem, hero: hero.use(elem),
                                                          rightAction=lambda elem, hero: hero.inventory.remove(elem)),
                      inventoryW, inventoryH, nbCol=inventoryColumns, sizeImage=self.tileSize)
@@ -229,13 +223,15 @@ class GUI:
             ("suicide", "assets/other/letterK.png", 0.7),
             ("skip", "assets/other/spaceBar.png", 0.7)
         ]
+        if debug:  # debug rects
+            pygame.draw.rect(self.screen, (20, 80, 80), pygame.Rect(controlsX, controlsY, controlsW, controlsH))
         self.drawBar(controlsX, controlsY, len(controls), lambda x, y, w, h, i: self.drawControl(x, y, w, h, controls[i][0], controls[i][1], controls[i][2]), controlsW, controlsH, nbCol=2)
 
         # Messages
         messagesX, messagesY = inventoryX, inventoryY + inventoryH + 20
         messagesW, messagesH = inventoryW, controlsY - messagesY - 20
         messagesFont = pygame.font.SysFont('comicsansms', int(max(messagesH / 15, 12)))
-        pygame.draw.rect(screen, (55, 55, 55), pygame.Rect(messagesX, messagesY, messagesW, messagesH))
+        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(messagesX, messagesY, messagesW, messagesH))
         msgs = self.game.readMessages(int(messagesH / messagesFont.get_linesize()))
         for msgI in range(len(msgs)):
             self.screen.blit(messagesFont.render(msgs[msgI], True, (255, 255, 255)), (messagesX, messagesY + messagesFont.get_linesize() * msgI, messagesW, messagesFont.get_linesize()))
