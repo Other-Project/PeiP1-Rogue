@@ -2,6 +2,7 @@ import copy
 import random
 
 import pygame
+from typing import List
 
 from Coord import Coord
 from Element import Element
@@ -26,7 +27,7 @@ class Game(object):
         pygame.K_SPACE: lambda hero: None
     }
 
-    def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: [] = None):
+    def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
         from Hero import Hero
         self.hero = hero or Hero()
         self.level = level

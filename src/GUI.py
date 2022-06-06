@@ -94,7 +94,6 @@ class GUI:
                     self.updateScreenSize(event.size[0], event.size[1])
 
             self.screen.fill((75, 75, 75))
-            font4 = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
             a, b = pygame.mouse.get_pos()
             posHero = self.game.floor.pos(self.game.hero)
             for y in range(len(self.game.floor)):
@@ -121,10 +120,8 @@ class GUI:
                                                          pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
                                                                      self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
                                 if isinstance(e, Item):
-                                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(
-                                            pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
-                                        self.screen.blit(font4.render(e.description(), True, (255, 255, 255)),
-                                                         (self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * (3 / 5)))
+                                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
+                                        self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
                     else:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
@@ -150,6 +147,15 @@ class GUI:
             pygame.display.flip()
             if start_button.clicked:
                 break
+
+    def drawInfoBox(self, x, y, e, padding=5):
+        font = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
+        desc = font.render(e.description(), True, (255, 255, 255))
+        width = desc.get_width()
+        height = desc.get_height()
+        x = x - width / 2
+        pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
+        self.screen.blit(desc, (x, y))
 
     def drawItem(self, elem, x, y, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None, size=None):
         size = size or self.tileSize
@@ -187,7 +193,8 @@ class GUI:
 
         # Stats: bars of hp, satiety, etc
         self.drawBarImage(statsX, statsY, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW, nbCol=10)
+        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW,
+                          nbCol=10)
         self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10)
 
         # Spells
@@ -293,6 +300,7 @@ class GUI:
                      lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (max(w, 0), max(h, 0))), (_x, _y)),
                      width, height, nbCol, padding, sizeImage)
 
+    # noinspection PyMethodMayBeStatic
     def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
         gapX = width / nbCol
         gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
