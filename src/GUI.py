@@ -1,7 +1,7 @@
 import pygame
 import math
 
-debug = True  # Debug mode
+debug = False  # Debug mode
 
 
 class Button:
