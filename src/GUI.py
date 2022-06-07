@@ -13,19 +13,18 @@ class Button:
         self.rightClicked = False
 
     def draw(self, surface):
-        # get mouse position
-        pos = pygame.mouse.get_pos()
-        # check mouseover and clicked conditions
-        if self.rect.collidepoint(pos):
+        """Draws the button"""
+        pos = pygame.mouse.get_pos()  # get mouse position
+        if self.rect.collidepoint(pos):  # check mouseover and clicked conditions
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked = True
             if pygame.mouse.get_pressed()[2] == 1:
                 self.rightClicked = True
-        # draw button on screen
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+        surface.blit(self.image, (self.rect.x, self.rect.y))  # draw button on screen
 
 
 def drawImage(screen, path, x, y, w, h):
+    """Draws an image fitting the w and h"""
     image = pygame.image.load(path)
     imgW = image.get_width()
     imgH = image.get_height()
@@ -41,19 +40,6 @@ def drawImage(screen, path, x, y, w, h):
     return xPos, yPos, width, height
 
 
-messages = None
-
-
-def printMsg(game):
-    global messages
-    msg = game.readMessages()
-    if msg is not None and msg != "":
-        messages = msg
-        return msg
-    else:
-        return messages
-
-
 class GUI:
     from Game import Game
 
@@ -64,24 +50,14 @@ class GUI:
 
     # noinspection PyAttributeOutsideInit
     def updateScreenSize(self, w=0, h=0):
+        """Resize the window"""
         self.w, self.h = max(1200, w), max(700, h)
         self.screen = pygame.display.set_mode((self.w, self.h), pygame.RESIZABLE)
         self.tileSize = min(self.w * 0.7, self.w - 400, self.h) / self.game.floor.size
 
-    def getTileSurface(self, e):
-        from Item import Item
-        if isinstance(e, Item):
-            return self.tileSize * 0.65, self.tileSize * 0.65
-        return self.tileSize, self.tileSize
-
-    def getTilePos(self, x, y, e):
-        tileSurface = self.getTileSurface(e)
-        tilePos = x * self.tileSize, y * self.tileSize
-        return tilePos[0] + (self.tileSize - tileSurface[0]) / 2, tilePos[1] + (self.tileSize - tileSurface[1]) / 2
-
     def main(self):
+        """Main loop"""
         import sys
-        from Coord import Coord
 
         self.startScreen()
         while self.game.hero.hp > 0:
@@ -92,46 +68,63 @@ class GUI:
                     self.game.newTurn(event.key)
                 if event.type == pygame.VIDEORESIZE:
                     self.updateScreenSize(event.size[0], event.size[1])
-
-            self.screen.fill((75, 75, 75))
-            a, b = pygame.mouse.get_pos()
-            posHero = self.game.floor.pos(self.game.hero)
-            for y in range(len(self.game.floor)):
-                for x in range(len(self.game.floor)):
-                    e = self.game.floor.get(Coord(x, y))
-                    if posHero.distance(Coord(x, y)) <= 6 or Coord(x, y) in self.game.floor.visited:
-                        if Coord(x, y) not in self.game.floor.visited:
-                            self.game.floor.visited.append(Coord(x, y))
-                        if e is None:
-                            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-                        else:
-                            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-
-                            if e.image is not None:
-                                from Monster import Monster
-                                from Item import Item
-                                self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
-                                if isinstance(e, Monster):
-                                    if e.visibility:
-                                        pygame.draw.rect(self.screen, (0, 0, 0),
-                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * 0.2, self.tileSize, self.tileSize * 0.2))
-                                        pygame.draw.rect(self.screen, self.getHpColor(e.hp, e.hpMax),
-                                                         pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
-                                                                     self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
-                                if isinstance(e, Item):
-                                    if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
-                                        self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
-                    else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-
+                self.gameMap()
             self.sidePanel()
             pygame.display.flip()
 
         self.endScreen()
 
+    def getTileSurface(self, e):
+        """Returns the screen surface of a map element (i.e. it's width and height)"""
+        from Item import Item
+        if isinstance(e, Item):
+            return self.tileSize * 0.65, self.tileSize * 0.65
+        return self.tileSize, self.tileSize
+
+    def getTilePos(self, x, y, e):
+        """Returns the screen position of a map element"""
+        tileSurface = self.getTileSurface(e)
+        tilePos = x * self.tileSize, y * self.tileSize
+        return tilePos[0] + (self.tileSize - tileSurface[0]) / 2, tilePos[1] + (self.tileSize - tileSurface[1]) / 2
+
+    def gameMap(self):
+        """Draws the map"""
+        from Coord import Coord
+        self.screen.fill((75, 75, 75))
+        a, b = pygame.mouse.get_pos()
+        posHero = self.game.floor.pos(self.game.hero)
+        for y in range(len(self.game.floor)):
+            for x in range(len(self.game.floor)):
+                e = self.game.floor.get(Coord(x, y))
+                if posHero.distance(Coord(x, y)) <= 6 or Coord(x, y) in self.game.floor.visited:
+                    if Coord(x, y) not in self.game.floor.visited:
+                        self.game.floor.visited.append(Coord(x, y))
+                    if e is None:
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                    else:
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+
+                        if e.image is not None:
+                            from Monster import Monster
+                            from Item import Item
+                            self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
+                            if isinstance(e, Monster):
+                                if e.visibility:
+                                    pygame.draw.rect(self.screen, (0, 0, 0),
+                                                     pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * 0.2, self.tileSize, self.tileSize * 0.2))
+                                    pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax),
+                                                     pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
+                                                                 self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
+                            if isinstance(e, Item):
+                                if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
+                                    self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
+                else:
+                    self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+
     @staticmethod
-    def getHpColor(hp, hpMax):
-        relativeHp = hp / hpMax
+    def getBarColor(value: float, maxValue: float):
+        """The color that the bar should take according to its value"""
+        relativeHp = value / maxValue
         if relativeHp > 0.67:  # 2/3 of life remaining
             return 25, 172, 38
         elif relativeHp > 0.34:  # 1/3 of life remaining
@@ -139,6 +132,7 @@ class GUI:
         return 255, 0, 0
 
     def startScreen(self):
+        """Draws the start screen"""
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -157,6 +151,7 @@ class GUI:
                 break
 
     def drawInfoBox(self, x, y, e, padding=5):
+        """Draws an info box"""
         font = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
         desc = font.render(e.description(), True, (255, 255, 255))
         width = desc.get_width()
@@ -166,6 +161,7 @@ class GUI:
         self.screen.blit(desc, (x, y))
 
     def drawItem(self, elem, x, y, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None, size=None):
+        """Draws a box with an item (or not) inside"""
         size = size or self.tileSize
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
         if elem is not None:
@@ -177,6 +173,7 @@ class GUI:
                 rightAction(elem, self.game.hero)
 
     def drawPotion(self, x, y, w, h, i):
+        """Draws a potion button"""
         from config import potions
         spellsFont = pygame.font.SysFont('comicsansms', 15)
         spell = potions[i]
@@ -185,6 +182,7 @@ class GUI:
         self.screen.blit(txt, (x + (self.tileSize - txt.get_width()) / 2, y + self.tileSize + 5))
 
     def sidePanel(self, debug=False):
+        """Draws the side panel"""
         boxX, boxY = self.game.floor.size * self.tileSize + 20, 20
         boxW, boxH = self.screen.get_width() - boxX - 20, self.screen.get_height() - boxY - 20  # Window's size - Position of the panel - Margin right/bottom of the panel
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(boxX, boxY, boxW, boxH))  # Draw the panel
@@ -252,6 +250,7 @@ class GUI:
             self.screen.blit(messagesFont.render(msgs[msgI], True, (255, 255, 255)), (messagesX, messagesY + messagesFont.get_linesize() * msgI, messagesW, messagesFont.get_linesize()))
 
     def drawControl(self, x: int, y: int, w: int, h: int, text: str, image: str, scale: float):
+        """Draws a control infogram"""
         font = pygame.font.SysFont('comicsansms', 14)
         imgSize = h * 2
         txt = font.render(text, True, (255, 255, 255))
@@ -260,9 +259,11 @@ class GUI:
         self.screen.blit(txt, (x + imgSize + 20, y + (h - txt.get_height()) / 2))
 
     def drawEquipment(self, x, y, w, h):
+        """Draws the equipment area of the side panel"""
         equipmentTileGap = 15
         equipmentTileW, equipmentTileH = self.tileSize, self.tileSize + equipmentTileGap
 
+        # Equipment
         equipmentLeftTiles = [self.game.hero.helmet, self.game.hero.chestplate, self.game.hero.legs, self.game.hero.boots]
         equipmentTileLeftW, equipmentTileLeftH = equipmentTileW, equipmentTileH * len(equipmentLeftTiles) - equipmentTileGap
         equipmentTileLeftX, equipmentTileLeftY = x, y + (h - equipmentTileLeftH) / 2
@@ -292,7 +293,7 @@ class GUI:
         for equipmentI in range(len(equipmentRightTiles)):
             self.drawItem(equipmentRightTiles[equipmentI], equipmentTileRightX, equipmentTileRightY + equipmentTileH * equipmentI)
 
-        # caractéristiques du héros
+        # Stats
         statsX, statsY = heroX, heroImgY + heroImgH + 5
         statsW, statsH = heroW / 2 - 20, 30
         statsFont = pygame.font.SysFont('comicsansms', 20)
@@ -304,12 +305,14 @@ class GUI:
         self.screen.blit(resistanceTxt, (statsX + statsW + 40 + (statsW - resistanceTxt.get_width()) / 2, statsY + statsH))
 
     def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
+        """Draws a horizontal bar made of images"""
         self.drawBar(x, y, valueMax,
                      lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (max(w, 0), max(h, 0))), (_x, _y)),
                      width, height, nbCol, padding, sizeImage)
 
     # noinspection PyMethodMayBeStatic
     def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
+        """Calculates a horizontal bar and call `drawFct` for each component"""
         gapX = width / nbCol
         gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
         sizeW = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
@@ -319,6 +322,7 @@ class GUI:
             drawFct(x + (nbr - int(nbr / nbCol) * nbCol) * gapX, y + int(nbr / nbCol) * gapY, sizeW, sizeH, nbr)
 
     def endScreen(self):
+        """Draws the end screen"""
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
