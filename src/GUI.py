@@ -7,16 +7,13 @@ debug = False  # Debug mode
 class Button:
     """Button class"""
 
-    def __init__(self, x, y, image, w, h):
-        self.image = pygame.transform.scale(image, (w, h))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
+    def __init__(self, x, y, w, h):
+        self.rect = pygame.Rect(x, y, w, h)
         self.clicked = False
         self.rightClicked = False
         self.hover = False
 
-    def draw(self, surface, event=pygame.event.Event(pygame.NOEVENT)):
-        """Draws the button"""
+    def update(self, event=pygame.event.Event(pygame.NOEVENT)):
         pos = pygame.mouse.get_pos()  # get mouse position
         if self.rect.collidepoint(pos):  # check mouseover
             self.hover = True
@@ -25,7 +22,17 @@ class Button:
                     self.clicked = True
                 if pygame.mouse.get_pressed()[2] == 1:  # right click
                     self.rightClicked = True
-        surface.blit(self.image, (self.rect.x, self.rect.y))  # draw button on screen
+
+    def drawImage(self, surface: pygame.Surface, imagePath, event=pygame.event.Event(pygame.NOEVENT)):
+        """Draws the button as an image"""
+        self.update(event)
+        drawImage(surface, imagePath, self.rect.x, self.rect.y, self.rect.w, self.rect.h)
+
+    def drawText(self, surface: pygame.Surface, text, event=pygame.event.Event(pygame.NOEVENT)):
+        """Draws the button as a text"""
+        self.update(event)
+        pygame.draw.rect(surface, (75, 75, 75) if self.hover else (64, 64, 64), self.rect)
+        drawText(surface, text, self.rect.x, self.rect.y, self.rect.w, self.rect.h, 24)
 
 
 def drawImage(screen, path, x, y, w, h):
@@ -45,11 +52,18 @@ def drawImage(screen, path, x, y, w, h):
     return xPos, yPos, width, height
 
 
+def drawText(screen, text, x, y, w, h, size=14, color=(255, 255, 255), fontName="comicsansms"):
+    font = pygame.font.SysFont(fontName, size)
+    txt = font.render(text, True, color)
+    screen.blit(txt, (x + (w - txt.get_width()) / 2, y + (h - txt.get_height()) / 2))
+
+
 class GUI:
     from Game import Game
 
     def __init__(self, game: Game):
         self.game = game
+        self.difficulty = 1
         pygame.init()
         pygame.display.set_caption('Roguelike')
         pygame.display.set_icon(pygame.image.load('assets/hero/frontHero.png'))
@@ -107,7 +121,7 @@ class GUI:
         for y in range(len(self.game.floor)):
             for x in range(len(self.game.floor)):
                 e = self.game.floor.get(Coord(x, y))
-                if posHero.distance(Coord(x, y)) <= 6 or Coord(x, y) in self.game.floor.visited:
+                if self.difficulty <= 1 or posHero.distance(Coord(x, y)) <= 6 or (self.difficulty <= 2 and Coord(x, y) in self.game.floor.visited):
                     if Coord(x, y) not in self.game.floor.visited:
                         self.game.floor.visited.append(Coord(x, y))
                     if e is None:
@@ -145,14 +159,8 @@ class GUI:
     def startScreen(self):
         """Draws the start screen"""
         self.screen.fill((255, 255, 255))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/back.png"), (self.w, self.h)), (0, 0))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (self.w / 2, self.h)),
-                         (self.w * (1 / 4), 0))
-        start_button = Button((self.w / 2) - 348 / 2, (self.h * (4 / 5)), pygame.image.load("assets/other/startButton.png"), 348, 149)
-        start_button.draw(self.screen)
-        pygame.display.flip()
 
-        while not start_button.clicked:
+        while True:
             event = pygame.event.wait()
             if event.type == pygame.QUIT:
                 import sys
@@ -162,7 +170,26 @@ class GUI:
             elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
                 continue
 
-            start_button.draw(self.screen, event)
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/back.png"), (self.w, self.h)), (0, 0))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
+
+            difficultyBtnY = self.h * 4 / 5
+            difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
+            easy = Button(self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+            easy.drawText(self.screen, "Easy", event)
+            if easy.clicked:
+                self.difficulty = 1
+                break
+            medium = Button(self.w / 2 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+            medium.drawText(self.screen, "Medium", event)
+            if medium.clicked:
+                self.difficulty = 2
+                break
+            hard = Button(5 * self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+            hard.drawText(self.screen, "Hard", event)
+            if hard.clicked:
+                self.difficulty = 3
+                break
             pygame.display.flip()
             if debug:
                 print("Start screen updated:", pygame.event.event_name(event.type))
@@ -182,8 +209,8 @@ class GUI:
         size = size or self.tileSize
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
         if elem is not None:
-            elemButton = Button(x + size * 0.125, y + size * 0.125, pygame.image.load(elem.image), size * 0.75, size * 0.75)
-            elemButton.draw(self.screen, event)
+            elemButton = Button(x + size * 0.125, y + size * 0.125, size * 0.75, size * 0.75)
+            elemButton.drawImage(self.screen, elem.image, event)
             if elemButton.clicked:
                 action(elem, self.game.hero)
             if elemButton.rightClicked:
@@ -341,10 +368,8 @@ class GUI:
     def endScreen(self):
         """Draws the end screen"""
         buttonsY = self.h / 1.3
-        close_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.7 / 5), buttonsY, pygame.image.load("assets/other/exitButton.png"),
-                              (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
-        replay_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (2.8 / 5), buttonsY, pygame.image.load("assets/other/restartButton.png"),
-                               (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
+        close_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.7 / 5), buttonsY, (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
+        replay_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (2.8 / 5), buttonsY, (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
         font = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.05))
         font1 = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.07))
         posHero = self.game.floor.pos(self.game.hero)
@@ -360,8 +385,8 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (255, 255, 255)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        close_button.draw(self.screen)
-        replay_button.draw(self.screen)
+        close_button.drawImage(self.screen, "assets/other/exitButton.png")
+        replay_button.drawImage(self.screen, "assets/other/restartButton.png")
         self.gameMap(pygame.event.Event(pygame.NOEVENT))
         pygame.display.flip()
 
@@ -375,12 +400,12 @@ class GUI:
             elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION]:
                 continue
 
-            close_button.draw(self.screen, event)
+            close_button.drawImage(self.screen, "assets/other/exitButton.png", event)
             if close_button.clicked:
                 pygame.quit()
                 import sys
                 sys.exit()
-            replay_button.draw(self.screen, event)
+            replay_button.drawImage(self.screen, "assets/other/restartButton.png", event)
             if replay_button.clicked:
                 self.game.__init__()
                 self.game.buildFloor()
