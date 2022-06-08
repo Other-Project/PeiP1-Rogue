@@ -73,7 +73,7 @@ class GUI:
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                self.game.newTurn(event.key)
+                self.game.keyPressed(event.key)
             elif event.type == pygame.VIDEORESIZE:
                 self.updateScreenSize(event.size[0], event.size[1])
             elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:

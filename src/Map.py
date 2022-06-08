@@ -1,5 +1,5 @@
 import random
-from typing import Union
+from typing import Union, Optional
 from Coord import Coord
 from Element import Element
 
@@ -73,9 +73,9 @@ class Map:
         self.checkCoord(c)
         return self._mat[c.y][c.x]
 
-    def pos(self, e) -> Union[Coord, bool]:
+    def pos(self, e) -> Optional[Coord]:
         self.checkElement(e)
-        return self._elem[e] if e in self._elem else False
+        return self._elem[e] if e in self._elem else None
 
     def put(self, c, e):
         self.checkCoord(c)
@@ -168,20 +168,25 @@ class Map:
 
     # region Movements
 
-    def move(self, e, way):
+    def move(self, e: Element, way: Coord) -> bool:
         """Moves the element e in the direction way."""
         orig = self.pos(e)
-        if not orig:
-            return  # TODO: Investigate this
+        if orig is None:
+            print("[Warning] Couldn't get position of", e)
+            return False
         dest = orig + way
         if dest not in self:
-            return
+            return False
         if self.get(dest) == Map.ground:
             self._mat[orig.y][orig.x] = Map.ground
             self._mat[dest.y][dest.x] = e
             self._elem[e] = dest
-        elif self.get(dest) != Map.empty and self.get(dest).meet(e) and self.get(dest) != self.hero:
-            self.rm(dest)
+            return True
+        elif self.get(dest) != Map.empty:
+            if self.get(dest).meet(e) and self.get(dest) != self.hero:
+                self.rm(dest)
+            return True
+        return False
 
     def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature):
         """
@@ -220,11 +225,12 @@ class Map:
         from utils import theGame
         if self.reposEffectue:
             theGame().addMessage("The " + hero.name + " has already rested")
-            return
+            return False
         theGame().addMessage("The " + hero.name + " is resting")
         hero.hp += 5
         for i in range(10):
             self.moveAllMonsters()
         self.reposEffectue = True
+        return True
 
     # endregion

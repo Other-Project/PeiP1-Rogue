@@ -25,31 +25,9 @@ class Creature(Element):
         attacker.attack(self)
         return self.hp <= 0
 
-    def attack(self, attacked):
+    def attack(self, attacked, damage=None):
         """Attacks an enemy"""
         import utils
-        from Hero import Hero
-        import random
-
-        if attacked.chestplate is None:
-            attacked.hp -= self.strength
-        else:
-            attacked.hp -= max(self.strength - attacked.chestplate.resistance, 1)
-        utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
-
-        if isinstance(attacked, Hero):
-            equippedArmor = attacked.equippedArmor()
-            if len(equippedArmor) > 0:
-                attackedArmor = random.choice(equippedArmor)
-                armorType = attackedArmor.armorType
-                attackedArmor.solidity -= 1
-                if attackedArmor.solidity <= 0:
-                    attackedArmor = None
-                setattr(attacked, armorType, attackedArmor)
-
-        if isinstance(self, Hero):
-            if self.weapon is not None:
-                self.weapon.solidity -= 1
-                if self.weapon.solidity <= 0:
-                    # noinspection PyAttributeOutsideInit
-                    self.weapon = None
+        attacked.hp -= damage or self.strength
+        utils.theGame().addMessage("The " + self.name + " hits " + ("" if attacked.hp > 0 else "fatally ") + "the " + attacked.name +
+                                   (" doing " + str(damage or self.strength) + " hp of damage (remaining hp: " + str(attacked.hp) + ")" if attacked.hp > 0 else ""))

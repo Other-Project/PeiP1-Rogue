@@ -20,10 +20,10 @@ class Ghost(Monster):
         attacker.attack(self)
         return self.hp <= 0
 
-    def attack(self, attacked):
+    def attack(self, attacked, damage=None):
         """Attacks an enemy"""
-        import utils
+        from Creature import Creature
+
         self.image = "assets/monsters/ghost.png"
         self.visibility = True
-        attacked.hp -= self.strength
-        utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
+        Creature.attack(self, attacked, damage)

@@ -1,3 +1,5 @@
+from typing import List
+
 from Creature import Creature
 import utils
 
@@ -78,16 +80,17 @@ class Hero(Creature):
 
     def attack(self, attacked, speAttack=None):
         """Attacks a monster"""
-        import utils
-
+        damage = 0
         if speAttack is not None:
-            attacked.hp -= speAttack
-        else:
-            if attacked.image is not None:
-                attacked.hp -= self.strength
+            damage += speAttack
+        elif attacked.visibility:
+            damage += self.strength
             if self.weapon is not None:
-                attacked.hp -= self.weapon.damage
-        utils.theGame().addMessage("The " + self.name + " hits the " + attacked.description())
+                damage += self.weapon.damage
+                self.weapon.solidity -= 1
+                if self.weapon.solidity <= 0:
+                    self.weapon = None
+        Creature.attack(self, attacked, damage)
 
         if attacked.hp <= 0:
             self.xp += attacked.xpGain * self.xpMultiplier
@@ -107,7 +110,7 @@ class Hero(Creature):
 
     def resistance(self):
         from Armor import Armor
-        armor: list[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
+        armor: List[Armor] = [self.boots, self.legs, self.chestplate, self.helmet, self.shield]
         return sum([0 if equipment is None else equipment.resistance for equipment in armor])
 
     def strengthTot(self):

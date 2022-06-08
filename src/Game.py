@@ -2,7 +2,7 @@ import copy
 import random
 
 import pygame
-from typing import List
+from typing import List, Optional
 
 from Coord import Coord
 from Element import Element
@@ -24,7 +24,7 @@ class Game(object):
         pygame.K_q: lambda hero: theGame().floor.move(hero, Coord(-1, 0)),
         pygame.K_k: lambda hero: hero.__setattr__("hp", 0),
         pygame.K_r: lambda hero: theGame().floor.rest(hero),
-        pygame.K_SPACE: lambda hero: None
+        pygame.K_SPACE: lambda hero: True
     }
 
     def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
@@ -53,6 +53,7 @@ class Game(object):
     def addMessage(self, msg):
         """Adds a message to be print at the end of the turn"""
         self._message.append(msg)
+        print("[New message]", msg)
 
     def readMessages(self, nbr=-1):
         """Gets `nbr` latest messages"""
@@ -61,7 +62,7 @@ class Game(object):
             msgs.append(self._message[(i + 1) * -1])
         return msgs
 
-    def randElement(self, collection: {int: [Element]}) -> Element:
+    def randElement(self, collection: {int: [Element]}) -> Optional[Element]:
         """
         Returns a random element from a dictionary depending on the game level
 
@@ -97,12 +98,17 @@ class Game(object):
         self.addMessage("--- Welcome Hero! ---")
         GUI(self).main()
 
-    def newTurn(self, c):
+    def keyPressed(self, c):
         if c in Game._actions:
             self._message.clear()
-            Game._actions[c](self.hero)
-            if self.hero.satiety > 0:
-                self.hero.satiety -= 0.05
-            else:
-                self.hero.hp -= 0.2
-            self.floor.moveAllMonsters()
+            if Game._actions[c](self.hero):
+                self.newTurn()
+
+    def newTurn(self):
+        from datetime import datetime
+        print("---", datetime.now().strftime("%H:%M:%S"), "New turn", "---")
+        if self.hero.satiety > 0:
+            self.hero.satiety -= 0.05  # 1 food every 20 actions
+        else:
+            self.hero.hp -= 0.2
+        self.floor.moveAllMonsters()
