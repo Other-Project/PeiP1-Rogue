@@ -42,10 +42,10 @@ def teleport(creature):
 
 
 def fireBall(creature: Hero):
-    import copy
-    for monster in copy.copy(theGame().floor._elem):
-        if isinstance(monster, Monster) and theGame().floor.pos(monster).distance(theGame().floor.pos(creature)) <= 3:
-            theGame().floor.rm(theGame().floor.pos(monster))
+    import utils
+    for monster in theGame().floor.getAllCreaturesInRadius(creature, 3, Monster):
+        theGame().floor.rm(theGame().floor.pos(monster))
+        utils.theGame().addMessage("The " + monster.name + " has been fatally wounded by the spell.")
 
 
 ##################
@@ -53,16 +53,15 @@ def fireBall(creature: Hero):
 ##################
 
 potions = [
-    Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potion/potionTeleportation.png", price=5),
-    # Potion("portoloin", usage=lambda item, hero: teleport(hero, False), image="assets/potion/potionPortoloin.png", price=7),
+    Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
     Potion("range attack", usage=lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)
 ]
 
 equipments = {
     0: [
         Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Item("manaPotion", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),

@@ -1,5 +1,5 @@
 import random
-from typing import Union, Optional
+from typing import Union, Optional, List
 from Coord import Coord
 from Element import Element
 
@@ -188,7 +188,7 @@ class Map:
             return True
         return False
 
-    def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature):
+    def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature) -> Optional[List[Creature]]:
         """
         Gets all creatures from a certain type in a specific radius
 
@@ -205,6 +205,7 @@ class Map:
                 continue
             if pos.distance(posCaller) < radius:
                 creatures.append(e)
+        # noinspection PyTypeChecker
         return creatures
 
     def moveAllMonsters(self, radius: int = 6):

@@ -22,7 +22,7 @@ class Potion(Item):
         import utils
 
         if creature.mana < self.price:
-            utils.theGame().addMessage("The " + self.name + " is not usable\nYou don't have enough magic point yet")
+            utils.theGame().addMessage("The " + self.name + " is not usable, you don't have enough mana")
             return False
         if self.usage is not None:
             utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
