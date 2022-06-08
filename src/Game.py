@@ -65,7 +65,6 @@ class Game(object):
     def randElement(self, collection: {int: [Element]}) -> Optional[Element]:
         """
         Returns a random element from a dictionary depending on the game level
-
         :param collection: A dictionary where the key is the minimum game level and the value is a list of elements
         """
         X = random.expovariate(1 / self.level)
@@ -98,13 +97,18 @@ class Game(object):
         self.addMessage("--- Welcome Hero! ---")
         GUI(self).main()
 
-    def keyPressed(self, c):
+    def keyPressed(self, c: int):
+        """
+        A key has been pressed, perform the associated action
+        :param c: The pygame id of the key
+        """
         if c in Game._actions:
             self._message.clear()
             if Game._actions[c](self.hero):
                 self.newTurn()
 
     def newTurn(self):
+        """Performs a new turn"""
         from datetime import datetime
         print("---", datetime.now().strftime("%H:%M:%S"), "New turn", "---")
         if self.hero.satiety > 0:
