@@ -135,11 +135,14 @@ class GUI:
                             self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
                             if isinstance(e, Monster):
                                 if e.visibility:
-                                    pygame.draw.rect(self.screen, (0, 0, 0),
-                                                     pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * 0.2, self.tileSize, self.tileSize * 0.2))
-                                    pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax),
-                                                     pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1] - self.tileSize * (0.6 / 5),
-                                                                 self.tileSize * (e.hp / e.hpMax), self.tileSize * (0.75 / 5)))
+                                    hpBarX, hpBarY = self.getTilePos(x, y, e)
+                                    hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
+                                    hpBarY -= hpBarH
+                                    hpBarRadius = int(hpBarH // 2)
+
+                                    pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(hpBarX, hpBarY, hpBarW, hpBarH), border_radius=hpBarRadius)
+                                    pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax), pygame.Rect(hpBarX + 1, hpBarY + 1, (hpBarW - 2) * (e.hp / e.hpMax), hpBarH - 2),
+                                                     border_radius=hpBarRadius)
                             if isinstance(e, Item):
                                 if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                                     self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
