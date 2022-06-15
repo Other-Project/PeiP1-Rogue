@@ -62,6 +62,7 @@ equipments = {
     0: [
         Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png"),
         Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Weapon("bow", radius=3, damage=2, image="assets/hero equipment/bow/bow1.0.png"),
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),

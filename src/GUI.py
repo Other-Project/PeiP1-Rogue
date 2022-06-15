@@ -128,12 +128,15 @@ class GUI:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                     else:
                         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-
                         if e.image is not None:
                             from Monster import Monster
                             from Item import Item
-                            self.screen.blit(pygame.transform.scale(pygame.image.load(e.image), self.getTileSurface(e)), self.getTilePos(x, y, e))
+                            element1_button = Button(self.getTilePos(x, y, None)[0], self.getTilePos(x, y, None)[1], self.tileSize, self.tileSize)
+                            element1_button.drawImage(self.screen, e.image, event)
                             if isinstance(e, Monster):
+                                if element1_button.clicked:
+                                    if self.game.hero.weapon is not None:
+                                        self.game.floor.hero.weapon.rangedAttack(e)
                                 if e.visibility:
                                     hpBarX, hpBarY = self.getTilePos(x, y, e)
                                     hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175

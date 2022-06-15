@@ -33,8 +33,7 @@ class Weapon(Equipment):
     def description(self) -> str:
         return "Bonus strength: +" + str(self.damage)
 
-    def attackInRadius(self, creature: Creature, floor: Map):
-        """Attack all ennemies in radius"""
-        for m in floor.getAllCreaturesInRadius(creature, self.radius + 1, creature.enemyType):
-            if m.meet(creature):
-                floor.rm(floor.pos(m))
+    def rangedAttack(self, creature: Creature):
+        import utils
+        if utils.theGame().floor.pos(utils.theGame().hero).distance(utils.theGame().floor.pos(creature)) <= self.radius:
+            utils.theGame().hero.attack(creature)

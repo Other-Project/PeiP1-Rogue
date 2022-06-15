@@ -217,8 +217,7 @@ class Map:
         from Monster import Monster
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
             e.doAction(self)
-        if self.hero.weapon is not None:
-            self.hero.weapon.attackInRadius(self.hero, self)
+
 
     def rest(self, hero):
         """The hero recovers 5 hp and the monsters move 10 times"""
