@@ -60,8 +60,7 @@ class Node:
         return [self.location + way for way in self.ways]
 
     def __repr__(self):
-        color = {State.Untested: "\033[1;33m", State.Closed: "\033[0;31m", State.Open: "\033[0;32m"}
-        return color[self.state] + "{:3d}".format(int(self.g())) + "\033[0m"
+        return "(" + str(self.location) + ", " + str(self.g()) + ")"
 
 
 class AStar:
@@ -74,12 +73,22 @@ class AStar:
         self.startNode = self.nodes[startCoord.y][startCoord.x]
 
     def __repr__(self):
-        return '\n'.join(
-            ["    " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])] +
-            ["{:^3d}".format(y) + ' '.join([str(self.nodes[y][x]) for x in range(len(self.nodes[y]))]) for y in range(len(self.nodes))]
-        )
+        return self.getMatRepr()
 
-    def getAdjacentWalkableNodes(self, fromNode: Node, endNode):
+    def getMatRepr(self, path=None):
+        path = path or []
+        color = {State.Untested: "\033[1;33m", State.Closed: "\033[0;31m", State.Open: "\033[0;32m", "Highlight": "\033[0;34m"}
+
+        lines = ["    " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])]
+        for y in range(len(self.nodes)):
+            columns = ["{:^3d}".format(y)]
+            for x in range(len(self.nodes[y])):
+                node = self.nodes[y][x]
+                columns.append(color["Highlight" if Coord(x, y) in path else node.state] + "{:3d}".format(int(node.g())) + "\033[0m")
+            lines.append(' '.join(columns))
+        return '\n'.join(lines)
+
+    def getAdjacentWalkableNodes(self, fromNode: Node):
         """Returns the accessible nodes from the current node"""
         walkableNodes = []
 
@@ -95,7 +104,7 @@ class AStar:
                 continue  # Ignore already-closed nodes
 
             # Already-open nodes are only added to the list if their G-value is lower going via this route.
-            if node.state == State.Open and fromNode.g() < node.g():
+            if node.state == State.Open and (False if node.parentNode is None else fromNode.g() < node.parentNode.g()):
                 node.parentNode = fromNode
                 walkableNodes.append(node)
             elif node.state == State.Untested:
@@ -114,15 +123,18 @@ class AStar:
 
         return walkableNodes
 
-    def search(self, currentNode: Node, endNode):
+    def search(self, currentNode: Node, endNode, nextNodes=None):
         """Finds a path from the currentNode to the destination point"""
         currentNode.State = State.Closed
-        nextNodes = self.getAdjacentWalkableNodes(currentNode, endNode)
+        if nextNodes is None:
+            nextNodes = []
+        nextNodes = list(set(nextNodes + self.getAdjacentWalkableNodes(currentNode)))
         nextNodes.sort(key=lambda x: x.f(endNode.location))
         for nextNode in nextNodes:
+            nextNodes.remove(nextNode)
             if nextNode.location == endNode.location:
                 return True
-            elif self.search(nextNode, endNode):  # Recurses
+            elif self.search(nextNode, endNode, nextNodes):  # Recurses
                 return True
         return False
 
