@@ -44,10 +44,11 @@ class Monster(Creature):
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""
         import random
-        from AStar import AStar
 
-        astar = AStar(floor, floor.pos(self), floor.pos(floor.hero))
-        path = astar.findPath()
+        astar = floor.hero.astarTree
+        if astar is None:
+            return
+        path = astar.findPath(floor.pos(self))
         for i in range(self.movingSpeed):
             if len(path) > i:
                 floor.move(self, floor.pos(self).direction(path[i]))

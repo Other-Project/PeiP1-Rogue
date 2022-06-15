@@ -215,9 +215,9 @@ class Map:
         :param radius: The maximum distance from the hero in which to perform the movement
         """
         from Monster import Monster
+        self.hero.doAction(self)
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
             e.doAction(self)
-
 
     def rest(self, hero):
         """The hero recovers 5 hp and the monsters move 10 times"""

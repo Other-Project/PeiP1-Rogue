@@ -33,3 +33,7 @@ class Creature(Element):
         attacked.hp -= damage or self.strength
         utils.theGame().addMessage("The " + self.name + " hits " + ("" if attacked.hp > 0 else "fatally ") + "the " + attacked.name +
                                    (" doing " + str(damage or self.strength) + " hp of damage (remaining hp: " + str(attacked.hp) + ")" if attacked.hp > 0 else ""))
+
+    def doAction(self, floor):
+        """A function that is called at each turn"""
+        raise NotImplementedError("Abstract method")
