@@ -11,7 +11,9 @@ debug = False
 class State(Enum):
     Untested = 0
     Open = 1
+    Calculated = 0.5
     Closed = -1
+    Unreachable = -2
 
 
 class Node:
@@ -28,7 +30,7 @@ class Node:
         """Keep a record of this node’s location in order to calculate distance to other locations."""
         self.isWalkable = self.floor.get(self.location) != self.floor.empty
         """Boolean value indicating whether the node can be used."""
-        self.state = State.Untested if self.isWalkable else State.Closed
+        self.state = State.Untested if self.isWalkable else State.Unreachable
         """Can be one of three states: not tested yet; open; closed."""
         self.parentNode = parentNode
         """The previous node in this path. Always None for the starting node."""
@@ -77,7 +79,7 @@ class AStar:
 
     def getMatRepr(self, path=None):
         path = path or []
-        color = {State.Untested: "\033[1;33m", State.Closed: "\033[0;31m", State.Open: "\033[0;32m", "Highlight": "\033[0;34m"}
+        color = {State.Untested: "\033[0;37m", State.Unreachable: "\033[0;31m", State.Closed: "\033[1;33m", State.Open: "\033[0;32m", State.Calculated: "\033[1;35m", "Highlight": "\033[0;34m"}
 
         lines = ["     " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])]
         for y in range(len(self.nodes)):
@@ -114,22 +116,20 @@ class AStar:
                 walkableNodes.append(node)
             self.nodes[location.y][location.x] = node  # Update the node
 
-            if debug:
-                print(self)
-                import time
-                time.sleep(0.05)
-                import os
-                os.system('cls' if os.name == 'nt' else 'clear')
-
         return walkableNodes
 
     def search(self, currentNode: Node, endNode, nextNodes=None):
         """Finds a path from the currentNode to the destination point"""
-        currentNode.State = State.Closed
+        currentNode.state = State.Closed
         if nextNodes is None:
             nextNodes = []
         nextNodes = list(set(nextNodes + self.getAdjacentWalkableNodes(currentNode)))
         nextNodes.sort(key=lambda x: x.f(endNode.location))
+
+        if debug:
+            print(currentNode, nextNodes)
+            print(self)
+
         for nextNode in nextNodes:
             nextNodes.remove(nextNode)
             if nextNode.location == endNode.location:
@@ -141,5 +141,5 @@ class AStar:
     def findPath(self, destination):
         """Returns a list of coordinates leading to the destination point"""
         endNode = self.nodes[destination.y][destination.x]
-        success = self.search(self.startNode, endNode)
+        success = self.search(self.startNode, endNode, nextNodes=list(filter(lambda node: node.state == State.Open, sum(self.nodes, []))))
         return endNode.getPath() if success else []
