@@ -94,9 +94,6 @@ class Hero(Creature):
         from AStar import AStar
         self.astarTree = AStar(floor, floor.pos(floor.hero))
 
-        if self.weapon is not None:
-            self.weapon.attackInRadius(self, self)
-
     def lvlSup(self):
         import math
         return int(30 * math.exp((self.lvl - 1) / 4))

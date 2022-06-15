@@ -5,6 +5,8 @@ from Coord import Coord
 from Map import Map
 from enum import Enum
 
+debug = False
+
 
 class State(Enum):
     Untested = 0
@@ -103,11 +105,12 @@ class AStar:
                 walkableNodes.append(node)
             self.nodes[location.y][location.x] = node  # Update the node
 
-            print(self)
-            import time
-            time.sleep(0.05)
-            import os
-            os.system('cls' if os.name == 'nt' else 'clear')
+            if debug:
+                print(self)
+                import time
+                time.sleep(0.05)
+                import os
+                os.system('cls' if os.name == 'nt' else 'clear')
 
         return walkableNodes
 
