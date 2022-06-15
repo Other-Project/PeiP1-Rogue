@@ -79,7 +79,7 @@ class AStar:
         path = path or []
         color = {State.Untested: "\033[1;33m", State.Closed: "\033[0;31m", State.Open: "\033[0;32m", "Highlight": "\033[0;34m"}
 
-        lines = ["    " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])]
+        lines = ["     " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])]
         for y in range(len(self.nodes)):
             columns = ["{:^3d}".format(y)]
             for x in range(len(self.nodes[y])):
