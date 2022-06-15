@@ -17,12 +17,11 @@ class Monster(Creature):
         :param movingSpeed: The number of moves the monster can make in one turn
         """
         from Hero import Hero
-        Creature.__init__(self, name, hp=hp, enemyType=Hero, strength=strength, image=image)
+        Creature.__init__(self, name, hp=hp, enemyType=Hero, strength=strength, image=image, visibility=visibility)
         self.range = radius
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed
         self.hpMax = hp
-        self.visibility = visibility
 
     def attack(self, attacked: Hero, damage=None):
         """Attacks the hero"""

@@ -2,18 +2,20 @@ from Element import Element
 
 
 class Creature(Element):
-    def __init__(self, name, hp, enemyType, strength=1, image=None):
+    def __init__(self, name, hp, enemyType, strength=1, image=None, visibility=True):
         """
-        :param name: The name of the element
-        :param image: The image of the element
-        :param hp: The health of the monster
+        :param name: The name of the creature
+        :param image: The image of the creature
+        :param hp: The health of the creature
         :param enemyType: The type to attack
-        :param strength: The strength of the monster
+        :param strength: The strength of the creature
+        :param visibility: Is the creature visible
         """
         Element.__init__(self, name, image)
         self.hp = hp
         self.strength = strength
         self.enemyType = enemyType
+        self.visibility = visibility
 
     def description(self):
         return Element.description(self) + "(" + str(max(self.hp, 0)) + ")"

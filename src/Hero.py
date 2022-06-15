@@ -5,7 +5,7 @@ import utils
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10, visibility=True):
+    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -15,7 +15,7 @@ class Hero(Creature):
         :param satietyMax: The maximum satiety value
         """
         from Monster import Monster
-        Creature.__init__(self, name=name, hp=healthMax, enemyType=Monster, strength=strength, image=image)
+        Creature.__init__(self, name=name, hp=healthMax, enemyType=Monster, strength=strength, image=image, visibility=True)
         self.healthMax = healthMax
         self.satiety, self.satietyMax = satietyMax, satietyMax
         self.inventory, self.inventorySize = [], 10
@@ -25,7 +25,6 @@ class Hero(Creature):
         self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
-        self.visibility = visibility
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
