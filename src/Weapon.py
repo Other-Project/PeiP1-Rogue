@@ -25,10 +25,11 @@ class Weapon(Equipment):
         hero.weapon = self
         return True  # Removes the weapon from the inventory
 
-    def deEquip(self, hero):
+    def deEquip(self, hero, remove=False):
         """De-equip the armor"""
         hero.weapon = None  # Removes the weapon from the equipped slot
-        hero.inventory.append(self)  # Add the weapon to the inventory
+        if not remove:
+            hero.inventory.append(self)  # Add the weapon to the inventory
 
     def description(self) -> str:
         return "Bonus strength: +" + str(self.damage)

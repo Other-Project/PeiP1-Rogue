@@ -13,6 +13,6 @@ class Equipment(Item):
     def equip(self, hero):
         raise NotImplementedError("Abstract method")
 
-    def deEquip(self, hero):
+    def deEquip(self, hero, remove=False):
         raise NotImplementedError("Abstract method")
 

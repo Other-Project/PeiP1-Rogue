@@ -202,7 +202,7 @@ class GUI:
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
-    def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: None, size=None):
+    def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
         """Draws a box with an item (or not) inside"""
         size = size or self.tileSize
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
@@ -224,7 +224,7 @@ class GUI:
         from config import potions
         spellsFont = pygame.font.SysFont('comicsansms', 15)
         spell = potions[i]
-        self.drawItem(spell, x, y, event, action=lambda elem, hero: elem.activate(hero))
+        self.drawItem(spell, x, y, event, action=lambda elem, hero: elem.activate(hero), rightAction=lambda elem, hero: None)
         txt = spellsFont.render(spell.name + ": " + str(spell.price) + " mana", True, (255, 255, 255))
         self.screen.blit(txt, (x + (self.tileSize - txt.get_width()) / 2, y + self.tileSize + 5))
 

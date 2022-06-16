@@ -26,10 +26,11 @@ class Amulet(Equipment):
 
         return True  # Removes the amulet from the inventory
 
-    def deEquip(self, hero):
+    def deEquip(self, hero, remove=False):
         """De-equip the amulet"""
         hero.amulet = None  # Removes the amulet from the equipped slot
-        hero.inventory.append(self)  # Add the amulet to the inventory
+        if not remove:
+            hero.inventory.append(self)  # Add the amulet to the inventory
         if self.type == "strength":
             hero.strength -= 2
         elif self.type == "xp":
