@@ -54,41 +54,41 @@ def fireBall(creature: Hero):
 ##################
 
 potions = [
-    Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potion/potionTeleportation.png", price=5),
-    Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potion/potionHeal.png", price=6),
-    Potion("range attack", usage=lambda item, hero: fireBall(hero), image="assets/potion/fireball.png", price=9)
+    Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
+    Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
+    Potion("range attack", usage=lambda item, hero: fireBall(hero), image="assets/potions/fireball.png", price=9)
 ]
 
 equipments = {
     0: [
-        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png", desc="+2 satiety"),
-        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png", desc="+1 mana"),
-        Weapon("bow", radius=3, damage=2, image="assets/hero equipment/bow/bow1.0.png"),
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety"),
+        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/items/mana.png", desc="+1 mana"),
+        Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
     ],
     1: [
-        Weapon("sword", radius=0, damage=2, image="assets/hero equipment/sword/sword1.png"),
-        Weapon("bow", radius=3, damage=2, image="assets/hero equipment/bow/bow1.0.png"),
-        Armor("shield", resistance=1, armorType="shield", image="assets/hero equipment/shield/shield1.png"),
-        Armor("helmet", resistance=1, armorType="helmet", image="assets/hero equipment/helmet/helmet1.png"),
-        Armor("chainmail", resistance=1, armorType="chestplate", image="assets/hero equipment/armor/armor1.png"),
-        Armor("Legs", resistance=1, armorType="legs", image="assets/hero equipment/leg/leg1.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/hero equipment/boot/boot1.png"),
+        Weapon("sword", radius=0, damage=2, image="assets/equipments/sword/sword1.png"),
+        Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
+        Armor("shield", resistance=1, armorType="shield", image="assets/equipments/shield/shield1.png"),
+        Armor("helmet", resistance=1, armorType="helmet", image="assets/equipments/helmet/helmet1.png"),
+        Armor("chainmail", resistance=1, armorType="chestplate", image="assets/equipments/armor/armor1.png"),
+        Armor("Legs", resistance=1, armorType="legs", image="assets/equipments/leg/leg1.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/equipments/boot/boot1.png"),
     ],
     2: [
-        Armor("shield", resistance=2, armorType="shield", image="assets/hero equipment/shield/shield2.png"),
-        Armor("helmet", resistance=2, armorType="helmet", image="assets/hero equipment/helmet/helmet3.png"),
-        Armor("chainmail", resistance=2, armorType="chestplate", image="assets/hero equipment/armor/armor3.png"),
-        Armor("Legs", resistance=2, armorType="legs", image="assets/hero equipment/leg/leg2.png"),
-        Armor("boots", resistance=2, armorType="boots", image="assets/hero equipment/boot/boot3.png"),
-        Weapon("sword", radius=0, damage=3, image="assets/hero equipment/sword/sword2.png"),
-        Weapon("bow", radius=3, damage=3, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("amulet of strength", image="assets/hero equipment/amulet/strength.png", effectType="strength"),
+        Armor("shield", resistance=2, armorType="shield", image="assets/equipments/shield/shield2.png"),
+        Armor("helmet", resistance=2, armorType="helmet", image="assets/equipments/helmet/helmet3.png"),
+        Armor("chainmail", resistance=2, armorType="chestplate", image="assets/equipments/armor/armor3.png"),
+        Armor("Legs", resistance=2, armorType="legs", image="assets/equipments/leg/leg2.png"),
+        Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png"),
+        Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
+        Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow1.0.png"),
+        Amulet("amulet of strength", image="assets/equipments/amulet/strength.png", effectType="strength"),
     ],
     3: [
-        Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
-        Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
-        Amulet("amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
-        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png", desc="+2 satiety")
+        Weapon("sword", radius=0, damage=4, image="assets/equipments/sword/sword3.png"),
+        Weapon("bow", radius=4, damage=4, image="assets/equipments/bow/bow1.0.png"),
+        Amulet("amulet of xp", image="assets/equipments/amulet/xp.png", effectType="xp"),
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety")
     ]
 }
 

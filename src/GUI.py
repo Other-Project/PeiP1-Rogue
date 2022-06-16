@@ -67,7 +67,7 @@ class GUI:
         self.difficulty = 1
         pygame.init()
         pygame.display.set_caption('Roguelike')
-        pygame.display.set_icon(pygame.image.load('assets/hero/frontHero.png'))
+        pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
         self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
@@ -126,9 +126,9 @@ class GUI:
                     if Coord(x, y) not in self.game.floor.visited:
                         self.game.floor.visited.append(Coord(x, y))
                     if e is None:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                     else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                         if e.image is not None:
                             from Monster import Monster
                             from Item import Item
@@ -158,7 +158,7 @@ class GUI:
                                 if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                                     self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
                 else:
-                    self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                    self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
 
     @staticmethod
     def getBarColor(value: float, maxValue: float):
@@ -184,8 +184,8 @@ class GUI:
             elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
                 continue
 
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/back.png"), (self.w, self.h)), (0, 0))
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
+            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
 
             difficultyBtnY = self.h * 4 / 5
             difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
@@ -256,10 +256,10 @@ class GUI:
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH, event)
 
         # Stats: bars of hp, satiety, etc
-        self.drawBarImage(statsX, statsY, 10, lambda i: "assets/other/heartRed.png" if i < self.game.hero.hp else "assets/other/heartGrey.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/food/chunk.png" if i < self.game.hero.satiety else "assets/food/chunkBack.png", statsW,
+        self.drawBarImage(statsX, statsY, 10, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png", statsW, sizeImage=self.tileSize * 0.75)
+        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png", statsW,
                           nbCol=10)
-        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/other/mana.png" if i < self.game.hero.mana else "assets/other/manaBack.png", statsW, nbCol=10)
+        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW, nbCol=10)
 
         # Spells
         from config import potions
@@ -287,12 +287,12 @@ class GUI:
         controlsW, controlsH = inventoryW, min(150, boxH * 0.15)
         controlsX, controlsY = inventoryX, boxY + boxH + - controlsH - 20
         controls = [
-            ("move", "assets/other/zqsd.png", 1.25),
-            ("destroy", "assets/other/mouseRight.png", 0.7),
-            ("heal", "assets/other/letterR.png", 0.7),
-            ("use", "assets/other/mouseLeft.png", 0.7),
-            ("suicide", "assets/other/letterK.png", 0.7),
-            ("skip", "assets/other/spaceBar.png", 0.7)
+            ("move", "assets/gui/sidebar/zqsd.png", 1.25),
+            ("destroy", "assets/gui/sidebar/mouseRight.png", 0.7),
+            ("heal", "assets/gui/sidebar/letterR.png", 0.7),
+            ("use", "assets/gui/sidebar/mouseLeft.png", 0.7),
+            ("suicide", "assets/gui/sidebar/letterK.png", 0.7),
+            ("skip", "assets/gui/sidebar/spaceBar.png", 0.7)
         ]
         if debug:  # debug rects
             pygame.draw.rect(self.screen, (20, 80, 80), pygame.Rect(controlsX, controlsY, controlsW, controlsH))
@@ -333,7 +333,7 @@ class GUI:
         heroY = y
         heroW = w - (equipmentTileW + 20) * 2
         heroH = h - 50
-        heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/frontHero.png", heroX, heroY, heroW, heroH)
+        heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/hero.png", heroX, heroY, heroW, heroH)
 
         # XP bar
         xpH = 15
@@ -355,10 +355,10 @@ class GUI:
         statsX, statsY = heroX, heroImgY + heroImgH + 5
         statsW, statsH = heroW / 2 - 20, 30
         statsFont = pygame.font.SysFont('comicsansms', 20)
-        drawImage(self.screen, "assets/hero equipment/sword/sword1.png", statsX, statsY, statsW, statsH)
+        drawImage(self.screen, "assets/equipments/sword/sword1.png", statsX, statsY, statsW, statsH)
         strengthTxt = statsFont.render(str(self.game.hero.strengthTot()), True, (255, 255, 255))
         self.screen.blit(strengthTxt, (statsX + (statsW - strengthTxt.get_width()) / 2, statsY + statsH))
-        drawImage(self.screen, "assets/hero equipment/shield/shield2.png", statsX + statsW + 40, statsY, statsW, statsH)
+        drawImage(self.screen, "assets/equipments/shield/shield2.png", statsX + statsW + 40, statsY, statsW, statsH)
         resistanceTxt = statsFont.render(str(self.game.hero.resistance()), True, (255, 255, 255))
         self.screen.blit(resistanceTxt, (statsX + statsW + 40 + (statsW - resistanceTxt.get_width()) / 2, statsY + statsH))
 
@@ -387,11 +387,11 @@ class GUI:
         font = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.05))
         font1 = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.07))
         posHero = self.game.floor.pos(self.game.hero)
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/ground.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/graveHero.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
-        self.game.hero.image = "assets/other/graveHero.png"
+        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
+        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/grave.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
+        self.game.hero.image = "assets/hero/grave.png"
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.w - self.tileSize * self.game.floor.size - 40, self.h - 40))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/other/gameOver.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
+        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/gameOver.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
                          (self.tileSize * self.game.floor.size + 20, 20))
         self.screen.blit(font1.render("SCORE:", True, (255, 255, 255)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
         self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
@@ -399,8 +399,8 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (255, 255, 255)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        close_button.drawImage(self.screen, "assets/other/exitButton.png")
-        replay_button.drawImage(self.screen, "assets/other/restartButton.png")
+        close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png")
+        replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png")
         self.gameMap(pygame.event.Event(pygame.NOEVENT))
         pygame.display.flip()
 
@@ -414,12 +414,12 @@ class GUI:
             elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION]:
                 continue
 
-            close_button.drawImage(self.screen, "assets/other/exitButton.png", event)
+            close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png", event)
             if close_button.clicked:
                 pygame.quit()
                 import sys
                 sys.exit()
-            replay_button.drawImage(self.screen, "assets/other/restartButton.png", event)
+            replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png", event)
             if replay_button.clicked:
                 self.game.__init__()
                 self.game.buildFloor()

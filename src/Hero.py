@@ -7,7 +7,7 @@ import utils
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/frontHero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/hero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
         """
         :param name: The name of the element
         :param image: The image of the element
