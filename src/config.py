@@ -9,6 +9,7 @@ from utils import theGame
 from Potion import Potion
 import utils
 
+
 ##################
 #     Usages     #
 ##################
@@ -33,6 +34,7 @@ def manaPotion(hero, manaGain=1):
         theGame().addMessage("Your inventory is already full")
         return False
 
+
 def teleport(creature):
     floor = theGame().floor
     newC = floor.randEmptyCoord()
@@ -42,26 +44,33 @@ def teleport(creature):
     utils.theGame().addMessage(" The hero has been teleported")
     return False
 
+
 def zap(creature: Hero):
     for monster in theGame().floor.getAllCreaturesInRadius(creature, 3, Monster):
-        monster.hp-=3
+        monster.hp -= 3
         utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
         utils.theGame().newTurn()
 
+
 def fireball(creature):
-    if theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0]!=[]:
-        theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].hp=0
+    if theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0] != []:
+        theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].hp = 0
         utils.theGame().addMessage("The " + theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].name + " has been fatally wounded by the spell.")
-        utils.theGame().newTurn()
+
+
 
 def invisible(creature):
-    pass
+    utils.theGame().hero.invisible = 10
+    utils.theGame().hero.image = "assets/hero/invisibleHero.png"
+    utils.theGame().newTurn()
+
 
 ##################
 #     Config     #
 ##################
 
 potions = [
+    Potion("invisible", usage=lambda item, hero: invisible(hero), image="assets/hero/invisibleHero.png", price=5),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),

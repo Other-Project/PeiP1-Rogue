@@ -146,6 +146,7 @@ class GUI:
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                             self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
 
+
     def drawProgressBar(self, x, y, w, h, val, color, r=None):
         r = r or int(h // 2)
         pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(x, y, w, h), border_radius=r)

@@ -30,6 +30,7 @@ class Hero(Creature):
         self.mana, self.manaMax = manaMax, manaMax
         self.astarTree: Optional[AStar] = None
         self.all_projectiles = pygame.sprite.Group()
+        self.invisible = 0
 
     def shootProjectile(self, gui):
         from Projectile import Projectile
@@ -81,6 +82,8 @@ class Hero(Creature):
     def attack(self, attacked, speAttack=None):
         """Attacks a monster"""
         damage = 0
+        if self.invisible>0:
+            self.invisible=0
         if speAttack is not None:
             damage += speAttack
         elif attacked.visibility:
@@ -100,6 +103,11 @@ class Hero(Creature):
     def doAction(self, floor):
         from AStar import AStar
         self.astarTree = AStar(floor, floor.pos(floor.hero))
+        if utils.theGame().hero.invisible != 0:
+            utils.theGame().hero.invisible -= 1
+            print()
+        else:
+            utils.theGame().hero.image = "assets/hero/hero.png"
 
     def lvlSup(self):
         import math

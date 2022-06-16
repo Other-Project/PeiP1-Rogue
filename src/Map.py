@@ -1,5 +1,7 @@
 import random
 from typing import Union, Optional, List
+
+import utils
 from Coord import Coord
 from Element import Element
 
@@ -217,20 +219,22 @@ class Map:
         from Monster import Monster
         self.hero.doAction(self)
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
-            e.doAction(self)
+            if utils.theGame().hero.invisible <= 0:
+                e.doAction(self)
 
-    def rest(self, hero):
-        """The hero recovers 5 hp and the monsters move 10 times"""
 
-        from utils import theGame
-        if self.reposEffectue:
-            theGame().addMessage("The " + hero.name + " has already rested")
-            return False
-        theGame().addMessage("The " + hero.name + " is resting")
-        hero.hp += 5
-        for i in range(10):
-            self.moveAllMonsters()
-        self.reposEffectue = True
-        return True
+def rest(self, hero):
+    """The hero recovers 5 hp and the monsters move 10 times"""
 
-    # endregion
+    from utils import theGame
+    if self.reposEffectue:
+        theGame().addMessage("The " + hero.name + " has already rested")
+        return False
+    theGame().addMessage("The " + hero.name + " is resting")
+    hero.hp += 5
+    for i in range(10):
+        self.moveAllMonsters()
+    self.reposEffectue = True
+    return True
+
+# endregion
