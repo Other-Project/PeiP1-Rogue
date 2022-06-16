@@ -1,4 +1,5 @@
 from typing import List
+import pygame.sprite
 
 from Creature import Creature
 import utils
@@ -25,6 +26,11 @@ class Hero(Creature):
         self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
+        self.all_projectiles = pygame.sprite.Group()
+
+    def shootProjectile(self, gui):
+        from Projectile import Projectile
+        self.all_projectiles.add(Projectile(self, gui))
 
     def description(self):
         return Creature.description(self) + str(self.inventory)

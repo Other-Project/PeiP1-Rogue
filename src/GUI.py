@@ -1,5 +1,6 @@
 import pygame
 import math
+from tkinter import *
 
 debug = False  # Debug mode
 
@@ -131,18 +132,25 @@ class GUI:
                         if e.image is not None:
                             from Monster import Monster
                             from Item import Item
+                            from Weapon import Weapon
                             element1_button = Button(self.getTilePos(x, y, None)[0], self.getTilePos(x, y, None)[1], self.tileSize, self.tileSize)
                             element1_button.drawImage(self.screen, e.image, event)
                             if isinstance(e, Monster):
                                 if element1_button.clicked:
                                     if self.game.hero.weapon is not None:
-                                        self.game.floor.hero.weapon.rangedAttack(e)
+                                        if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
+                                            self.game.hero.shootProjectile(self)
+                                            for projectile in self.game.hero.all_projectiles:
+                                                projectile.move(e, self.screen)
+                                            if e.meet(self.game.hero):
+                                                self.game.floor.rm(self.game.floor.pos(e))
+                                            pygame.display.flip()
+
                                 if e.visibility:
                                     hpBarX, hpBarY = self.getTilePos(x, y, e)
                                     hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
                                     hpBarY -= hpBarH
                                     hpBarRadius = int(hpBarH // 2)
-
                                     pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(hpBarX, hpBarY, hpBarW, hpBarH), border_radius=hpBarRadius)
                                     pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax), pygame.Rect(hpBarX + 1, hpBarY + 1, (hpBarW - 2) * (e.hp / e.hpMax), hpBarH - 2),
                                                      border_radius=hpBarRadius)
