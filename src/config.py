@@ -20,6 +20,7 @@ def heal(creature, hpGain=3):
 
 def eat(hero, satietyGain=2):
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
+    theGame().newTurn()
     return True
 
 

@@ -24,7 +24,11 @@ class Potion(Item):
         if creature.mana < self.price:
             utils.theGame().addMessage("The " + self.name + " is not usable, you don't have enough mana")
             return False
-        if self.usage is not None:
-            utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
-            creature.mana -= self.price
-            return self.usage(self, creature)
+        if self.usage is None:
+            return False
+
+        utils.theGame().addMessage("The " + creature.name + " uses the " + self.name)
+        creature.mana -= self.price
+        result = self.usage(self, creature)
+        utils.theGame().newTurn()
+        return result
