@@ -11,7 +11,7 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.hero = hero
         self.gui = gui
-        self.image = pygame.image.load("assets/hero equipment/bow/arrow.png")
+        self.image = pygame.image.load("assets/equipments/bow/arrow.png")
         self.rect = self.image.get_rect()
         self.rect.x = gui.getTilePos(utils.theGame().floor.pos(hero).x, utils.theGame().floor.pos(hero).y, hero)[0]
         self.rect.y = gui.getTilePos(utils.theGame().floor.pos(hero).x, utils.theGame().floor.pos(hero).y, hero)[1]
