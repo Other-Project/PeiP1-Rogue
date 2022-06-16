@@ -11,19 +11,18 @@ class Ghost(Monster):
         :param xpGain: The quantity of XP that the hero will gain
         """
         Monster.__init__(self, name, hp, image=None, strength=strength, radius=0, xpGain=xpGain, visibility=False)
-        self.image = image
+        self.imageWhenVisible = image
 
     def meet(self, attacker) -> bool:
         """Attacked by an enemy"""
         if not isinstance(attacker, self.enemyType):
             return False
+        self.visibility, self.image = True, self.imageWhenVisible
         attacker.attack(self)
         return self.hp <= 0
 
     def attack(self, attacked, damage=None):
         """Attacks an enemy"""
         from Creature import Creature
-
-        self.image = "assets/monsters/ghost.png"
-        self.visibility = True
+        self.visibility, self.image = True, self.imageWhenVisible
         Creature.attack(self, attacked, damage)

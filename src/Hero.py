@@ -1,5 +1,6 @@
 from typing import List
 import pygame.sprite
+from typing import List, Optional
 
 from Creature import Creature
 import utils
@@ -16,6 +17,7 @@ class Hero(Creature):
         :param satietyMax: The maximum satiety value
         """
         from Monster import Monster
+        from AStar import AStar
         Creature.__init__(self, name=name, hp=healthMax, enemyType=Monster, strength=strength, image=image, visibility=True)
         self.healthMax = healthMax
         self.satiety, self.satietyMax = satietyMax, satietyMax
@@ -26,6 +28,7 @@ class Hero(Creature):
         self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
+        self.astarTree: Optional[AStar] = None
         self.all_projectiles = pygame.sprite.Group()
 
     def shootProjectile(self, gui):
@@ -34,14 +37,6 @@ class Hero(Creature):
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
-
-    def fullDescription(self):
-        attributes = []
-        for attr, val in self.__dict__.items():
-            if not attr.startswith("_") and attr != "inventory":
-                attributes.append("> " + attr + " : " + str(val))
-        attributes.append("> INVENTORY : " + str([x.name for x in self.inventory]))
-        return "\n".join(attributes)
 
     def take(self, item):
         """Collects an item on the ground"""
@@ -101,6 +96,10 @@ class Hero(Creature):
             self.xp += attacked.xpGain * self.xpMultiplier
             self.monstersKilled += 1
             self.experience()
+
+    def doAction(self, floor):
+        from AStar import AStar
+        self.astarTree = AStar(floor, floor.pos(floor.hero))
 
     def lvlSup(self):
         import math
