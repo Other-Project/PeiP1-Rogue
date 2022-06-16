@@ -7,7 +7,7 @@ from Armor import Armor
 from Hero import Hero
 from utils import theGame
 from Potion import Potion
-
+import utils
 
 ##################
 #     Usages     #
@@ -15,6 +15,7 @@ from Potion import Potion
 
 def heal(creature, hpGain=3):
     creature.hp = min(creature.hp + hpGain, creature.healthMax)
+    theGame().addMessage("The hero cured himself")
     return True
 
 
@@ -32,22 +33,29 @@ def manaPotion(hero, manaGain=1):
         theGame().addMessage("Your inventory is already full")
         return False
 
-
 def teleport(creature):
     floor = theGame().floor
     newC = floor.randEmptyCoord()
     c = floor.pos(creature)
     floor.rm(c)
     floor.put(newC, creature)
+    utils.theGame().addMessage(" The hero has been teleported")
     return False
 
-
-def fireBall(creature: Hero):
-    import utils
+def zap(creature: Hero):
     for monster in theGame().floor.getAllCreaturesInRadius(creature, 3, Monster):
-        theGame().floor.rm(theGame().floor.pos(monster))
-        utils.theGame().addMessage("The " + monster.name + " has been fatally wounded by the spell.")
+        monster.hp-=3
+        utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
+        utils.theGame().newTurn()
 
+def fireball(creature):
+    if theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0]!=[]:
+        theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].hp=0
+        utils.theGame().addMessage("The " + theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].name + " has been fatally wounded by the spell.")
+        utils.theGame().newTurn()
+
+def invisible(creature):
+    pass
 
 ##################
 #     Config     #
@@ -56,7 +64,9 @@ def fireBall(creature: Hero):
 potions = [
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
-    Potion("range attack", usage=lambda item, hero: fireBall(hero), image="assets/potions/fireball.png", price=9)
+    Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
+    Potion("fireball", usage=lambda item, hero: fireball(hero), image="assets/potions/fireball.png", price=9)
+
 ]
 
 equipments = {
