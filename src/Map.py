@@ -21,7 +21,7 @@ class Map:
         self.hero = hero or Hero()
         self._elem = {}
         self.put(self.position, self.hero)
-        self.visited=[]
+        self.visited = []
         for room in self._rooms:
             room.decorate(self)
         self.reposEffectue = False
@@ -69,15 +69,15 @@ class Map:
 
     # region Mat operations
 
-    def get(self, c) -> Union[str, Element]:
+    def get(self, c: Coord) -> Union[str, Element]:
         self.checkCoord(c)
         return self._mat[c.y][c.x]
 
-    def pos(self, e) -> Optional[Coord]:
+    def pos(self, e: Element) -> Optional[Coord]:
         self.checkElement(e)
         return self._elem[e] if e in self._elem else None
 
-    def put(self, c, e):
+    def put(self, c: Coord, e: Element):
         self.checkCoord(c)
         self.checkElement(e)
         if self._mat[c.y][c.x] != self.ground:
@@ -87,7 +87,7 @@ class Map:
         self._mat[c.y][c.x] = e
         self._elem[e] = c
 
-    def rm(self, c):
+    def rm(self, c: Coord):
         self.checkCoord(c)
         e = self._mat[c.y][c.x]
         if e in self._elem:
@@ -108,7 +108,7 @@ class Map:
                 if self._validCoord(Coord(x, y)):
                     self._mat[y][x] = self.ground
 
-    def findRoom(self, coord):
+    def findRoom(self, coord: Coord):
         for room in self._roomsToReach:
             if coord in room:
                 return room
@@ -120,7 +120,7 @@ class Map:
                 return False
         return True
 
-    def dig(self, coord):
+    def dig(self, coord: Coord):
         if self._validCoord(coord):
             self._mat[coord.y][coord.x] = self.ground
         room = self.findRoom(coord)
@@ -129,7 +129,7 @@ class Map:
             self._rooms.append(room)
         return room
 
-    def corridor(self, start, end):
+    def corridor(self, start: Coord, end: Coord):
         coord = start
         while (start.y < end.y and coord.y < end.y) or (start.y > end.y and coord.y > end.y):
             coord += Coord(0, -1 if start.y > end.y else 1)

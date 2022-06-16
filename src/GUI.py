@@ -74,7 +74,7 @@ class GUI:
         """Resize the window"""
         self.w, self.h = max(1200, w), max(700, h)
         self.screen = pygame.display.set_mode((self.w, self.h), pygame.RESIZABLE)
-        self.tileSize = min(self.w * 0.7, self.w - 400, self.h) / self.game.floor.size
+        self.tileSize = min(self.w * 0.7, self.w - 500, self.h) / self.game.floor.size
 
     def main(self):
         """Main loop"""
@@ -140,14 +140,16 @@ class GUI:
                         if e.visibility:
                             hpBarX, hpBarY = self.getTilePos(x, y, e)
                             hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
-                            hpBarY -= hpBarH
-                            hpBarRadius = int(hpBarH // 2)
-
-                            pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(hpBarX, hpBarY, hpBarW, hpBarH), border_radius=hpBarRadius)
-                            pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax), pygame.Rect(hpBarX + 1, hpBarY + 1, (hpBarW - 2) * (e.hp / e.hpMax), hpBarH - 2), border_radius=hpBarRadius)
+                            hpBarY += -hpBarH if hpBarY >= self.tileSize else self.tileSize
+                            self.drawProgressBar(hpBarX, hpBarY, hpBarW, hpBarH, e.hp / e.hpMax, self.getBarColor(e.hp, e.hpMax))
                     if isinstance(e, Item):
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                             self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
+
+    def drawProgressBar(self, x, y, w, h, val, color, r=None):
+        r = r or int(h // 2)
+        pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(x, y, w, h), border_radius=r)
+        pygame.draw.rect(self.screen, color, pygame.Rect(x + 1, y + 1, (w - 2) * val, h - 2), border_radius=r)
 
     @staticmethod
     def getBarColor(value: float, maxValue: float):
@@ -204,13 +206,18 @@ class GUI:
         """Draws a box with an item (or not) inside"""
         size = size or self.tileSize
         pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
-        if elem is not None:
-            elemButton = Button(x + size * 0.125, y + size * 0.125, size * 0.75, size * 0.75)
-            elemButton.drawImage(self.screen, elem.image, event)
-            if elemButton.clicked:
-                action(elem, self.game.hero)
-            if elemButton.rightClicked:
-                rightAction(elem, self.game.hero)
+        if elem is None:
+            return
+        elemButton = Button(x + size * 0.125, y + size * 0.125, size * 0.75, size * 0.75)
+        elemButton.drawImage(self.screen, elem.image, event)
+        if elemButton.clicked:
+            action(elem, self.game.hero)
+        if elemButton.rightClicked:
+            rightAction(elem, self.game.hero)
+
+        from Equipment import Equipment
+        if isinstance(elem, Equipment):
+            self.drawProgressBar(x + size * 0.125, y + size * 0.8125, size * 0.75, size * 0.125, elem.solidity / elem.solidityMax, self.getBarColor(elem.solidity, elem.solidityMax))
 
     def drawPotion(self, x, y, i, event):
         """Draws a potion button"""
