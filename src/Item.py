@@ -5,7 +5,7 @@ from Element import Element
 class Item(Element):
     """An object that can be collected by the hero"""
 
-    def __init__(self, name: str, usage: Callable = None, image=None):
+    def __init__(self, name: str, usage: Callable = None, image=None, desc=""):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -13,6 +13,7 @@ class Item(Element):
         """
         Element.__init__(self, name=name, image=image)
         self.usage = usage
+        self.desc = desc
 
     def meet(self, hero):
         import utils
@@ -32,4 +33,4 @@ class Item(Element):
         return self.usage(self, creature)
 
     def description(self) -> str:
-        return ""
+        return self.desc

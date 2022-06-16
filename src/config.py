@@ -61,8 +61,8 @@ potions = [
 
 equipments = {
     0: [
-        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png"),
-        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png"),
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png", desc="+2 satiety"),
+        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/other/mana.png", desc="+1 mana"),
         Weapon("bow", radius=3, damage=2, image="assets/hero equipment/bow/bow1.0.png"),
     ],
     1: [
@@ -88,7 +88,7 @@ equipments = {
         Weapon("sword", radius=0, damage=4, image="assets/hero equipment/sword/sword3.png"),
         Weapon("bow", radius=4, damage=4, image="assets/hero equipment/bow/bow1.0.png"),
         Amulet("amulet of xp", image="assets/hero equipment/amulet/xp.png", effectType="xp"),
-        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png")
+        Item("food", usage=lambda item, hero: eat(hero), image="assets/food/chunk.png", desc="+2 satiety")
     ]
 }
 
@@ -97,7 +97,7 @@ monsters = {
         Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
         Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
-        Ghost("Ghost", 5, xpGain=3)
+        Ghost("Ghost", 5, xpGain=3, image="assets/monsters/ghost.png")
     ],
     1: [
         Monster("Ork", 6, strength=2, xpGain=3, image="assets/monsters/orc.png"),
