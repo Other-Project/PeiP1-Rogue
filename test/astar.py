@@ -34,7 +34,7 @@ def getPath(astar, monsterPos):
 
 class AStarTest(unittest.TestCase):
     def test_blocked(self):
-        """An unreachable destination"""
+        """An unreachable destination (small map)"""
         print("\n" + self.shortDescription())
         from Coord import Coord
 
@@ -42,8 +42,23 @@ class AStarTest(unittest.TestCase):
         monsterPos = Coord(4, 3)
         game = newMap(5, heroPos, monsterPos)
 
-        for x in range(0, 5):  # Wall
-            game.floor._mat[x][2] = game.floor.empty
+        for x in range(0, game.floor.size):  # Wall
+            game.floor._mat[x][game.floor.size // 2] = game.floor.empty
+
+        path = getPath(getAstar(game.floor, heroPos), monsterPos)
+        self.assertListEqual(path, [])
+
+    def test_blocked2(self):
+        """An unreachable destination (big map)"""
+        print("\n" + self.shortDescription())
+        from Coord import Coord
+
+        heroPos = Coord(0, 12)
+        monsterPos = Coord(24, 12)
+        game = newMap(25, heroPos, monsterPos)
+
+        for x in range(0, game.floor.size):  # Wall
+            game.floor._mat[x][game.floor.size // 2] = game.floor.empty
 
         path = getPath(getAstar(game.floor, heroPos), monsterPos)
         self.assertListEqual(path, [])

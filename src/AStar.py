@@ -5,15 +5,21 @@ from Coord import Coord
 from Map import Map
 from enum import Enum
 
+# DEBUG MODE
 debug = False
+"""Prints the matrix state at each operation"""
 
 
 class State(Enum):
+    """The state of the node"""
+    Unreachable = -1
+    """The node isn't walkable"""
     Untested = 0
+    """The node hasn't been tested"""
+    Closed = 0.5
+    """The node has been tested"""
     Open = 1
-    Calculated = 0.5
-    Closed = -1
-    Unreachable = -2
+    """The node will be tested (has a direct connection with a closed one)"""
 
 
 class Node:
@@ -31,7 +37,7 @@ class Node:
         self.isWalkable = self.floor.get(self.location) != self.floor.empty
         """Boolean value indicating whether the node can be used."""
         self.state = State.Untested if self.isWalkable else State.Unreachable
-        """Can be one of three states: not tested yet; open; closed."""
+        """The state of the node"""
         self.parentNode = parentNode
         """The previous node in this path. Always None for the starting node."""
 
@@ -44,10 +50,11 @@ class Node:
         return len(self.getPath())
 
     def f(self, dest):
-        """Estimated total distance/cost."""
+        """Estimated total distance/cost"""
         return self.g() + self.h(dest)
 
     def getPath(self):
+        """Returns a list of coordinates leading to this node"""
         path = []
         node = self
         while node.parentNode is not None and node.parentNode.location not in path:
@@ -71,15 +78,15 @@ class AStar:
         self.closeList = []
         self.floor = floor
         self.nodes = [[Node(self.floor, Coord(x, y)) for x in range(self.floor.size)] for y in range(self.floor.size)]
-        self.nodes[startCoord.y][startCoord.x].state = State.Open
         self.startNode = self.nodes[startCoord.y][startCoord.x]
 
     def __repr__(self):
         return self.getMatRepr()
 
     def getMatRepr(self, path=None):
+        """Returns a representation of the current matrix with (optionally) a highlighted set of nodes"""
         path = path or []
-        color = {State.Untested: "\033[0;37m", State.Unreachable: "\033[0;31m", State.Closed: "\033[1;33m", State.Open: "\033[0;32m", State.Calculated: "\033[1;35m", "Highlight": "\033[0;34m"}
+        color = {State.Untested: "\033[0;37m", State.Unreachable: "\033[0;31m", State.Closed: "\033[1;33m", State.Open: "\033[0;32m", "Highlight": "\033[0;34m"}
 
         lines = ["     " + ' '.join(["{:^3d}".format(x) for x in range(self.floor.size)])]
         for y in range(len(self.nodes)):
@@ -118,12 +125,10 @@ class AStar:
 
         return walkableNodes
 
-    def search(self, currentNode: Node, endNode, nextNodes=None):
+    def search(self, currentNode: Node, endNode):
         """Finds a path from the currentNode to the destination point"""
         currentNode.state = State.Closed
-        if nextNodes is None:
-            nextNodes = []
-        nextNodes = list(set(nextNodes + self.getAdjacentWalkableNodes(currentNode)))
+        nextNodes = list(set(filter(lambda node: node.state == State.Open, sum(self.nodes, []))).union(self.getAdjacentWalkableNodes(currentNode)))  # The opened/adjacent nodes (w/o duplicates)
         nextNodes.sort(key=lambda x: x.f(endNode.location))
 
         if debug:
@@ -134,12 +139,12 @@ class AStar:
             nextNodes.remove(nextNode)
             if nextNode.location == endNode.location:
                 return True
-            elif self.search(nextNode, endNode, nextNodes):  # Recurses
+            elif self.search(nextNode, endNode):  # Recurses
                 return True
         return False
 
     def findPath(self, destination):
         """Returns a list of coordinates leading to the destination point"""
         endNode = self.nodes[destination.y][destination.x]
-        success = self.search(self.startNode, endNode, nextNodes=list(filter(lambda node: node.state == State.Open, sum(self.nodes, []))))
+        success = self.search(self.startNode, endNode)
         return endNode.getPath() if success else []
