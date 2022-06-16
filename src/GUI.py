@@ -1,6 +1,5 @@
 import pygame
 import math
-from tkinter import *
 
 debug = False  # Debug mode
 
@@ -79,23 +78,9 @@ class GUI:
 
     def main(self):
         """Main loop"""
-        import sys
-
         self.startScreen()
         while self.game.hero.hp > 0:
-            events = []
-            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]):
-                if event.type in events:
-                    continue
-                events.append(event.type)
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    self.game.keyPressed(event.key)
-                elif event.type == pygame.VIDEORESIZE:
-                    self.updateScreenSize(event.size[0], event.size[1])
-                if debug:
-                    print("Received event:", pygame.event.event_name(event.type))
+            events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
             if len(events) > 0:
                 self.screen.fill((75, 75, 75))
                 self.gameMap(events)
@@ -127,43 +112,42 @@ class GUI:
         for y in range(len(self.game.floor)):
             for x in range(len(self.game.floor)):
                 e = self.game.floor.get(Coord(x, y))
-                if self.difficulty <= 1 or posHero.distance(Coord(x, y)) <= 6 or (self.difficulty <= 2 and Coord(x, y) in self.game.floor.visited):
-                    if Coord(x, y) not in self.game.floor.visited:
-                        self.game.floor.visited.append(Coord(x, y))
-                    if e is None:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-                    else:
-                        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
-                        if e.image is not None:
-                            from Monster import Monster
-                            from Item import Item
-                            from Weapon import Weapon
-                            element1_button = Button(self.getTilePos(x, y, None)[0], self.getTilePos(x, y, None)[1], self.tileSize, self.tileSize)
-                            element1_button.drawImage(self.screen, e.image, event)
-                            if isinstance(e, Monster):
-                                if element1_button.clicked:
-                                    if self.game.hero.weapon is not None:
-                                        if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
-                                            self.game.hero.shootProjectile(self)
-                                            for projectile in self.game.hero.all_projectiles:
-                                                projectile.move(e, self.screen)
-                                            if e.meet(self.game.hero):
-                                                self.game.floor.rm(self.game.floor.pos(e))
-                                            pygame.display.flip()
-
-                                if e.visibility:
-                                    hpBarX, hpBarY = self.getTilePos(x, y, e)
-                                    hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
-                                    hpBarY -= hpBarH
-                                    hpBarRadius = int(hpBarH // 2)
-                                    pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(hpBarX, hpBarY, hpBarW, hpBarH), border_radius=hpBarRadius)
-                                    pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax), pygame.Rect(hpBarX + 1, hpBarY + 1, (hpBarW - 2) * (e.hp / e.hpMax), hpBarH - 2),
-                                                     border_radius=hpBarRadius)
-                            if isinstance(e, Item):
-                                if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
-                                    self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
-                else:
+                if self.difficulty > 1 and posHero.distance(Coord(x, y)) > 6 and (self.difficulty > 2 or Coord(x, y) not in self.game.floor.visited):
                     self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                    continue
+                if Coord(x, y) not in self.game.floor.visited:
+                    self.game.floor.visited.append(Coord(x, y))
+                if e is None:
+                    self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/lava.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                    continue
+
+                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
+                if e.image is not None:
+                    from Monster import Monster
+                    from Item import Item
+                    element1_button = Button(self.getTilePos(x, y, None)[0], self.getTilePos(x, y, None)[1], self.tileSize, self.tileSize)
+                    element1_button.drawImage(self.screen, e.image, event)
+                    if isinstance(e, Monster):
+                        if element1_button.clicked:
+                            if self.game.hero.weapon is not None:
+                                if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
+                                    self.game.hero.shootProjectile(self)
+                                    for projectile in self.game.hero.all_projectiles:
+                                        projectile.move(e, self.screen)
+                                    if e.meet(self.game.hero):
+                                        self.game.floor.rm(self.game.floor.pos(e))
+                                    pygame.display.flip()
+                        if e.visibility:
+                            hpBarX, hpBarY = self.getTilePos(x, y, e)
+                            hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
+                            hpBarY -= hpBarH
+                            hpBarRadius = int(hpBarH // 2)
+
+                            pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(hpBarX, hpBarY, hpBarW, hpBarH), border_radius=hpBarRadius)
+                            pygame.draw.rect(self.screen, self.getBarColor(e.hp, e.hpMax), pygame.Rect(hpBarX + 1, hpBarY + 1, (hpBarW - 2) * (e.hp / e.hpMax), hpBarH - 2), border_radius=hpBarRadius)
+                    if isinstance(e, Item):
+                        if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
+                            self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
 
     @staticmethod
     def getBarColor(value: float, maxValue: float):
@@ -180,19 +164,7 @@ class GUI:
         self.screen.fill((255, 255, 255))
 
         while True:
-            events = []
-            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]):
-                if event.type in events:
-                    continue
-                events.append(event.type)
-                if event.type == pygame.QUIT:
-                    import sys
-                    sys.exit()
-                elif event.type == pygame.VIDEORESIZE:
-                    self.updateScreenSize(event.size[0], event.size[1])
-                if debug:
-                    print("Received event:", pygame.event.event_name(event.type))
-
+            events = self.getEvents()
             if len(events) > 0:
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
@@ -417,19 +389,7 @@ class GUI:
         pygame.display.flip()
 
         while True:
-            events = []
-            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION]):
-                if event.type in events:
-                    continue
-                events.append(event.type)
-                if event.type == pygame.QUIT:
-                    import sys
-                    sys.exit()
-                elif event.type == pygame.VIDEORESIZE:
-                    self.updateScreenSize(event.size[0], event.size[1])
-                if debug:
-                    print("Received event:", pygame.event.event_name(event.type))
-
+            events = self.getEvents()
             if len(events) > 0:
                 close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png", events)
                 if close_button.clicked:
@@ -445,3 +405,21 @@ class GUI:
                 pygame.display.flip()
                 if debug:
                     print("End screen updated")
+
+    def getEvents(self, additionalEvents=None):
+        events = []
+        additionalEvents = additionalEvents or {}
+        for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION] + list(additionalEvents.keys())):
+            if event.type in events:
+                continue
+            events.append(event.type)
+            if event.type == pygame.QUIT:
+                import sys
+                sys.exit()
+            elif event.type == pygame.VIDEORESIZE:
+                self.updateScreenSize(event.size[0], event.size[1])
+            elif event.type in additionalEvents:
+                additionalEvents[event.type](event)
+            if debug:
+                print("Received event:", pygame.event.event_name(event.type))
+        return events
