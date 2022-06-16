@@ -14,22 +14,22 @@ class Button:
         self.rightClicked = False
         self.hover = False
 
-    def update(self, event=pygame.event.Event(pygame.NOEVENT)):
+    def update(self, events):
         pos = pygame.mouse.get_pos()  # get mouse position
         if self.rect.collidepoint(pos):  # check mouseover
             self.hover = True
-            if event.type == pygame.MOUSEBUTTONDOWN:  # check clicked conditions
+            if events is not None and pygame.MOUSEBUTTONDOWN in events:  # check clicked conditions
                 if pygame.mouse.get_pressed()[0] == 1:  # left click
                     self.clicked = True
                 if pygame.mouse.get_pressed()[2] == 1:  # right click
                     self.rightClicked = True
 
-    def drawImage(self, surface: pygame.Surface, imagePath, event=pygame.event.Event(pygame.NOEVENT)):
+    def drawImage(self, surface: pygame.Surface, imagePath, event=None):
         """Draws the button as an image"""
         self.update(event)
         drawImage(surface, imagePath, self.rect.x, self.rect.y, self.rect.w, self.rect.h)
 
-    def drawText(self, surface: pygame.Surface, text, event=pygame.event.Event(pygame.NOEVENT)):
+    def drawText(self, surface: pygame.Surface, text, event=None):
         """Draws the button as a text"""
         self.update(event)
         pygame.draw.rect(surface, (75, 75, 75) if self.hover else (64, 64, 64), self.rect)
@@ -82,22 +82,27 @@ class GUI:
         import sys
 
         self.startScreen()
-        self.screen.fill((75, 75, 75))
         while self.game.hero.hp > 0:
-            event = pygame.event.wait()
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                self.game.keyPressed(event.key)
-            elif event.type == pygame.VIDEORESIZE:
-                self.updateScreenSize(event.size[0], event.size[1])
-            elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
-                continue
-            self.gameMap(event)
-            self.sidePanel(event)
-            pygame.display.flip()
-            if debug:
-                print("Game screen updated:", pygame.event.event_name(event.type))
+            events = []
+            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]):
+                if event.type in events:
+                    continue
+                events.append(event.type)
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    self.game.keyPressed(event.key)
+                elif event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
+                if debug:
+                    print("Received event:", pygame.event.event_name(event.type))
+            if len(events) > 0:
+                self.screen.fill((75, 75, 75))
+                self.gameMap(events)
+                self.sidePanel(events)
+                pygame.display.flip()
+                if debug:
+                    print("Game screen updated")
 
         self.endScreen()
 
@@ -175,38 +180,43 @@ class GUI:
         self.screen.fill((255, 255, 255))
 
         while True:
-            event = pygame.event.wait()
-            if event.type == pygame.QUIT:
-                import sys
-                sys.exit()
-            elif event.type == pygame.VIDEORESIZE:
-                self.updateScreenSize(event.size[0], event.size[1])
-            elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
-                continue
+            events = []
+            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]):
+                if event.type in events:
+                    continue
+                events.append(event.type)
+                if event.type == pygame.QUIT:
+                    import sys
+                    sys.exit()
+                elif event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
+                if debug:
+                    print("Received event:", pygame.event.event_name(event.type))
 
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
-            self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
+            if len(events) > 0:
+                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
+                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
 
-            difficultyBtnY = self.h * 4 / 5
-            difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
-            easy = Button(self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-            easy.drawText(self.screen, "Easy", event)
-            if easy.clicked:
-                self.difficulty = 1
-                break
-            medium = Button(self.w / 2 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-            medium.drawText(self.screen, "Medium", event)
-            if medium.clicked:
-                self.difficulty = 2
-                break
-            hard = Button(5 * self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-            hard.drawText(self.screen, "Hard", event)
-            if hard.clicked:
-                self.difficulty = 3
-                break
-            pygame.display.flip()
-            if debug:
-                print("Start screen updated:", pygame.event.event_name(event.type))
+                difficultyBtnY = self.h * 4 / 5
+                difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
+                easy = Button(self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                easy.drawText(self.screen, "Easy", events)
+                if easy.clicked:
+                    self.difficulty = 1
+                    break
+                medium = Button(self.w / 2 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                medium.drawText(self.screen, "Medium", events)
+                if medium.clicked:
+                    self.difficulty = 2
+                    break
+                hard = Button(5 * self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                hard.drawText(self.screen, "Hard", events)
+                if hard.clicked:
+                    self.difficulty = 3
+                    break
+                pygame.display.flip()
+                if debug:
+                    print("Start screen updated")
 
     def drawInfoBox(self, x, y, e, padding=5):
         """Draws an info box"""
@@ -257,9 +267,11 @@ class GUI:
 
         # Stats: bars of hp, satiety, etc
         self.drawBarImage(statsX, statsY, 10, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png", statsW,
+        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
+                          statsW,
                           nbCol=10)
-        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW, nbCol=10)
+        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW,
+                          nbCol=10)
 
         # Spells
         from config import potions
@@ -405,26 +417,31 @@ class GUI:
         pygame.display.flip()
 
         while True:
-            event = pygame.event.wait()
-            if event.type == pygame.QUIT:
-                import sys
-                sys.exit()
-            elif event.type == pygame.VIDEORESIZE:
-                self.updateScreenSize(event.size[0], event.size[1])
-            elif event.type not in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION]:
-                continue
+            events = []
+            for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION]):
+                if event.type in events:
+                    continue
+                events.append(event.type)
+                if event.type == pygame.QUIT:
+                    import sys
+                    sys.exit()
+                elif event.type == pygame.VIDEORESIZE:
+                    self.updateScreenSize(event.size[0], event.size[1])
+                if debug:
+                    print("Received event:", pygame.event.event_name(event.type))
 
-            close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png", event)
-            if close_button.clicked:
-                pygame.quit()
-                import sys
-                sys.exit()
-            replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png", event)
-            if replay_button.clicked:
-                self.game.__init__()
-                self.game.buildFloor()
-                self.main()
-                break
-            pygame.display.flip()
-            if debug:
-                print("End screen updated:", pygame.event.event_name(event.type))
+            if len(events) > 0:
+                close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png", events)
+                if close_button.clicked:
+                    pygame.quit()
+                    import sys
+                    sys.exit()
+                replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png", events)
+                if replay_button.clicked:
+                    self.game.__init__()
+                    self.game.buildFloor()
+                    self.main()
+                    break
+                pygame.display.flip()
+                if debug:
+                    print("End screen updated")
