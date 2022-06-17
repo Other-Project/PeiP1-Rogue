@@ -32,9 +32,9 @@ class Hero(Creature):
         self.all_projectiles = pygame.sprite.Group()
         self.invisible = 0
 
-    def shootProjectile(self, gui, monster):
+    def shootProjectile(self, gui, monster, onCollide=None):
         from Projectile import Projectile
-        self.all_projectiles.add(Projectile(gui, self, utils.theGame().floor.pos(monster)))
+        self.all_projectiles.add(Projectile(gui, self, utils.theGame().floor.pos(monster), onCollide))
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
