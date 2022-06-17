@@ -7,7 +7,7 @@ class Weapon(Equipment):
     from Creature import Creature
     from Map import Map
 
-    def __init__(self, name: str, damage: int = 1, radius: int = 0, solidityMax=10, image=None):
+    def __init__(self, name: str, damage: int = 1, radiusDamage: int = 0, radius: int = 0, solidityMax=10, image=None):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -16,7 +16,7 @@ class Weapon(Equipment):
         """
         Equipment.__init__(self, name=name, image=image, solidityMax=solidityMax)
         self.damage = damage
-        self.radius = radius
+        self.radius, self.radiusDamage = radius, radiusDamage
 
     def equip(self, hero: Hero):
         """Equip the weapon"""
@@ -36,5 +36,8 @@ class Weapon(Equipment):
 
     def rangedAttack(self, creature: Creature):
         import utils
-        if utils.theGame().floor.pos(utils.theGame().hero).distance(utils.theGame().floor.pos(creature)) <= self.radius:
-            utils.theGame().hero.attack(creature)
+        creaturePos = utils.theGame().floor.pos(creature)
+        if utils.theGame().floor.pos(utils.theGame().hero).distance(creaturePos) <= self.radius:
+            utils.theGame().hero.attack(creature, self.radiusDamage)
+            if creature.hp <= 0:
+                utils.theGame().floor.rm(creaturePos)

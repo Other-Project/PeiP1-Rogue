@@ -105,7 +105,7 @@ equipments = {
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/equipments/sword/sword3.png"),
-        Weapon("bow", radius=4, damage=4, image="assets/equipments/bow/bow1.0.png"),
+        Weapon("bow", radius=4, damage=0, radiusDamage=4, image="assets/equipments/bow/bow1.0.png"),
         Amulet("amulet of xp", image="assets/equipments/amulet/xp.png", effectType="xp"),
         Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety")
     ]

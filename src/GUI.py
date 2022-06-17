@@ -131,10 +131,7 @@ class GUI:
                         if element1_button.clicked:
                             if self.game.hero.weapon is not None:
                                 if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
-                                    self.game.hero.shootProjectile(self, e)
-                                    if e.meet(self.game.hero):
-                                        self.game.floor.rm(self.game.floor.pos(e))
-                                    pygame.display.flip()
+                                    self.game.hero.shootProjectile(self, e, lambda coord: self.game.hero.weapon.rangedAttack(self.game.floor.get(coord)))
                         if e.visibility:
                             hpBarX, hpBarY = self.getTilePos(x, y, e)
                             hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175

@@ -7,7 +7,7 @@ import utils
 
 # anime le projectile
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, gui: GUI, hero, dest, image="assets/equipments/bow/arrow.png"):
+    def __init__(self, gui: GUI, hero, dest, onCollide=None, image="assets/equipments/bow/arrow.png"):
         super().__init__()
         self.hero, self.origin = hero, utils.theGame().floor.pos(hero)
         self.dest = dest
@@ -15,16 +15,17 @@ class Projectile(pygame.sprite.Sprite):
         self.rect = pygame.Rect(0, 0, self.gui.tileSize * 0.5, self.gui.tileSize * 0.5)
         self.originImage = self.image = pygame.transform.scale(pygame.image.load(image), self.rect.size)
         self.angle = 0
+        self.onCollide = onCollide
 
     def draw(self):
         from Coord import Coord
         if self.origin is None:
             return
-        posHeroInTiles = self.origin + Coord(0.5, 0.5)
+        posHeroInTiles = self.origin + Coord(0.25, 0.25)
         posHeroInPixels = posHeroInTiles * self.gui.tileSize
         if self.dest is None:
             return
-        posMonsterInTiles = self.dest + Coord(0.5, 0.5)
+        posMonsterInTiles = self.dest + Coord(0.25, 0.25)
         posMonsterInPixels = posMonsterInTiles * self.gui.tileSize
         distanceX = posMonsterInPixels.x - posHeroInPixels.x
         distanceY = posMonsterInPixels.y - posHeroInPixels.y
@@ -40,5 +41,6 @@ class Projectile(pygame.sprite.Sprite):
             self.rect.x += mvtX
             self.rect.y += mvtY
             pygame.display.flip()
-            pygame.time.wait(200)
+            pygame.time.wait(100)
+        self.onCollide(self.dest)
         self.hero.all_projectiles.remove(self)
