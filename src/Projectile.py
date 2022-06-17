@@ -20,7 +20,7 @@ class Projectile(pygame.sprite.Sprite):
         from Coord import Coord
         if self.origin is None:
             return
-        posHeroInTiles = self.origin
+        posHeroInTiles = self.origin + Coord(0.5, 0.5)
         posHeroInPixels = posHeroInTiles * self.gui.tileSize
         if self.dest is None:
             return
