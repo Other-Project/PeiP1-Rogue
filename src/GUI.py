@@ -382,13 +382,14 @@ class GUI:
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/grave.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
         self.game.hero.image = "assets/hero/grave.png"
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(self.tileSize * self.game.floor.size + 20, 20, self.w - self.tileSize * self.game.floor.size - 40, self.h - 40))
+        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/endBACK.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h - 40)),
+                         (self.tileSize * self.game.floor.size + 20, 20))
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/gameOver.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
                          (self.tileSize * self.game.floor.size + 20, 20))
-        self.screen.blit(font1.render("SCORE:", True, (255, 255, 255)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
-        self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (255, 255, 255)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
-        self.screen.blit(font.render("rooms visited: " + str(self.game.level), True, (255, 255, 255)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.6 / 3)))
-        self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (255, 255, 255)),
+        self.screen.blit(font1.render("SCORE:", True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
+        self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
+        self.screen.blit(font.render("rooms visited: " + str(self.game.level), True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.6 / 3)))
+        self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160,0,0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
         close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png")
