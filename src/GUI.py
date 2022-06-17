@@ -85,6 +85,10 @@ class GUI:
                 self.screen.fill((75, 75, 75))
                 self.sidePanel(events)
                 self.gameMap(events)
+
+                # Updates the display but don't pass event, so it doesn't count a click twice
+                self.sidePanel(None)
+                self.gameMap(None)
                 pygame.display.flip()
                 if debug:
                     print("Game screen updated")
