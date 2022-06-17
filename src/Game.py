@@ -41,9 +41,9 @@ class Game(object):
         from RoomShop import RoomShop
 
         if self.level%3 == 0:
-            self.floor = Map(hero=self.hero, roomSpe=RoomChest)
+            self.floor = Map(hero=self.hero, roomSpe=RoomChest())
         elif self.level%2 == 0:
-            self.floor = Map(hero=self.hero, roomSpe=RoomShop)
+            self.floor = Map(hero=self.hero, roomSpe=RoomShop())
         else:
             self.floor = Map(hero=self.hero)
             self.floor.put(self.floor.getRoom(-1).center(), Stairs())

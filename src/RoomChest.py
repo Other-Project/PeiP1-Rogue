@@ -12,8 +12,8 @@ class RoomChest(Room):
         :param c1, c2: extrémités haut/gauche c1 et bas/droite c2
         """
         Room.__init__(self, c1=c1, c2=c2)
-        self.c1 = c1
-        self.c2 = c2
+
+
 
     def decorate(self, floor):
         theGame().floor.put(Coord(9, 12), Chest('Chest'))

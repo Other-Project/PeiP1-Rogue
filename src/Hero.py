@@ -45,6 +45,9 @@ class Hero(Creature):
         from Item import Item
         if not isinstance(item, Item):
             raise TypeError('Not a Equipment')
+        elif item.name == 'gold':
+            self.gold += 1
+            utils.theGame().floor.rm(utils.theGame().floor.get(item))
         return self.addInventory(item)
 
     def addInventory(self, item):
