@@ -14,19 +14,19 @@ import utils
 #     Usages     #
 ##################
 
-def heal(creature, hpGain=3):
-    creature.hp = min(creature.hp + hpGain, creature.healthMax)
+def heal(hero: Hero, hpGain=3):
+    hero.hp = min(hero.hp + hpGain, hero.healthMax)
     theGame().addMessage("The hero cured himself")
     return True
 
 
-def eat(hero, satietyGain=2):
+def eat(hero: Hero, satietyGain=2):
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
     theGame().newTurn()
     return True
 
 
-def manaPotion(hero, manaGain=1):
+def manaPotion(hero: Hero, manaGain=1):
     if hero.mana < hero.manaMax:
         hero.mana = min(hero.mana + manaGain, hero.manaMax)
         return True
@@ -35,31 +35,34 @@ def manaPotion(hero, manaGain=1):
         return False
 
 
-def teleport(creature):
+def teleport(hero: Hero):
     floor = theGame().floor
     newC = floor.randEmptyCoord()
-    c = floor.pos(creature)
+    c = floor.pos(hero)
     floor.rm(c)
-    floor.put(newC, creature)
+    floor.put(newC, hero)
     utils.theGame().addMessage(" The hero has been teleported")
     return False
 
 
-def zap(creature: Hero):
-    for monster in theGame().floor.getAllCreaturesInRadius(creature, 3, Monster):
+def zap(hero: Hero):
+    for monster in theGame().floor.getAllCreaturesInRadius(hero, 3, Monster):
         monster.hp -= 3
         utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
         utils.theGame().newTurn()
 
 
-def fireball(creature):
-    if theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0] != []:
-        theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].hp = 0
-        utils.theGame().addMessage("The " + theGame().floor.getAllCreaturesInRadius(creature, 3, Monster)[0].name + " has been fatally wounded by the spell.")
+def fireball(hero: Hero):
+    creatures = theGame().floor.getAllCreaturesInRadius(hero, 3, Monster)
+    if creatures is not None:
+        import random
+        creature = random.choice(creatures)
+        hero.attack(creature, creature.hp)
+        utils.theGame().floor.rm(utils.theGame().floor.pos(creature))
+        utils.theGame().addMessage("The " + creature.name + " has been fatally wounded by the spell.")
 
 
-
-def invisible(creature):
+def invisible():
     utils.theGame().hero.invisible = 10
     utils.theGame().hero.image = "assets/hero/invisibleHero.png"
     utils.theGame().newTurn()
@@ -70,7 +73,7 @@ def invisible(creature):
 ##################
 
 potions = [
-    Potion("invisible", usage=lambda item, hero: invisible(hero), image="assets/hero/invisibleHero.png", price=5),
+    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/hero/invisibleHero.png", price=5),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),

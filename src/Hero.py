@@ -82,8 +82,7 @@ class Hero(Creature):
     def attack(self, attacked, speAttack=None):
         """Attacks a monster"""
         damage = 0
-        if self.invisible>0:
-            self.invisible=0
+        self.invisible = 0  # The hero is no longer invisible
         if speAttack is not None:
             damage += speAttack
         elif attacked.visibility:
