@@ -133,7 +133,7 @@ class GUI:
                                 if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
                                     self.game.hero.shootProjectile(self)
                                     for projectile in self.game.hero.all_projectiles:
-                                        projectile.move(e, self.screen)
+                                        projectile.move(e)
                                     if e.meet(self.game.hero):
                                         self.game.floor.rm(self.game.floor.pos(e))
                                     pygame.display.flip()

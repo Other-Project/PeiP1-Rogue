@@ -21,31 +21,19 @@ class Projectile(pygame.sprite.Sprite):
     def remove(self):
         self.hero.all_projectiles.remove(self)
 
-    def move(self, other, screen):
+    def move(self, other):
         from Coord import Coord
         posHero = utils.theGame().floor.pos(utils.theGame().hero) * self.gui.tileSize + Coord(0.5 * self.gui.tileSize, 0.5 * self.gui.tileSize)
         posOther = utils.theGame().floor.pos(other) * self.gui.tileSize + Coord(0.5 * self.gui.tileSize, 0.5 * self.gui.tileSize)
-        distance = posHero.distance(posOther) * self.gui.tileSize + 0.5 * self.gui.tileSize
+        distance = posHero.distance(posOther)
         distanceX = posOther.x - posHero.x
         distanceY = posOther.y - posHero.y
-        if posHero.y < posOther.y and posHero.x < posOther.x:
-            self.angle = 180 - math.degrees(math.asin(abs(distanceY / distance)))
-        if posHero.y < posOther.y and posHero.x > posOther.x:
-            self.angle = math.degrees(math.asin(abs(distanceY / distance)))
-        if posHero.y > posOther.y and posHero.x > posOther.x:
-            self.angle = -math.degrees(math.asin(abs(distanceY / distance)))
-        if posHero.y > posOther.y and posHero.x < posOther.x:
-            self.angle = -180 + math.asin(abs(distanceY / distance))
-        if posHero.y == posOther.y and posHero.x < posOther.x:
-            self.angle = 180
-        if posHero.y > posOther.y and posHero.x == posOther.x:
-            self.angle = -90
-        if posHero.y < posOther.y and posHero.x == posOther.x:
-            self.angle = 90
+        self.angle = math.degrees(math.atan2(distanceY, -distanceX))
         self.image = pygame.transform.rotate(self.originImage, self.angle)
+        print(posHero, posOther, distance, distanceX, distanceY, distanceY / distance, math.asin(distanceY / distance), math.degrees(math.asin(distanceY / distance)), self.angle)
         nbrEtape = 10
         for i in range(nbrEtape):
-            utils.theGame().hero.all_projectiles.draw(screen)
+            utils.theGame().hero.all_projectiles.draw(self.gui.screen)
             self.rect.x += distanceX / nbrEtape
             self.rect.y += distanceY / nbrEtape
             pygame.display.flip()
