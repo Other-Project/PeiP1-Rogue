@@ -8,6 +8,7 @@ def newMap(size, heroPos, monsterPos):
     from config import monsters
 
     floor = Map(size)
+    floor._elem = {}
     floor._mat = [[floor.ground for x in range(floor.size)] for y in range(floor.size)]  # Clear the map
 
     floor.put(heroPos, floor.hero)  # Hero

@@ -34,9 +34,7 @@ class Node:
         """The map"""
         self.location = location
         """Keep a record of this node’s location in order to calculate distance to other locations."""
-        self.isWalkable = self.floor.get(self.location) != self.floor.empty
-        """Boolean value indicating whether the node can be used."""
-        self.state = State.Untested if self.isWalkable else State.Unreachable
+        self.state = State.Untested if self.floor.get(self.location) == self.floor.ground else State.Unreachable
         """The state of the node"""
         self.parentNode = parentNode
         """The previous node in this path. Always None for the starting node."""
@@ -106,11 +104,8 @@ class AStar:
                 continue
 
             node: Node = self.nodes[location.y][location.x]
-            if not node.isWalkable:
-                continue  # Ignore non-walkable nodes
-
-            if node.state == State.Closed:
-                continue  # Ignore already-closed nodes
+            if node.state == State.Closed or node.state == State.Unreachable:
+                continue  # Ignore already-closed nodes and non-walkable nodes
 
             # Already-open nodes are only added to the list if their G-value is lower going via this route.
             if node.state == State.Open and (False if node.parentNode is None else fromNode.g() < node.parentNode.g()):
@@ -146,5 +141,6 @@ class AStar:
     def findPath(self, destination):
         """Returns a list of coordinates leading to the destination point"""
         endNode = self.nodes[destination.y][destination.x]
+        endNode.state = State.Untested
         success = self.search(self.startNode, endNode)
         return endNode.getPath() if success else []
