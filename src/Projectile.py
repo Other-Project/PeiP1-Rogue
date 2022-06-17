@@ -1,41 +1,44 @@
 import math
-
 import pygame
+
 from GUI import GUI
 import utils
 
 
 # anime le projectile
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, hero, gui: GUI):
+    def __init__(self, gui: GUI, hero, dest, image="assets/equipments/bow/arrow.png"):
         super().__init__()
-        self.hero = hero
+        self.hero, self.origin = hero, utils.theGame().floor.pos(hero)
+        self.dest = dest
         self.gui = gui
-        self.image = pygame.image.load("assets/equipments/bow/arrow.png")
-        self.rect = self.image.get_rect()
-        self.rect.x = gui.getTilePos(utils.theGame().floor.pos(hero).x, utils.theGame().floor.pos(hero).y, hero)[0]
-        self.rect.y = gui.getTilePos(utils.theGame().floor.pos(hero).x, utils.theGame().floor.pos(hero).y, hero)[1]
-        self.originImage = self.image
+        self.rect = pygame.Rect(0, 0, self.gui.tileSize * 0.5, self.gui.tileSize * 0.5)
+        self.originImage = self.image = pygame.transform.scale(pygame.image.load(image), self.rect.size)
         self.angle = 0
 
-    def remove(self):
-        self.hero.all_projectiles.remove(self)
-
-    def move(self, other):
+    def draw(self):
         from Coord import Coord
-        posHero = utils.theGame().floor.pos(utils.theGame().hero) * self.gui.tileSize + Coord(0.5 * self.gui.tileSize, 0.5 * self.gui.tileSize)
-        posOther = utils.theGame().floor.pos(other) * self.gui.tileSize + Coord(0.5 * self.gui.tileSize, 0.5 * self.gui.tileSize)
-        distance = posHero.distance(posOther)
-        distanceX = posOther.x - posHero.x
-        distanceY = posOther.y - posHero.y
+        if self.origin is None:
+            return
+        posHeroInTiles = self.origin
+        posHeroInPixels = posHeroInTiles * self.gui.tileSize
+        if self.dest is None:
+            return
+        posMonsterInTiles = self.dest + Coord(0.5, 0.5)
+        posMonsterInPixels = posMonsterInTiles * self.gui.tileSize
+        distanceX = posMonsterInPixels.x - posHeroInPixels.x
+        distanceY = posMonsterInPixels.y - posHeroInPixels.y
+        self.rect.x, self.rect.y = posHeroInPixels.x, posHeroInPixels.y
         self.angle = math.degrees(math.atan2(distanceY, -distanceX))
         self.image = pygame.transform.rotate(self.originImage, self.angle)
-        print(posHero, posOther, distance, distanceX, distanceY, distanceY / distance, math.asin(distanceY / distance), math.degrees(math.asin(distanceY / distance)), self.angle)
-        nbrEtape = 10
+
+        distance = posHeroInTiles.distance(posMonsterInTiles)
+        nbrEtape = max(round(distance * 2), 2)
+        mvtX, mvtY = distanceX / nbrEtape, distanceY / nbrEtape
         for i in range(nbrEtape):
             utils.theGame().hero.all_projectiles.draw(self.gui.screen)
-            self.rect.x += distanceX / nbrEtape
-            self.rect.y += distanceY / nbrEtape
+            self.rect.x += mvtX
+            self.rect.y += mvtY
             pygame.display.flip()
             pygame.time.wait(200)
         self.hero.all_projectiles.remove(self)

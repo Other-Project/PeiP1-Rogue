@@ -36,10 +36,7 @@ class Map:
 
     def __contains__(self, item):
         if not isinstance(item, Coord):
-            for line in self._mat:
-                if item in line:
-                    return True
-            return False
+            return item in self._elem
         return 0 <= item.x < self.size and 0 <= item.y < self.size
 
     def __getitem__(self, key):
@@ -222,19 +219,18 @@ class Map:
             if utils.theGame().hero.invisible <= 0:
                 e.doAction(self)
 
+    def rest(self, hero):
+        """The hero recovers 5 hp and the monsters move 10 times"""
 
-def rest(self, hero):
-    """The hero recovers 5 hp and the monsters move 10 times"""
-
-    from utils import theGame
-    if self.reposEffectue:
-        theGame().addMessage("The " + hero.name + " has already rested")
-        return False
-    theGame().addMessage("The " + hero.name + " is resting")
-    hero.hp += 5
-    for i in range(10):
-        self.moveAllMonsters()
-    self.reposEffectue = True
-    return True
+        from utils import theGame
+        if self.reposEffectue:
+            theGame().addMessage("The " + hero.name + " has already rested")
+            return False
+        theGame().addMessage("The " + hero.name + " is resting")
+        hero.hp += 5
+        for i in range(10):
+            self.moveAllMonsters()
+        self.reposEffectue = True
+        return True
 
 # endregion

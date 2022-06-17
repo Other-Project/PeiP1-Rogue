@@ -1,6 +1,5 @@
 import copy
 import random
-
 import pygame
 from typing import List, Optional
 

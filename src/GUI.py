@@ -83,8 +83,8 @@ class GUI:
             events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
             if len(events) > 0:
                 self.screen.fill((75, 75, 75))
-                self.gameMap(events)
                 self.sidePanel(events)
+                self.gameMap(events)
                 pygame.display.flip()
                 if debug:
                     print("Game screen updated")
@@ -131,9 +131,7 @@ class GUI:
                         if element1_button.clicked:
                             if self.game.hero.weapon is not None:
                                 if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
-                                    self.game.hero.shootProjectile(self)
-                                    for projectile in self.game.hero.all_projectiles:
-                                        projectile.move(e)
+                                    self.game.hero.shootProjectile(self, e)
                                     if e.meet(self.game.hero):
                                         self.game.floor.rm(self.game.floor.pos(e))
                                     pygame.display.flip()
@@ -145,6 +143,8 @@ class GUI:
                     if isinstance(e, Item):
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                             self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
+        for projectile in self.game.hero.all_projectiles:
+            projectile.draw()
 
 
     def drawProgressBar(self, x, y, w, h, val, color, r=None):
