@@ -146,11 +146,10 @@ class GUI:
         for projectile in self.game.hero.all_projectiles:
             projectile.draw()
 
-
     def drawProgressBar(self, x, y, w, h, val, color, r=None):
         r = r or int(h // 2)
         pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(x, y, w, h), border_radius=r)
-        pygame.draw.rect(self.screen, color, pygame.Rect(x + 1, y + 1, (w - 2) * val, h - 2), border_radius=r)
+        pygame.draw.rect(self.screen, color, pygame.Rect(x + 1, y + 1, (w - 2) * max(min(val, 1), 0), h - 2), border_radius=r)
 
     @staticmethod
     def getBarColor(value: float, maxValue: float):
