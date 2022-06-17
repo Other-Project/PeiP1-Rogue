@@ -37,10 +37,18 @@ class Game(object):
         """Generates a new floor"""
         from Map import Map
         from Stairs import Stairs
-        self.floor = Map(hero=self.hero)
-        self.floor.put(self.floor.getRoom(-1).center(), Stairs())
-        self.putChest()
+        from RoomChest import RoomChest
+        from RoomShop import RoomShop
 
+        if self.level%3 == 0:
+            self.floor = Map(hero=self.hero, roomSpe=RoomChest)
+        elif self.level%2 == 0:
+            self.floor = Map(hero=self.hero, roomSpe=RoomShop)
+        else:
+            self.floor = Map(hero=self.hero)
+            self.floor.put(self.floor.getRoom(-1).center(), Stairs())
+
+    '''
     def putChest(self):
         from Chest import Chest
         if self.level % 5 == 0:
@@ -48,7 +56,7 @@ class Game(object):
             while self.floor.get(position) != self.floor.ground:
                 position = self.floor.randRoom().center()
             self.floor.put(position, Chest("Chest"))
-
+    '''
     def addMessage(self, msg):
         """Adds a message to be print at the end of the turn"""
         self._message.append(msg)

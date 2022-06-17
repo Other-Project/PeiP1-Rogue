@@ -7,7 +7,9 @@ from Armor import Armor
 from Hero import Hero
 from utils import theGame
 from Potion import Potion
+from Element import Element
 import utils
+
 
 
 ##################
@@ -105,6 +107,7 @@ equipments = {
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow1.0.png"),
         Amulet("amulet of strength", image="assets/equipments/amulet/strength.png", effectType="strength"),
+        Element(name="gold", image="assets/items/gold_dragon_hide.png")
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/equipments/sword/sword3.png"),

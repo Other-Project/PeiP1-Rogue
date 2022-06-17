@@ -1,6 +1,6 @@
 import random
 from typing import Union, Optional, List
-
+from RoomMonster import RoomMonster
 import utils
 from Coord import Coord
 from Element import Element
@@ -12,12 +12,16 @@ class Map:
     ground = Element("ground")
     empty = None
 
-    def __init__(self, size=20, hero=None, nbRooms=7):
+    def __init__(self, size=20, hero=None, nbRooms=7, roomSpe=None):
         from Hero import Hero
         self.size = size
         self._roomsToReach, self._rooms = [], []
         self._mat = [[self.empty for _ in range(size)] for _ in range(size)]
-        self.generateRooms(nbRooms)
+        self.roomSpe = roomSpe
+        if self.roomSpe is None:
+            self.generateRooms(nbRooms)
+        else:
+            self.addRoom(self.roomSpe)
         self.reachAllRooms()
         self.position = self._rooms[0].center()
         self.hero = hero or Hero()
@@ -152,7 +156,7 @@ class Map:
         from Room import Room
         c1 = Coord(random.randint(0, self.size - 3), random.randint(0, self.size - 3))
         l, h = random.randint(3, 8), random.randint(3, 8)
-        return Room(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
+        return RoomMonster(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
 
     def generateRooms(self, n):
         for i in range(0, n):

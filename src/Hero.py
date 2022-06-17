@@ -28,6 +28,7 @@ class Hero(Creature):
         self.xp, self.lvl, self.xpMultiplier = 0, 1, 1
         self.monstersKilled = 0
         self.mana, self.manaMax = manaMax, manaMax
+        self.gold = 0
         self.astarTree: Optional[AStar] = None
         self.all_projectiles = pygame.sprite.Group()
         self.invisible = 0

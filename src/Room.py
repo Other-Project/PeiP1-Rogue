@@ -37,6 +37,4 @@ class Room:
             return c
 
     def decorate(self, floor):
-        import utils
-        floor.put(self.randEmptyCoord(floor), utils.theGame().randEquipment())
-        floor.put(self.randEmptyCoord(floor), utils.theGame().randMonster())
+        raise NotImplementedError("Abstract Error")
