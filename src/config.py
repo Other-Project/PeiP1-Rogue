@@ -60,7 +60,7 @@ def invincible():
 
 
 def invisible():
-    utils.theGame().hero.invisible = 10
+    utils.theGame().hero.invisible = 5
     utils.theGame().hero.image = "assets/hero/invisibleHero.png"
     utils.theGame().newTurn()
 
@@ -116,12 +116,6 @@ equipments = {
 monsters = {
     0: [
         Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-
         Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 5, xpGain=3, image="assets/monsters/ghost.png")
