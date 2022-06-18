@@ -94,7 +94,7 @@ equipments = {
         Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow1.0.png"),
-        Amulet("amulet of strength", image="assets/equipments/amulet/strength.png", effectType="strength"),
+        Amulet("amulet of strength", image="assets/equipments/amulet/xp.png", effectType="strength"),
 
     ],
     3: [
