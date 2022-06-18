@@ -1,6 +1,8 @@
 import pygame
 import math
 
+import utils
+
 debug = False  # Debug mode
 
 
@@ -115,6 +117,8 @@ class GUI:
         posHero = self.game.floor.pos(self.game.hero)
         for y in range(len(self.game.floor)):
             for x in range(len(self.game.floor)):
+                if utils.theGame().hero.empoisonne>0:
+                    utils.theGame().hero.image = "assets/hero/heroPoisened.png"
                 e = self.game.floor.get(Coord(x, y))
                 if self.difficulty > 1 and posHero.distance(Coord(x, y)) > 6 and (self.difficulty > 2 or Coord(x, y) not in self.game.floor.visited):
                     self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))

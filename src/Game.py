@@ -128,5 +128,4 @@ class Game(object):
             self.hero.hp -= 0.5
             self.hero.empoisonne -= 1
             utils.theGame().addMessage("The hero is poisoned")
-
         self.floor.moveAllMonsters()

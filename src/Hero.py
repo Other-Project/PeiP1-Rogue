@@ -34,6 +34,7 @@ class Hero(Creature):
         self.invisible = 0
         self.empoisonne = 0
 
+
     def shootProjectile(self, gui, monster, onCollide=None):
         from Projectile import Projectile
         self.all_projectiles.add(Projectile(gui, self, utils.theGame().floor.pos(monster), onCollide))
