@@ -339,20 +339,19 @@ class GUI:
 
         # Image of the hero
         heroX = equipmentTileLeftX + equipmentTileW + 20
-        heroY = y
+        heroY = y + 20
         heroW = w - (equipmentTileW + 20) * 2
-        heroH = h - 50
+        heroH = h - 70
         heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/hero.png", heroX, heroY, heroW, heroH)
 
         # XP bar
         xpH = 15
         xpY = heroImgY - 20
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(heroX, xpY, heroW, xpH))
-        pygame.draw.rect(self.screen, (25, 172, 38), pygame.Rect(heroX, xpY, heroW * (self.game.hero.xp / self.game.hero.lvlSup()), xpH))
+        self.drawProgressBar(heroX, xpY, heroW, xpH, self.game.hero.xp / self.game.hero.lvlSup(), (25, 172, 38))
         font = pygame.font.SysFont('comicsansms', int(xpH * 0.75))
-        self.screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (heroX + 5, xpY))
+        self.screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (heroX + 8, xpY - 2))
         xpTxt = font.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255))
-        self.screen.blit(xpTxt, (heroX + heroW - xpTxt.get_width() - 5, xpY))
+        self.screen.blit(xpTxt, (heroX + heroW - xpTxt.get_width() - 8, xpY - 2))
 
         equipmentRightTiles = [self.game.hero.weapon, self.game.hero.shield, self.game.hero.amulet]
         equipmentTileRightW, equipmentTileRightH = equipmentTileW, equipmentTileH * len(equipmentRightTiles) - equipmentTileGap
