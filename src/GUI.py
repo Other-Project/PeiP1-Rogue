@@ -392,20 +392,20 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160,0,0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png")
-        replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png")
+        close_button.drawText(self.screen, "Exit")
+        replay_button.drawText(self.screen, "Restart")
         self.gameMap(pygame.event.Event(pygame.NOEVENT))
         pygame.display.flip()
 
         while True:
             events = self.getEvents()
             if len(events) > 0:
-                close_button.drawImage(self.screen, "assets/gui/end_screen/exitButton.png", events)
+                close_button.drawText(self.screen, "Exit")
                 if close_button.clicked:
                     pygame.quit()
                     import sys
                     sys.exit()
-                replay_button.drawImage(self.screen, "assets/gui/end_screen/restartButton.png", events)
+                replay_button.drawText(self.screen, "Restart")
                 if replay_button.clicked:
                     self.game.__init__()
                     self.game.buildFloor()
