@@ -117,9 +117,15 @@ class Game(object):
     def newTurn(self):
         """Performs a new turn"""
         from datetime import datetime
+        import utils
         print("---", datetime.now().strftime("%H:%M:%S"), "New turn", "---")
         if self.hero.satiety > 0:
             self.hero.satiety -= 0.05  # 1 food every 20 actions
         else:
             self.hero.hp -= 0.2
+        if self.hero.empoisonne > 0:
+            self.hero.hp -= 0.5
+            self.hero.empoisonne -= 1
+            utils.theGame().addMessage("The hero is poisoned")
+
         self.floor.moveAllMonsters()

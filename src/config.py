@@ -7,9 +7,8 @@ from Armor import Armor
 from Hero import Hero
 from utils import theGame
 from Potion import Potion
-from Element import Element
+from Spider import Spider
 import utils
-
 
 
 ##################
@@ -119,7 +118,13 @@ equipments = {
 
 monsters = {
     0: [
-        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+        Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
+
         Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 5, xpGain=3, image="assets/monsters/ghost.png")
