@@ -264,11 +264,19 @@ class GUI:
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH, event)
 
         # Stats: bars of hp, satiety, etc
-        self.drawBarImage(statsX, statsY, 10, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
-                          statsW, nbCol=10)
-        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW,
-                          nbCol=10)
+        statsHpCol, statsSatietyCol, statsManaCol = 5, 10, 10
+        statsHpR, statsSatietyR, statsManaR = math.ceil(self.game.hero.healthMax / statsHpCol), math.ceil(self.game.hero.satietyMax / statsSatietyCol), math.ceil(self.game.hero.manaMax / statsManaCol)
+        statsHpH = self.tileSize * 0.75 * statsHpR + 20 * (statsHpR - 1)
+        statsSatietyH = self.tileSize * 0.75 * statsSatietyR + 20 * (statsHpR - 1)
+        statsManaH = self.tileSize * 0.75 * statsManaR + 20 * (statsHpR - 1)
+        statsGap = (statsH - statsHpH - statsSatietyH - statsManaH) / 2
+        self.drawBarImage(statsX, statsY, self.game.hero.healthMax, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png",
+                          statsW, statsHpH, sizeImage=self.tileSize * 0.75, nbCol=statsHpCol)
+        self.drawBarImage(statsX, statsY + statsHpH + statsGap, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
+                          statsW, statsSatietyH, sizeImage=self.tileSize * 0.75, nbCol=10)
+        self.drawBarImage(statsX, statsY + statsHpH + statsSatietyH + statsGap * 2, self.game.hero.manaMax,
+                          lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png",
+                          statsW, statsManaH, sizeImage=self.tileSize * 0.75, nbCol=10)
 
         # Spells
         from config import potions
@@ -341,7 +349,7 @@ class GUI:
         heroX = equipmentTileLeftX + equipmentTileW + 20
         heroY = y + 20
         heroW = w - (equipmentTileW + 20) * 2
-        heroH = h - 70
+        heroH = h - 80
         heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/hero.png", heroX, heroY, heroW, heroH)
 
         # XP bar
@@ -378,7 +386,7 @@ class GUI:
     def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
         """Draws a horizontal bar made of images"""
         self.drawBar(x, y, valueMax,
-                     lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (max(w, 0), max(h, 0))), (_x, _y)),
+                     lambda _x, _y, w, h, i: drawImage(self.screen, image(i), _x, _y, max(w, 0), max(h, 0)),
                      width, height, nbCol, padding, sizeImage)
 
     # noinspection PyMethodMayBeStatic
