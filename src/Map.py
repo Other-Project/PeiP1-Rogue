@@ -157,23 +157,19 @@ class Map:
         while len(self._roomsToReach) > 0:
             self.reach()
 
-    def randRoom(self):
-        from RoomMonster import RoomMonster
-        from RoomShop import RoomShop
-        from RoomChest import RoomChest
-        roomTypes = [RoomMonster, RoomShop, RoomChest]
-        if len(list(filter(lambda r: isinstance(r, RoomShop), self._rooms))) > 0:
-            roomTypes -= RoomShop
-        if len(list(filter(lambda r: isinstance(r, RoomChest), self._rooms))) > 0:
-            roomTypes -= RoomChest
-
+    def randRoom(self, roomType):
         c1 = Coord(random.randint(0, self.size - 3), random.randint(0, self.size - 3))
         l, h = random.randint(3, 8), random.randint(3, 8)
-        return random.choice(roomTypes)(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
+        return roomType(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
 
     def generateRooms(self, n):
+        from config import rooms
+        from RoomMonster import RoomMonster
+        roomTypes = random.choices(list(rooms.keys()), weights=list(rooms.values()), k=n-2)
+        roomTypes += [RoomMonster, RoomMonster]
+        print(roomTypes)
         for i in range(0, n):
-            room = self.randRoom()
+            room = self.randRoom(roomTypes[i])
             if self.intersectNone(room):
                 self.addRoom(room)
 

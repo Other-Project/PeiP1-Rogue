@@ -8,6 +8,9 @@ from Hero import Hero
 from utils import theGame
 from Potion import Potion
 from Spider import Spider
+from RoomMonster import RoomMonster
+from RoomShop import RoomShop
+from RoomChest import RoomChest
 import utils
 
 
@@ -127,4 +130,10 @@ monsters = {
     5: [
         Monster("Dragon", 20, strength=3, xpGain=10, image="assets/monsters/dragon.png")
     ]
+}
+
+rooms = {
+    RoomMonster: 8,
+    RoomChest: 2,
+    RoomShop: 1
 }

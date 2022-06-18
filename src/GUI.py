@@ -438,7 +438,7 @@ class GUI:
                     sys.exit()
                 replay_button.drawText(self.screen, "Restart", events)
                 if replay_button.clicked:
-                    self.game.__init__()
+                    self.game.newGame()
                     self.game.buildFloor()
                     self.main()
                     break
