@@ -225,9 +225,17 @@ class GUI:
         from config import potions
         spellsFont = pygame.font.SysFont('comicsansms', 15)
         spell = potions[i]
+
         self.drawItem(spell, x, y, event, action=lambda elem, hero: elem.activate(hero), rightAction=lambda elem, hero: None)
-        txt = spellsFont.render(spell.name + ": " + str(spell.price) + " mana", True, (255, 255, 255))
-        self.screen.blit(txt, (x + (self.tileSize - txt.get_width()) / 2, y + self.tileSize + 5))
+
+        name = spellsFont.render(spell.name, True, (255, 255, 255))
+        self.screen.blit(name, (x + (self.tileSize - name.get_width()) / 2, y + self.tileSize + 5))
+
+        price = spellsFont.render("x" + str(spell.price), True, (255, 255, 255))
+        priceY = y + self.tileSize + name.get_height() + 10
+        priceSize = max(price.get_width(), price.get_height())
+        drawImage(self.screen, "assets/items/mana.png", x + (self.tileSize - priceSize) / 2, priceY, priceSize, priceSize)
+        self.screen.blit(price, (x + (self.tileSize - priceSize) / 2, priceY))
 
     def sidePanel(self, event):
         """Draws the side panel"""
@@ -248,15 +256,14 @@ class GUI:
         # Stats: bars of hp, satiety, etc
         self.drawBarImage(statsX, statsY, 10, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png", statsW, sizeImage=self.tileSize * 0.75)
         self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
-                          statsW,
-                          nbCol=10)
+                          statsW, nbCol=10)
         self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW,
                           nbCol=10)
 
         # Spells
         from config import potions
         spellsX, spellsY = statsX, statsY + statsH + 20
-        spellsW, spellsH = boxW - 40, self.tileSize + 25
+        spellsW, spellsH = boxW - 40, self.tileSize + 50
         if debug:  # debug rects
             pygame.draw.rect(self.screen, (80, 20, 20), pygame.Rect(spellsX, spellsY, spellsW, spellsH))  # debug rect
         self.drawBar(spellsX, spellsY, len(potions), lambda x, y, w, h, i: self.drawPotion(x, y, i, event), spellsW, spellsH, nbCol=len(potions), sizeImage=self.tileSize)
@@ -281,7 +288,7 @@ class GUI:
         controls = [
             ("move", "assets/gui/sidebar/zqsd.png", 1.25),
             ("destroy", "assets/gui/sidebar/mouseRight.png", 0.7),
-            ("heal", "assets/gui/sidebar/letterR.png", 0.7),
+            ("rest", "assets/gui/sidebar/letterR.png", 0.7),
             ("use", "assets/gui/sidebar/mouseLeft.png", 0.7),
             ("suicide", "assets/gui/sidebar/letterK.png", 0.7),
             ("skip", "assets/gui/sidebar/spaceBar.png", 0.7)
