@@ -31,6 +31,6 @@ class RoomShop(Room):
 
     def decorate(self, floor):
         utils.theGame().floor.put(Coord(5, 5), Marchand())
-        utils.theGame().floor.put(Coord(13, 13), Stairs())
+        utils.theGame().floor.put(Coord(6, 6), Stairs())
 
 
