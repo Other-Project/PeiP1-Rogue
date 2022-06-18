@@ -401,26 +401,26 @@ class GUI:
                          (self.tileSize * self.game.floor.size + 20, 20))
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/gameOver.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
                          (self.tileSize * self.game.floor.size + 20, 20))
-        self.screen.blit(font1.render("SCORE:", True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
-        self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
-        self.screen.blit(font.render("rooms visited: " + str(self.game.level), True, (160,0,0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.6 / 3)))
-        self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160,0,0)),
+        self.screen.blit(font1.render("SCORE:", True, (160, 0, 0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (0.9 / 3)))
+        self.screen.blit(font.render("hero level: " + str(self.game.hero.lvl), True, (160, 0, 0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.3 / 3)))
+        self.screen.blit(font.render("rooms visited: " + str(self.game.level), True, (160, 0, 0)), (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.6 / 3)))
+        self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160, 0, 0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
         close_button.drawText(self.screen, "Exit")
         replay_button.drawText(self.screen, "Restart")
-        self.gameMap(pygame.event.Event(pygame.NOEVENT))
+        self.gameMap(None)
         pygame.display.flip()
 
         while True:
             events = self.getEvents()
             if len(events) > 0:
-                close_button.drawText(self.screen, "Exit")
+                close_button.drawText(self.screen, "Exit", events)
                 if close_button.clicked:
                     pygame.quit()
                     import sys
                     sys.exit()
-                replay_button.drawText(self.screen, "Restart")
+                replay_button.drawText(self.screen, "Restart", events)
                 if replay_button.clicked:
                     self.game.__init__()
                     self.game.buildFloor()
