@@ -34,6 +34,7 @@ class Hero(Creature):
         self.invisible = 0
         self.poisoned = 0
         self.invincible = 0
+        self.superStrength=0
 
     def shootProjectile(self, gui, monster, onCollide=None):
         from Projectile import Projectile

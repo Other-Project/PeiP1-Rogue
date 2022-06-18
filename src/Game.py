@@ -134,4 +134,8 @@ class Game(object):
             self.hero.invincible -= 1
             self.hero.poisoned = 0
             utils.theGame().addMessage("The hero is invincible")
+        if self.hero.superStrength > 0:
+            self.hero.strength += 4
+            self.hero.superStrength -= 1
+            utils.theGame().addMessage("The hero is stronger")
         self.floor.moveAllMonsters()

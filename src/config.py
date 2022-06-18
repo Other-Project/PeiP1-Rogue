@@ -57,24 +57,28 @@ def invisible():
     utils.theGame().hero.image = "assets/hero/invisibleHero.png"
     utils.theGame().newTurn()
 
+def superStrength():
+    utils.theGame().hero.superStrength = 5
+    utils.theGame().hero.image = "assets/hero/heroSuperStrength.png"
+
 
 ##################
 #     Config     #
 ##################
 
 potions = [
-    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/hero/invisibleHero.png", price=5),
+    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/hero/invisible.png", price=5),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
-    Potion("invincible", usage=lambda item, hero: invincible(), image="assets/potions/invincible.png", price=9)
+    Potion("invincible", usage=lambda item, hero: invincible(), image="assets/potions/invincible.png", price=9),
+    Potion("super strength", usage=lambda item, hero: invincible(), image="assets/potions/strength.png", price=9)
 ]
 
 equipments = {
     0: [
         Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety"),
         Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/items/mana.png", desc="+1 mana"),
-        Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
         Item(name="gold", image="assets/items/gold.png", desc="+1 gold"),
     ],
     1: [
@@ -93,13 +97,13 @@ equipments = {
         Armor("Legs", resistance=2, armorType="legs", image="assets/equipments/leg/leg2.png"),
         Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
-        Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow1.0.png"),
+        Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow2.png"),
         Amulet("amulet of strength", image="assets/equipments/amulet/xp.png", effectType="strength"),
 
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/equipments/sword/sword3.png"),
-        Weapon("bow", radius=4, damage=0, radiusDamage=4, image="assets/equipments/bow/bow1.0.png"),
+        Weapon("bow", radius=4, damage=0, radiusDamage=4, image="assets/equipments/bow/bow3.png"),
         Amulet("amulet of xp", image="assets/equipments/amulet/xp.png", effectType="xp"),
         Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety")
     ]
