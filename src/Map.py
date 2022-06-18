@@ -3,6 +3,8 @@ from typing import Union, Optional, List
 from RoomMonster import RoomMonster
 import utils
 from Coord import Coord
+from Chest import Chest
+from RoomShop import Marchand
 from Element import Element
 
 
@@ -18,18 +20,21 @@ class Map:
         self._roomsToReach, self._rooms = [], []
         self._mat = [[self.empty for _ in range(size)] for _ in range(size)]
         self.roomSpe = roomSpe
-        if self.roomSpe is None:
-            self.generateRooms(nbRooms)
-        else:
-            self.addRoom(self.roomSpe)
+        self.generateRooms(nbRooms)
         self.reachAllRooms()
         self.position = self._rooms[0].center()
         self.hero = hero or Hero()
         self._elem = {}
         self.put(self.position, self.hero)
         self.visited = []
-        for room in self._rooms:
-            room.decorate(self)
+
+        if utils.theGame().level % 3 == 0:
+            self.put(self.randEmptyCenterCoordInRandRoom(), Chest())
+        elif utils.theGame().level % 2 == 0:
+            self.put(self.randEmptyCenterCoordInRandRoom(), Marchand())
+        else:
+            for room in self._rooms:
+                room.decorate(self)
         self.reposEffectue = False
 
     def __repr__(self):
@@ -166,6 +171,12 @@ class Map:
 
     def randEmptyCoord(self):
         return random.choice(self._rooms).randEmptyCoord(self)
+
+    def randEmptyCenterCoordInRandRoom(self):
+        co = self.randRoom().center()
+        while self.get(co) != self.ground:
+            co = self.randRoom().center()
+        return co
 
     # endregion
 
