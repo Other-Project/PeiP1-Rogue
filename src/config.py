@@ -67,7 +67,7 @@ def superStrength():
 ##################
 
 potions = [
-    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/hero/invisible.png", price=5),
+    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/potions/invisible.png", price=5),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
