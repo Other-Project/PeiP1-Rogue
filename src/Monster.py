@@ -1,9 +1,11 @@
 from Creature import Creature
+import pygame
 
 
 class Monster(Creature):
     from Map import Map
     from Hero import Hero
+    from GUI import GUI
 
     def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, visibility=True):
         """
@@ -22,6 +24,12 @@ class Monster(Creature):
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed
         self.hpMax = hp
+        self.all_projectile = pygame.sprite.Group()
+
+    def shootProjectile(self, gui, onCollide=None):
+        from Projectile import Projectile
+        import utils
+        self.all_projectile.add(Projectile(gui, self, utils.theGame().floor.pos(utils.theGame().hero), onCollide))
 
     def attack(self, attacked: Hero, damage=None):
         """Attacks the hero"""
@@ -44,8 +52,8 @@ class Monster(Creature):
 
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""
-        import random
-
+        print("Do action", floor, self)
+        import utils
         astar = floor.hero.astarTree
         if astar is None:
             return
@@ -53,7 +61,8 @@ class Monster(Creature):
         for i in range(self.movingSpeed):
             if len(path) > i:
                 floor.move(self, floor.pos(self).direction(path[i]))
-
         inRadius = floor.getAllCreaturesInRadius(self, self.range, self.enemyType)
         if len(inRadius) > 0:
-            self.attack(random.choice(inRadius))
+            self.shootProjectile(utils.theGame().gui)
+            self.attack(utils.theGame().hero)
+

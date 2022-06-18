@@ -69,7 +69,6 @@ class GUI:
         pygame.init()
         pygame.display.set_caption('Roguelike')
         pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
-        self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
     def updateScreenSize(self, w=0, h=0):
@@ -80,6 +79,7 @@ class GUI:
 
     def main(self):
         """Main loop"""
+        self.updateScreenSize()
         self.startScreen()
         while self.game.hero.hp > 0:
             events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
@@ -87,14 +87,12 @@ class GUI:
                 self.screen.fill((75, 75, 75))
                 self.sidePanel(events)
                 self.gameMap(events)
-
                 # Updates the display but don't pass event, so it doesn't count a click twice
                 self.sidePanel(None)
                 self.gameMap(None)
                 pygame.display.flip()
                 if debug:
                     print("Game screen updated")
-
         self.endScreen()
 
     def getTileSurface(self, e):
@@ -117,7 +115,7 @@ class GUI:
         posHero = self.game.floor.pos(self.game.hero)
         for y in range(len(self.game.floor)):
             for x in range(len(self.game.floor)):
-                if utils.theGame().hero.empoisonne>0:
+                if utils.theGame().hero.poisoned>0:
                     utils.theGame().hero.image = "assets/hero/heroPoisened.png"
                 if utils.theGame().hero.invincible>0:
                     utils.theGame().hero.image = "assets/hero/heroInvincible.png"
@@ -151,6 +149,9 @@ class GUI:
                     if isinstance(e, Item):
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                             self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
+                    if isinstance(e, Monster):
+                        for projectile in e.all_projectile:
+                            projectile.draw()
         for projectile in self.game.hero.all_projectiles:
             projectile.draw()
 
@@ -172,7 +173,6 @@ class GUI:
     def startScreen(self):
         """Draws the start screen"""
         self.screen.fill((255, 255, 255))
-
         while True:
             events = self.getEvents()
             if len(events) > 0:

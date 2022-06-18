@@ -42,5 +42,7 @@ class Projectile(pygame.sprite.Sprite):
             self.rect.y += mvtY
             pygame.display.flip()
             pygame.time.wait(100)
-        self.onCollide(self.dest)
+        if self.onCollide is not None:
+            self.onCollide(self.dest)
         self.hero.all_projectiles.remove(self)
+

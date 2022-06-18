@@ -20,12 +20,10 @@ def heal(hero: Hero, hpGain=3):
     theGame().addMessage("The hero cured himself")
     return True
 
-
 def eat(hero: Hero, satietyGain=2):
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
     theGame().newTurn()
     return True
-
 
 def manaPotion(hero: Hero, manaGain=1):
     if hero.mana < hero.manaMax:
@@ -34,7 +32,6 @@ def manaPotion(hero: Hero, manaGain=1):
     else:
         theGame().addMessage("Your inventory is already full")
         return False
-
 
 def teleport(hero: Hero):
     floor = theGame().floor
@@ -45,19 +42,15 @@ def teleport(hero: Hero):
     utils.theGame().addMessage(" The hero has been teleported")
     return False
 
-
 def zap(hero: Hero):
     for monster in theGame().floor.getAllCreaturesInRadius(hero, 3, Monster):
         monster.hp -= 3
         utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
         utils.theGame().newTurn()
 
-
 def invincible():
     utils.theGame().hero.invincible=10
     utils.theGame().newTurn()
-
-
 
 def invisible():
     utils.theGame().hero.invisible = 5
@@ -115,10 +108,14 @@ equipments = {
 
 monsters = {
     0: [
+        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
+        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
+        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
         Spider("Spider", 1, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
         Monster("Bat", 2, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 4, xpGain=2, image="assets/monsters/goblin.png"),
-        Ghost("Ghost", 5, xpGain=3, image="assets/monsters/ghost.png")
+        Ghost("Ghost", 5, xpGain=3, image="assets/monsters/ghost.png"),
+        Monster("Archer", 1, radius=2, image="assets/monsters/archer.png"),
     ],
     1: [
         Monster("Ork", 6, strength=2, xpGain=3, image="assets/monsters/orc.png"),

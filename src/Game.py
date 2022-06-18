@@ -28,10 +28,12 @@ class Game(object):
 
     def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
         from Hero import Hero
+        from GUI import GUI
         self.hero = hero or Hero()
         self.level = level
         self.floor = floor
         self._message = message or []
+        self.gui = GUI(self)
 
     def buildFloor(self):
         """Generates a new floor"""
@@ -101,10 +103,9 @@ class Game(object):
         """Main game loop"""
         import os
         os.system('cls' if os.name == 'nt' else 'clear')
-        from GUI import GUI
         self.buildFloor()
         self.addMessage("--- Welcome Hero! ---")
-        GUI(self).main()
+        self.gui.main()
 
     def keyPressed(self, c: int):
         """
@@ -125,12 +126,12 @@ class Game(object):
             self.hero.satiety -= 0.05  # 1 food every 20 actions
         else:
             self.hero.hp -= 0.2
-        if self.hero.empoisonne > 0:
+        if self.hero.poisoned > 0:
             self.hero.hp -= 0.5
-            self.hero.empoisonne -= 1
+            self.hero.poisoned -= 1
             utils.theGame().addMessage("The hero is poisoned")
         if self.hero.invincible > 0:
             self.hero.invincible -= 1
-            self.hero.empoisonne = 0
+            self.hero.poisoned = 0
             utils.theGame().addMessage("The hero is invincible")
         self.floor.moveAllMonsters()

@@ -27,5 +27,5 @@ class Spider(Monster):
         import utils
         from Creature import Creature
         Creature.attack(self, attacked, damage)
-        utils.theGame().hero.empoisonne = 4
+        utils.theGame().hero.poisoned = 4
 

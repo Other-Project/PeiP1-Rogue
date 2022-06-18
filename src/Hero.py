@@ -32,7 +32,7 @@ class Hero(Creature):
         self.astarTree: Optional[AStar] = None
         self.all_projectiles = pygame.sprite.Group()
         self.invisible = 0
-        self.empoisonne = 0
+        self.poisoned = 0
         self.invincible = 0
 
     def shootProjectile(self, gui, monster, onCollide=None):
