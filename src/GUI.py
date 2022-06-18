@@ -79,7 +79,6 @@ class GUI:
 
     def main(self):
         """Main loop"""
-        self.updateScreenSize()
         self.startScreen()
         while self.game.hero.hp > 0:
             events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
@@ -117,7 +116,7 @@ class GUI:
             for x in range(len(self.game.floor)):
                 if utils.theGame().hero.poisoned>0:
                     utils.theGame().hero.image = "assets/hero/heroPoisened.png"
-                if utils.theGame().hero.invincible>0:
+                if utils.theGame().hero.invincible > 0:
                     utils.theGame().hero.image = "assets/hero/heroInvincible.png"
 
                 e = self.game.floor.get(Coord(x, y))
@@ -210,8 +209,8 @@ class GUI:
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
-    def popContaine(self, l, x = 500, y=500,size=20):
-        pygame.draw.rect(self.screen,(55,55,55), pygame.Rect(x,y,size,size))
+    def popContaine(self, l, x=500, y=500, size=20):
+        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
 
     def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
         """Draws a box with an item (or not) inside"""
@@ -264,12 +263,19 @@ class GUI:
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH, event)
 
         # Stats: bars of hp, satiety, etc
-        self.drawBarImage(statsX, statsY, 10, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png", statsW, sizeImage=self.tileSize * 0.75)
-        self.drawBarImage(statsX, statsY + self.tileSize * 2.7, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
-                          statsW, nbCol=10)
-        self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW,
-                          nbCol=10)
-
+        statsHpCol, statsSatietyCol, statsManaCol = 5, 10, 10
+        statsHpR, statsSatietyR, statsManaR = math.ceil(self.game.hero.healthMax / statsHpCol), math.ceil(self.game.hero.satietyMax / statsSatietyCol), math.ceil(self.game.hero.manaMax / statsManaCol)
+        statsHpH = self.tileSize * 0.75 * statsHpR + 20 * (statsHpR - 1)
+        statsSatietyH = self.tileSize * 0.75 * statsSatietyR + 20 * (statsHpR - 1)
+        statsManaH = self.tileSize * 0.75 * statsManaR + 20 * (statsHpR - 1)
+        statsGap = (statsH - statsHpH - statsSatietyH - statsManaH) / 2
+        self.drawBarImage(statsX, statsY, self.game.hero.healthMax, lambda i: "assets/gui/sidebar/heart_fg.png" if i < self.game.hero.hp else "assets/gui/sidebar/heart_bg.png",
+                          statsW, statsHpH, sizeImage=self.tileSize * 0.75, nbCol=statsHpCol)
+        self.drawBarImage(statsX, statsY + statsHpH + statsGap, self.game.hero.satietyMax, lambda i: "assets/foods/chunk.png" if i < self.game.hero.satiety else "assets/gui/sidebar/food_bg.png",
+                          statsW, statsSatietyH, sizeImage=self.tileSize * 0.75, nbCol=10)
+        self.drawBarImage(statsX, statsY + statsHpH + statsSatietyH + statsGap * 2, self.game.hero.manaMax,
+                          lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png",
+                          statsW, statsManaH, sizeImage=self.tileSize * 0.75, nbCol=10)
 
         # Spells
         from config import potions
@@ -340,20 +346,19 @@ class GUI:
 
         # Image of the hero
         heroX = equipmentTileLeftX + equipmentTileW + 20
-        heroY = y
+        heroY = y + 20
         heroW = w - (equipmentTileW + 20) * 2
-        heroH = h - 50
+        heroH = h - 80
         heroImgX, heroImgY, heroImgW, heroImgH = drawImage(self.screen, "assets/hero/hero.png", heroX, heroY, heroW, heroH)
 
         # XP bar
         xpH = 15
         xpY = heroImgY - 20
-        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(heroX, xpY, heroW, xpH))
-        pygame.draw.rect(self.screen, (25, 172, 38), pygame.Rect(heroX, xpY, heroW * (self.game.hero.xp / self.game.hero.lvlSup()), xpH))
+        self.drawProgressBar(heroX, xpY, heroW, xpH, self.game.hero.xp / self.game.hero.lvlSup(), (25, 172, 38))
         font = pygame.font.SysFont('comicsansms', int(xpH * 0.75))
-        self.screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (heroX + 5, xpY))
+        self.screen.blit(font.render("lvl:" + str(self.game.hero.lvl), True, (255, 255, 255)), (heroX + 8, xpY - 2))
         xpTxt = font.render(str(self.game.hero.xp) + "/" + str(self.game.hero.lvlSup()), True, (255, 255, 255))
-        self.screen.blit(xpTxt, (heroX + heroW - xpTxt.get_width() - 5, xpY))
+        self.screen.blit(xpTxt, (heroX + heroW - xpTxt.get_width() - 8, xpY - 2))
 
         equipmentRightTiles = [self.game.hero.weapon, self.game.hero.shield, self.game.hero.amulet]
         equipmentTileRightW, equipmentTileRightH = equipmentTileW, equipmentTileH * len(equipmentRightTiles) - equipmentTileGap
@@ -363,19 +368,24 @@ class GUI:
 
         # Stats
         statsX, statsY = heroX, heroImgY + heroImgH + 5
-        statsW, statsH = heroW / 2 - 20, 30
+        statsW, statsH = heroW / 3 - 40, 30
+        stats = [
+            ("assets/equipments/sword/sword1.png", str(self.game.hero.strengthTot())),
+            ("assets/equipments/shield/shield2.png", str(self.game.hero.resistance())),
+            ("assets/items/gold.png", str(self.game.hero.gold))
+        ]
+        self.drawBar(statsX, statsY, len(stats), lambda x, y, w, h, i: self.drawStatComponent(x, y, w, h, stats[i]), heroW, statsH, nbCol=3)
+
+    def drawStatComponent(self, x, y, w, h, data):
         statsFont = pygame.font.SysFont('comicsansms', 20)
-        drawImage(self.screen, "assets/equipments/sword/sword1.png", statsX, statsY, statsW, statsH)
-        strengthTxt = statsFont.render(str(self.game.hero.strengthTot()), True, (255, 255, 255))
-        self.screen.blit(strengthTxt, (statsX + (statsW - strengthTxt.get_width()) / 2, statsY + statsH))
-        drawImage(self.screen, "assets/equipments/shield/shield2.png", statsX + statsW + 40, statsY, statsW, statsH)
-        resistanceTxt = statsFont.render(str(self.game.hero.resistance()), True, (255, 255, 255))
-        self.screen.blit(resistanceTxt, (statsX + statsW + 40 + (statsW - resistanceTxt.get_width()) / 2, statsY + statsH))
+        drawImage(self.screen, data[0], x, y, w, h)
+        strengthTxt = statsFont.render(data[1], True, (255, 255, 255))
+        self.screen.blit(strengthTxt, (x + (w - strengthTxt.get_width()) / 2, y + h))
 
     def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
         """Draws a horizontal bar made of images"""
         self.drawBar(x, y, valueMax,
-                     lambda _x, _y, w, h, i: self.screen.blit(pygame.transform.scale(pygame.image.load(image(i)), (max(w, 0), max(h, 0))), (_x, _y)),
+                     lambda _x, _y, w, h, i: drawImage(self.screen, image(i), _x, _y, max(w, 0), max(h, 0)),
                      width, height, nbCol, padding, sizeImage)
 
     # noinspection PyMethodMayBeStatic
