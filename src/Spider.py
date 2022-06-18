@@ -11,7 +11,7 @@ class Spider(Monster):
         :param strength: The strength of the monster
         :param xpGain: The quantity of XP that the hero will gain
         """
-        Monster.__init__(self, name, hp, image=None, strength=strength, radius=0, xpGain=xpGain, visibility=False)
+        Monster.__init__(self, name, hp, image=None, strength=strength, radius=0, xpGain=xpGain, visibility=True)
         self.image = image
         self.movingSpeed = movingSpeed
 
