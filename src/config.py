@@ -75,7 +75,7 @@ potions = [
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
     Potion("invincible", usage=lambda item, hero: invincible(), image="assets/potions/invincible.png", price=9),
-    Potion("super strength", usage=lambda item, hero: invincible(), image="assets/potions/strength.png", price=9)
+    Potion("stronger", usage=lambda item, hero: invincible(), image="assets/potions/strength.png", price=9)
 ]
 
 equipments = {
