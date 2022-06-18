@@ -31,7 +31,7 @@ class Map:
         for room in self._rooms:
             room.decorate(self)
         self.reposEffectue = False
-        print(self._elem, self._rooms, self._roomsToReach)
+
     def __repr__(self):
         return '\n'.join([''.join([str(x) for x in y]) for y in self._mat]) + '\n'
 
