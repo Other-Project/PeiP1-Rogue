@@ -58,6 +58,7 @@ class Game(object):
                 position = self.floor.randRoom().center()
             self.floor.put(position, Chest("Chest"))
     '''
+
     def addMessage(self, msg):
         """Adds a message to be print at the end of the turn"""
         self._message.append(msg)
@@ -128,4 +129,8 @@ class Game(object):
             self.hero.hp -= 0.5
             self.hero.empoisonne -= 1
             utils.theGame().addMessage("The hero is poisoned")
+        if self.hero.invincible > 0:
+            self.hero.invincible -= 1
+            self.hero.empoisonne = 0
+            utils.theGame().addMessage("The hero is invincible")
         self.floor.moveAllMonsters()

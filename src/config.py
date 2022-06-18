@@ -53,14 +53,10 @@ def zap(hero: Hero):
         utils.theGame().newTurn()
 
 
-def fireball(hero: Hero):
-    creatures = theGame().floor.getAllCreaturesInRadius(hero, 3, Monster)
-    if creatures is not None:
-        import random
-        creature = random.choice(creatures)
-        hero.attack(creature, creature.hp)
-        utils.theGame().floor.rm(utils.theGame().floor.pos(creature))
-        utils.theGame().addMessage("The " + creature.name + " has been fatally wounded by the spell.")
+def invincible():
+    utils.theGame().hero.invincible=10
+    utils.theGame().newTurn()
+
 
 
 def invisible():
@@ -78,7 +74,7 @@ potions = [
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
-    Potion("fireball", usage=lambda item, hero: fireball(hero), image="assets/potions/fireball.png", price=9)
+    Potion("invincible", usage=lambda item, hero: invincible(), image="assets/potions/invincible.png", price=9)
 
 ]
 

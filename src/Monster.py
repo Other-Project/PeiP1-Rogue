@@ -27,7 +27,8 @@ class Monster(Creature):
         """Attacks the hero"""
         from Hero import Hero
         import random
-
+        if attacked.invincible > 0:
+            return True
         damage = damage or max(self.strength - attacked.resistance(), 1)
         Creature.attack(self, attacked, damage)
 
