@@ -14,26 +14,23 @@ class Map:
     def __init__(self, size=20, hero=None, nbRooms=7, roomSpe=None):
         from Hero import Hero
         from RoomMonster import RoomMonster
+        from Stairs import Stairs
+
         self.size = size
         self._roomsToReach, self._rooms = [], []
         self._mat = [[self.empty for _ in range(size)] for _ in range(size)]
         self.roomSpe = roomSpe
         self.generateRooms(nbRooms)
         self.reachAllRooms()
-        self.position = list(filter(lambda r: isinstance(r, RoomMonster), self._rooms))[0].center()
+        self.position = self.getRoom(0, RoomMonster).center()
         self.hero = hero or Hero()
         self._elem = {}
         self.put(self.position, self.hero)
         self.visited = []
 
-        stairsSpawned = False
-        for room in reversed(self._rooms):
+        for room in self._rooms:
             room.decorate(self)
-            from RoomMonster import RoomMonster
-            from Stairs import Stairs
-            if isinstance(room, RoomMonster) and not stairsSpawned:
-                self.put(room.center(), Stairs())
-                stairsSpawned = True
+        self.put(self.getRoom(-1, RoomMonster).center(), Stairs())
 
         self.reposEffectue = False
 
@@ -106,8 +103,9 @@ class Map:
 
     # region Rooms
 
-    def getRoom(self, i: int):
-        return self._rooms[i]
+    def getRoom(self, i: int, roomType=None):
+        rooms = list(filter(lambda r: isinstance(r, roomType), self._rooms))
+        return rooms[i] if i < len(rooms) else None
 
     def addRoom(self, room):
         self._roomsToReach.append(room)
@@ -165,9 +163,8 @@ class Map:
     def generateRooms(self, n):
         from config import rooms
         from RoomMonster import RoomMonster
-        roomTypes = random.choices(list(rooms.keys()), weights=list(rooms.values()), k=n-2)
-        roomTypes += [RoomMonster, RoomMonster]
-        print(roomTypes)
+        roomTypes = [RoomMonster, RoomMonster]
+        roomTypes += random.choices(list(rooms.keys()), weights=list(rooms.values()), k=n - 2)
         for i in range(0, n):
             room = self.randRoom(roomTypes[i])
             if self.intersectNone(room):
