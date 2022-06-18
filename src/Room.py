@@ -1,5 +1,4 @@
 import random
-
 from Coord import Coord
 
 
@@ -38,3 +37,4 @@ class Room:
 
     def decorate(self, floor):
         raise NotImplementedError("Abstract Error")
+

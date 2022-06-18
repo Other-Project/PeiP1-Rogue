@@ -1,10 +1,7 @@
 import random
 from typing import Union, Optional, List
-from RoomMonster import RoomMonster
 import utils
 from Coord import Coord
-from Chest import Chest
-from RoomShop import Marchand
 from Element import Element
 
 
@@ -16,25 +13,28 @@ class Map:
 
     def __init__(self, size=20, hero=None, nbRooms=7, roomSpe=None):
         from Hero import Hero
+        from RoomMonster import RoomMonster
         self.size = size
         self._roomsToReach, self._rooms = [], []
         self._mat = [[self.empty for _ in range(size)] for _ in range(size)]
         self.roomSpe = roomSpe
         self.generateRooms(nbRooms)
         self.reachAllRooms()
-        self.position = self._rooms[0].center()
+        self.position = list(filter(lambda r: isinstance(r, RoomMonster), self._rooms))[0].center()
         self.hero = hero or Hero()
         self._elem = {}
         self.put(self.position, self.hero)
         self.visited = []
 
-        if utils.theGame().level % 3 == 0:
-            self.put(self.randEmptyCenterCoordInRandRoom(), Chest())
-        elif utils.theGame().level % 2 == 0:
-            self.put(self.randEmptyCenterCoordInRandRoom(), Marchand())
-        else:
-            for room in self._rooms:
-                room.decorate(self)
+        stairsSpawned = False
+        for room in reversed(self._rooms):
+            room.decorate(self)
+            from RoomMonster import RoomMonster
+            from Stairs import Stairs
+            if isinstance(room, RoomMonster) and not stairsSpawned:
+                self.put(room.center(), Stairs())
+                stairsSpawned = True
+
         self.reposEffectue = False
 
     def __repr__(self):
@@ -89,7 +89,7 @@ class Map:
         self.checkCoord(c)
         self.checkElement(e)
         if self._mat[c.y][c.x] != self.ground:
-            raise ValueError('Incorrect cell')
+            raise ValueError('Incorrect cell (' + str(self._mat[c.y][c.x]) + ')')
         if e in self:
             raise KeyError('Already placed')
         self._mat[c.y][c.x] = e
@@ -158,10 +158,18 @@ class Map:
             self.reach()
 
     def randRoom(self):
-        from Room import Room
+        from RoomMonster import RoomMonster
+        from RoomShop import RoomShop
+        from RoomChest import RoomChest
+        roomTypes = [RoomMonster, RoomShop, RoomChest]
+        if len(list(filter(lambda r: isinstance(r, RoomShop), self._rooms))) > 0:
+            roomTypes -= RoomShop
+        if len(list(filter(lambda r: isinstance(r, RoomChest), self._rooms))) > 0:
+            roomTypes -= RoomChest
+
         c1 = Coord(random.randint(0, self.size - 3), random.randint(0, self.size - 3))
         l, h = random.randint(3, 8), random.randint(3, 8)
-        return RoomMonster(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
+        return random.choice(roomTypes)(c1, Coord(min(self.size - 1, c1.x + l), min(self.size - 1, c1.y + h)))
 
     def generateRooms(self, n):
         for i in range(0, n):

@@ -69,16 +69,19 @@ class GUI:
         pygame.init()
         pygame.display.set_caption('Roguelike')
         pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
+        self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
     def updateScreenSize(self, w=0, h=0):
         """Resize the window"""
         self.w, self.h = max(1200, w), max(700, h)
         self.screen = pygame.display.set_mode((self.w, self.h), pygame.RESIZABLE)
-        self.tileSize = min(self.w * 0.7, self.w - 500, self.h) / self.game.floor.size
+        if self.game.floor is not None:
+            self.tileSize = min(self.w * 0.7, self.w - 500, self.h) / self.game.floor.size
 
     def main(self):
         """Main loop"""
+        self.updateScreenSize()
         self.startScreen()
         while self.game.hero.hp > 0:
             events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
@@ -138,8 +141,8 @@ class GUI:
                     if isinstance(e, Monster):
                         if element1_button.clicked:
                             if self.game.hero.weapon is not None:
-                                if posHero.distance(self.game.floor.pos(e)) <= self.game.floor.hero.weapon.radius:
-                                    self.game.hero.shootProjectile(self, e, lambda coord: self.game.hero.weapon.rangedAttack(self.game.floor.get(coord)))
+                                if posHero.distance(Coord(x, y)) <= self.game.floor.hero.weapon.radius:
+                                    self.game.hero.shootProjectile(Coord(x, y), lambda coord: self.game.hero.weapon.rangedAttack(self.game.floor.get(coord)))
                         if e.visibility:
                             hpBarX, hpBarY = self.getTilePos(x, y, e)
                             hpBarW, hpBarH = self.tileSize, self.tileSize * 0.175
@@ -148,11 +151,11 @@ class GUI:
                     if isinstance(e, Item):
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
                             self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
-                    if isinstance(e, Monster):
-                        for projectile in e.all_projectile:
-                            projectile.draw()
-        for projectile in self.game.hero.all_projectiles:
-            projectile.draw()
+        for elem in self.game.floor._elem.copy():
+            from Creature import Creature
+            if isinstance(elem, Creature) and elem.hp > 0:
+                for projectile in elem.all_projectiles:
+                    projectile.draw()
 
     def drawProgressBar(self, x, y, w, h, val, color, r=None):
         r = r or int(h // 2)
