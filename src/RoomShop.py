@@ -1,10 +1,6 @@
 from Room import Room
 from Coord import Coord
-from Equipment import Equipment
-from Stairs import Stairs
 from Chest import Chest
-from Hero import Hero
-import utils
 
 
 class Marchand(Chest):
@@ -14,6 +10,10 @@ class Marchand(Chest):
         self.product = {}
 
     def sell(self,item, hero):
+        import utils
+        from Hero import Hero
+        from Equipment import Equipment
+
         if not isinstance(item, Equipment):
             raise TypeError("The item is not equipable")
 
@@ -26,11 +26,8 @@ class Marchand(Chest):
 
 
 class RoomShop(Room):
-    def __init__(self, c1=Coord(6, 6), c2=Coord(12, 12)):
+    def __init__(self, c1, c2):
         Room.__init__(self, c1=c1, c2=c2)
 
     def decorate(self, floor):
-        utils.theGame().floor.put(Coord(5, 5), Marchand())
-        utils.theGame().floor.put(Coord(6, 6), Stairs())
-
-
+        floor.put(self.center(), Marchand())

@@ -1,4 +1,3 @@
-import copy
 import random
 import pygame
 from typing import List, Optional
@@ -27,20 +26,20 @@ class Game(object):
     }
 
     def __init__(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
-        from Hero import Hero
         from GUI import GUI
+        self.newGame(hero, level, floor, message)
+        self.gui = GUI(self)
+
+    def newGame(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
+        from Hero import Hero
         self.hero = hero or Hero()
         self.level = level
         self.floor = floor
         self._message = message or []
-        self.gui = GUI(self)
 
     def buildFloor(self):
         """Generates a new floor"""
         from Map import Map
-        from Stairs import Stairs
-        from RoomChest import RoomChest
-        from RoomShop import RoomShop
         """
         if self.level%3 == 0:
             self.floor = Map(hero=self.hero, roomSpe=RoomChest())
@@ -49,7 +48,6 @@ class Game(object):
         else:
         """
         self.floor = Map(hero=self.hero)
-        self.floor.put(self.floor.getRoom(-1).center(), Stairs())
 
     '''
     def putChest(self):
@@ -78,6 +76,7 @@ class Game(object):
         Returns a random element from a dictionary depending on the game level
         :param collection: A dictionary where the key is the minimum game level and the value is a list of elements
         """
+        import copy
         X = random.expovariate(1 / self.level)
         index = -1
         for x in collection:
@@ -102,8 +101,8 @@ class Game(object):
     def play(self):
         """Main game loop"""
         import os
-        os.system('cls' if os.name == 'nt' else 'clear')
         self.buildFloor()
+        os.system('cls' if os.name == 'nt' else 'clear')
         self.addMessage("--- Welcome Hero! ---")
         self.gui.main()
 

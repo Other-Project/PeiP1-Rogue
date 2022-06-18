@@ -1,4 +1,5 @@
 from Element import Element
+import pygame
 
 
 class Creature(Element):
@@ -16,6 +17,11 @@ class Creature(Element):
         self.strength = strength
         self.enemyType = enemyType
         self.visibility = visibility
+        self.all_projectiles = pygame.sprite.Group()
+
+    def shootProjectile(self, target, onCollide=None):
+        from Projectile import Projectile
+        self.all_projectiles.add(Projectile(self, target, onCollide))
 
     def description(self):
         return Element.description(self) + "(" + str(max(self.hp, 0)) + ")"
