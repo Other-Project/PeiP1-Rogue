@@ -1,10 +1,10 @@
 import utils
-from Item import Item
+from Element import Element
 
 
-class Chest(Item):
+class Chest(Element):
     def __init__(self, name: str='Chest', image="assets/items/chest.png", contain: list = None, size=3):
-        Item.__init__(self, name, image=image)
+        Element.__init__(self, name, image=image)
         if contain is None:
             self.contain = [utils.theGame().randEquipment() for _ in range(size)]
         else:
@@ -13,6 +13,16 @@ class Chest(Item):
     def open(self):
         return ".\n".join(self.contain)
 
+    def meet(self, hero):
+        import utils
+        from Hero import Hero
+        if isinstance(hero, Hero):
+            utils.theGame().addMessage("You open the Chest")
+            '''
+            return self.open()
+            '''
+            utils.theGame().GUI.popContain(self.contain)
+        return None
 
 
 

@@ -207,6 +207,9 @@ class GUI:
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
+    def popContaine(self, l, x = 500, y=500,size=20):
+        pygame.draw.rect(self.screen,(55,55,55), pygame.Rect(x,y,size,size))
+
     def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
         """Draws a box with an item (or not) inside"""
         size = size or self.tileSize
@@ -263,6 +266,7 @@ class GUI:
                           statsW, nbCol=10)
         self.drawBarImage(statsX, statsY + self.tileSize * 3.7, self.game.hero.manaMax, lambda i: "assets/items/mana.png" if i < self.game.hero.mana else "assets/gui/sidebar/mana_bg.png", statsW,
                           nbCol=10)
+
 
         # Spells
         from config import potions

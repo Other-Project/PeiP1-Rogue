@@ -83,6 +83,7 @@ equipments = {
         Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+2 satiety"),
         Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/items/mana.png", desc="+1 mana"),
         Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
+        Item(name="gold", image="assets/items/gold_dragon_hide.png"),
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/equipments/sword/sword1.png"),
@@ -91,7 +92,7 @@ equipments = {
         Armor("helmet", resistance=1, armorType="helmet", image="assets/equipments/helmet/helmet1.png"),
         Armor("chainmail", resistance=1, armorType="chestplate", image="assets/equipments/armor/armor1.png"),
         Armor("Legs", resistance=1, armorType="legs", image="assets/equipments/leg/leg1.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/equipments/boot/boot1.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/items/gold_dragon_hide.png"),
     ],
     2: [
         Armor("shield", resistance=2, armorType="shield", image="assets/equipments/shield/shield2.png"),
@@ -102,7 +103,7 @@ equipments = {
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
         Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow1.0.png"),
         Amulet("amulet of strength", image="assets/equipments/amulet/strength.png", effectType="strength"),
-        Item(name="gold", image="assets/items/gold_dragon_hide.png")
+
     ],
     3: [
         Weapon("sword", radius=0, damage=4, image="assets/equipments/sword/sword3.png"),
