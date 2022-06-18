@@ -49,7 +49,7 @@ class Hero(Creature):
             raise TypeError('Not a Equipment')
         elif item.name == 'gold':
             self.gold += 1
-            utils.theGame().floor.rm(utils.theGame().floor.get(item))
+            return True
         return self.addInventory(item)
 
     def addInventory(self, item):
