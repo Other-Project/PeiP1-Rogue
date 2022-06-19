@@ -236,7 +236,6 @@ class GUI:
                     elemButton = Button(x, y, self.tileSize, self.tileSize)
                     elemButton.drawImage(self.screen, element.image, events)
                     x += self.tileSize * 3.5
-                    utils.theGame().newTurn()
                     if elemButton.clicked:
                         self.game.hero.take(element)
                         l.remove(element)
