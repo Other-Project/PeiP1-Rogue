@@ -20,7 +20,7 @@ class Chest(Element):
                 hero.inventory.remove(self.key)
                 utils.theGame().gui.chestPopup(self, False)
             else:
-                utils.theGame().addMessage("You don't have the key.")
+                utils.theGame().addMessage("You don't have the key")
                 utils.theGame().addMessage("Kill Monster to find the key")
         return False
 
