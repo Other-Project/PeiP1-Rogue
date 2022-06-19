@@ -100,7 +100,7 @@ equipments = {
         Armor("Legs", resistance=1, armorType="legs", image="assets/equipments/leg/leg1.png", price=4),
         Armor("boots", resistance=1, armorType="boots", image="assets/equipments/boot/boot1.png", price=4),
     ],
-    2: [
+    4: [
         Armor("shield", resistance=2, armorType="shield", image="assets/equipments/shield/shield2.png", price=8),
         Armor("helmet", resistance=2, armorType="helmet", image="assets/equipments/helmet/helmet3.png", price=8),
         Armor("chainmail", resistance=2, armorType="chestplate", image="assets/equipments/armor/armor3.png", price=8),
@@ -108,10 +108,10 @@ equipments = {
         Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png", price=8),
         Weapon("sword", radius=0, damage=10, image="assets/equipments/sword/sword2.png", price=8),
         Weapon("bow", radius=3, damage=0, radiusDamage=15, image="assets/equipments/bow/bow2.png", price=8),
-        Amulet("amulet of strength", image="assets/equipments/amulet/xp.png", effectType="strength", price=8),
+        Amulet("amulet of strength", image="assets/equipments/amulet/strength.png", effectType="strength", price=8),
 
     ],
-    3: [
+    8: [
         Weapon("sword", radius=0, damage=15, image="assets/equipments/sword/sword3.png", price=12),
         Weapon("bow", radius=4, damage=0, radiusDamage=20, image="assets/equipments/bow/bow3.png", price=12),
         Amulet("amulet of xp", image="assets/equipments/amulet/xp.png", effectType="xp", price=12),
@@ -126,25 +126,25 @@ monsters = {
         Monster("Goblin", 20, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 20, xpGain=3, image="assets/monsters/ghost.png"),
     ],
-    1: [
+    3: [
         Monster("Ork", 25, strength=2, xpGain=3, image="assets/monsters/orc.png"),
         Monster("Blob", 50, xpGain=4, image="assets/monsters/blob.png")
     ],
-    5: [
+    6: [
         Monster("Dragon", 70, strength=3, xpGain=10, image="assets/monsters/dragon.png")
     ]
 }
 
 bosses = [
     Monster("Dragon Boss", 100, strength=5, xpGain=10, image="assets/monsters/boss/boss1.png"),
-    Monster("Demon Boss", 100, strength=5, xpGain=10, image="assets/monsters/boss/boss2.png"),
-    Monster("Angel Boss", 100, strength=5, xpGain=10, image="assets/monsters/boss/boss3.png")
+    Monster("Demon Boss", 200, strength=2, xpGain=10, image="assets/monsters/boss/boss2.png"),
+    Monster("Angel Boss", 80, strength=6, xpGain=10, image="assets/monsters/boss/boss3.png")
 ]
 
 rooms = {
     RoomMonster: 40,
-    RoomChest: 30,
-    RoomShop: 2,
-    RoomBoss: 1,
-    RoomTrap: 10
+    RoomChest: 20,
+    RoomTrap: 10,
+    RoomShop: 5,
+    RoomBoss: 1
 }
