@@ -6,7 +6,7 @@ class Weapon(Equipment):
     from Hero import Hero
     from Creature import Creature
 
-    def __init__(self, name: str, damage: int = 1, radiusDamage: int = 0, radius: int = 0, solidityMax=10, image=None, price=None):
+    def __init__(self, name: str, damage: int = 1, radiusDamage: int = 0, radius: int = 0, solidityMax=25, image=None, price=None):
         """
         :param name: The name of the element
         :param image: The image of the element
