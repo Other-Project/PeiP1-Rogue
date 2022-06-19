@@ -32,7 +32,18 @@ class Hero(Creature):
         self.invisible = 0
         self.poisoned = 0
         self.invincible = 0
-        self.superStrength=0
+        self.superStrength = 0
+
+    def getImage(self):
+        if self.hp <= 0:
+            return "assets/hero/grave.png"
+        if self.poisoned > 0:
+            return "assets/hero/heroPoisened.png"
+        elif self.invincible > 0:
+            return "assets/hero/heroInvincible.png"
+        elif self.superStrength > 0:
+            return "assets/hero/heroSuperStrength.png"
+        return self.image
 
     def description(self):
         return Creature.description(self) + str(self.inventory)
