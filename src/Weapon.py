@@ -32,7 +32,12 @@ class Weapon(Equipment):
             hero.inventory.append(self)  # Add the weapon to the inventory
 
     def description(self) -> str:
-        return "Bonus strength: +" + str(self.damage)
+        txt = []
+        if self.damage > 0:
+            txt.append("Bonus strength: +" + str(self.damage))
+        if self.radiusDamage > 0:
+            txt.append("Range attack: " + str(self.radiusDamage))
+        return " ; ".join(txt)
 
     def rangedAttack(self, creature: Creature):
         import utils

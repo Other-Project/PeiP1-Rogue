@@ -68,7 +68,10 @@ class GUI:
         self.difficulty = 1
         pygame.init()
         pygame.display.set_caption('Roguelike')
-        pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
+        try:
+            pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
+        except FileNotFoundError as e:
+            print(e)
         self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
@@ -150,7 +153,7 @@ class GUI:
                             self.drawProgressBar(hpBarX, hpBarY, hpBarW, hpBarH, e.hp / e.hpMax, self.getBarColor(e.hp, e.hpMax))
                     if isinstance(e, Item):
                         if pygame.Rect(a, b, self.tileSize, self.tileSize).colliderect(pygame.Rect(self.getTilePos(x, y, e)[0], self.getTilePos(x, y, e)[1], self.tileSize, self.tileSize)):
-                            self.drawInfoBox(self.getTilePos(x, y, e)[0] - self.tileSize * (3 / 5), self.getTilePos(x, y, e)[1] - self.tileSize * 0.75, e)
+                            self.drawInfoBox(self.getTilePos(x, y, None), e)
         for elem in self.game.floor._elem.copy():
             from Creature import Creature
             if isinstance(elem, Creature) and elem.hp > 0:
@@ -202,14 +205,15 @@ class GUI:
                 if debug:
                     print("Start screen updated")
 
-    def drawInfoBox(self, x, y, e, padding=5):
+    def drawInfoBox(self, pos, e, padding=5):
         """Draws an info box"""
         font = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
         desc = font.render(e.description(), True, (255, 255, 255))
         width = desc.get_width()
         height = desc.get_height()
-        x = x - width / 2
-        pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
+        x = pos[0] + (self.tileSize - width) / 2
+        y = pos[1] - height
+        pygame.draw.rect(self.screen, (80, 80, 80), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
     def chestPopup(self, l):

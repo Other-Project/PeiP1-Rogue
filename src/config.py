@@ -5,13 +5,11 @@ from Ghost import Ghost
 from Amulet import Amulet
 from Armor import Armor
 from Hero import Hero
-from utils import theGame
 from Potion import Potion
 from Spider import Spider
 from RoomMonster import RoomMonster
 from RoomShop import RoomShop
 from RoomChest import RoomChest
-import utils
 
 
 ##################
@@ -19,11 +17,13 @@ import utils
 ##################
 
 def heal(hero: Hero, hpGain=3):
+    from utils import theGame
     hero.hp = min(hero.hp + hpGain, hero.healthMax)
     theGame().addMessage("The hero cured himself")
     return True
 
 def eat(hero: Hero, satietyGain=2):
+    from utils import theGame
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
     theGame().newTurn()
     return True
@@ -33,11 +33,13 @@ def manaPotion(hero: Hero, manaGain=1):
         hero.mana = min(hero.mana + manaGain, hero.manaMax)
         return True
     else:
+        from utils import theGame
         theGame().addMessage("Your inventory is already full")
         return False
 
 def teleport(hero: Hero):
-    floor = theGame().floor
+    import utils
+    floor = utils.theGame().floor
     newC = floor.randEmptyCoord()
     c = floor.pos(hero)
     floor.rm(c)
@@ -46,21 +48,25 @@ def teleport(hero: Hero):
     return False
 
 def zap(hero: Hero):
-    for monster in theGame().floor.getAllCreaturesInRadius(hero, 3, Monster):
+    import utils
+    for monster in utils.theGame().floor.getAllCreaturesInRadius(hero, 3, Monster):
         monster.hp -= 3
         utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
         utils.theGame().newTurn()
 
 def invincible():
+    import utils
     utils.theGame().hero.invincible=10
     utils.theGame().newTurn()
 
 def invisible():
+    import utils
     utils.theGame().hero.invisible = 5
     utils.theGame().hero.image = "assets/hero/invisibleHero.png"
     utils.theGame().newTurn()
 
 def superStrength():
+    import utils
     utils.theGame().hero.superStrength = 5
     utils.theGame().hero.image = "assets/hero/heroSuperStrength.png"
 
@@ -86,12 +92,12 @@ equipments = {
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/equipments/sword/sword1.png"),
-        Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
+        Weapon("bow", radius=3, damage=0, radiusDamage=2, image="assets/equipments/bow/bow1.0.png"),
         Armor("shield", resistance=1, armorType="shield", image="assets/equipments/shield/shield1.png"),
         Armor("helmet", resistance=1, armorType="helmet", image="assets/equipments/helmet/helmet1.png"),
         Armor("chainmail", resistance=1, armorType="chestplate", image="assets/equipments/armor/armor1.png"),
         Armor("Legs", resistance=1, armorType="legs", image="assets/equipments/leg/leg1.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/items/gold.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/equipments/boot/boot1.png"),
     ],
     2: [
         Armor("shield", resistance=2, armorType="shield", image="assets/equipments/shield/shield2.png"),
@@ -100,7 +106,7 @@ equipments = {
         Armor("Legs", resistance=2, armorType="legs", image="assets/equipments/leg/leg2.png"),
         Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
-        Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow2.png"),
+        Weapon("bow", radius=3, damage=0, radiusDamage=3, image="assets/equipments/bow/bow2.png"),
         Amulet("amulet of strength", image="assets/equipments/amulet/xp.png", effectType="strength"),
 
     ],
