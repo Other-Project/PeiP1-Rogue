@@ -15,6 +15,8 @@ class Map:
         from Hero import Hero
         from RoomMonster import RoomMonster
         from Stairs import Stairs
+        from Monster import Monster
+        from Chest import Chest
 
         self.size = size
         self._roomsToReach, self._rooms = [], []
@@ -31,12 +33,10 @@ class Map:
 
         for room in self._rooms:
             room.decorate(self)
-        import Monster
-        keyMonster = random.choice(tuple(self._elem.keys()))
-        while not isinstance(keyMonster, Monster.Monster):
-            keyMonster = random.choice(tuple(self._elem.keys()))
-        keyMonster.key = True
-
+        for elem in self._elem:
+            if isinstance(elem, Chest):
+                keyMonster = random.choice(list(filter(lambda e: isinstance(e, Monster), self._elem.keys())))
+                keyMonster.key = True
         self.put(self.getRoom(1, RoomMonster).center(), Stairs())
         self.reposEffectue = False
 

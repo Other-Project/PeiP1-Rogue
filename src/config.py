@@ -66,7 +66,6 @@ def invincible(hero: Hero):
 
 def invisible(hero: Hero):
     hero.invisible = 6
-    hero.image = "assets/hero/invisibleHero.png"
 
 
 def superStrength(hero: Hero):
@@ -121,14 +120,14 @@ equipments = {
 
 monsters = {
     0: [
-        Monster("Archer", 15, strength=1, radius=3, image="assets/monsters/archer.png"),
+        Monster("Archer", 10, strength=1, radius=3, image="assets/monsters/archer.png"),
         Spider("Spider", 15, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
         Monster("Bat", 10, strength=1, movingSpeed=2, image="assets/monsters/bat.png"),
-        Monster("Goblin", 25, xpGain=2, image="assets/monsters/goblin.png"),
+        Monster("Goblin", 20, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 20, xpGain=3, image="assets/monsters/ghost.png"),
     ],
     1: [
-        Monster("Ork", 30, strength=2, xpGain=3, image="assets/monsters/orc.png"),
+        Monster("Ork", 25, strength=2, xpGain=3, image="assets/monsters/orc.png"),
         Monster("Blob", 50, xpGain=4, image="assets/monsters/blob.png")
     ],
     5: [
@@ -144,8 +143,8 @@ bosses = [
 
 rooms = {
     RoomMonster: 40,
-    RoomChest: 2,
-    RoomShop: 1,
+    RoomChest: 30,
+    RoomShop: 2,
     RoomBoss: 1,
     RoomPiege: 10
 }

@@ -2,8 +2,8 @@ from Chest import Chest
 
 
 class Merchant(Chest):
-    def __init__(self, name: str = 'Retailer', image="assets/other/retailer.png", contain: list = None, size: int = 3):
-        Chest.__init__(self, name, image, contain, size)
+    def __init__(self, name: str = 'Retailer', image="assets/other/retailer.png", items: list = None, size: int = 3):
+        Chest.__init__(self, name, image, items, size)
 
     def meet(self, hero):
         import utils
