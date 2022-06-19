@@ -272,8 +272,8 @@ class GUI:
         self.drawEquipment(equipmentX, equipmentY, equipmentW, equipmentH, event)
 
         # Stats: bars of hp, satiety, etc
-        statsHpCol, statsSatietyCol, statsManaCol = 5, 10, 10
-        statsHpR, statsSatietyR, statsManaR = math.ceil(self.game.hero.healthMax / statsHpCol), math.ceil(self.game.hero.satietyMax / statsSatietyCol), math.ceil(self.game.hero.manaMax / statsManaCol)
+        statsHpCol, statsSatietyCol, statsManaCol = math.ceil(self.game.hero.healthMax / 2), 10, 10
+        statsHpR, statsSatietyR, statsManaR = 2, math.ceil(self.game.hero.satietyMax / statsSatietyCol), math.ceil(self.game.hero.manaMax / statsManaCol)
         statsHpH = self.tileSize * 0.75 * statsHpR + 20 * (statsHpR - 1)
         statsSatietyH = self.tileSize * 0.75 * statsSatietyR + 20 * (statsHpR - 1)
         statsManaH = self.tileSize * 0.75 * statsManaR + 20 * (statsHpR - 1)
