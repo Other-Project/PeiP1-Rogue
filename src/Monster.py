@@ -4,7 +4,6 @@ from Creature import Creature
 class Monster(Creature):
     from Map import Map
     from Hero import Hero
-    from GUI import GUI
 
     def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, visibility=True):
         """

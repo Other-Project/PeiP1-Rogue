@@ -1,9 +1,7 @@
-from typing import List
 import pygame.sprite
 from typing import List, Optional
 
 from Creature import Creature
-import utils
 
 
 class Hero(Creature):
@@ -50,6 +48,7 @@ class Hero(Creature):
         return self.addInventory(item)
 
     def addInventory(self, item):
+        import utils
         if item.name == "manaPotion":
             if self.mana == self.manaMax:
                 utils.theGame().addMessage("Your mana tank is full")
@@ -104,6 +103,7 @@ class Hero(Creature):
 
     def doAction(self, floor):
         from AStar import AStar
+        import utils
         self.astarTree = AStar(floor, floor.pos(floor.hero))
         if utils.theGame().hero.invisible != 0:
             utils.theGame().hero.invisible -= 1

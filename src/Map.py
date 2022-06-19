@@ -1,6 +1,5 @@
 import random
 from typing import Union, Optional, List
-import utils
 from Coord import Coord
 from Element import Element
 
@@ -30,12 +29,12 @@ class Map:
 
         for room in self._rooms:
             room.decorate(self)
-        self.put(self.getRoom(-1, RoomMonster).center(), Stairs())
+        self.put(self.getRoom(1, RoomMonster).center(), Stairs())
 
         self.reposEffectue = False
 
     def __repr__(self):
-        return '\n'.join([''.join([str(x) for x in y]) for y in self._mat]) + '\n'
+        return '\n'.join([''.join([" " if x is None else x.name[0] for x in y]) for y in self._mat]) + '\n'
 
     def __len__(self):
         return len(self._mat)
@@ -86,6 +85,7 @@ class Map:
         self.checkCoord(c)
         self.checkElement(e)
         if self._mat[c.y][c.x] != self.ground:
+            print(self)
             raise ValueError('Incorrect cell (' + str(self._mat[c.y][c.x]) + ')')
         if e in self:
             raise KeyError('Already placed')
@@ -104,11 +104,13 @@ class Map:
     # region Rooms
 
     def getRoom(self, i: int, roomType=None):
-        rooms = []
+        n = 0
         for room in self._rooms:
             if isinstance(room, roomType):
-                rooms.append(room)
-        return rooms[i] if i < len(rooms) else None
+                if n == i:
+                    return room
+                n += 1
+        return None
 
     def addRoom(self, room):
         self._roomsToReach.append(room)
@@ -169,18 +171,13 @@ class Map:
         roomTypes = [RoomMonster, RoomMonster]
         roomTypes += random.choices(list(rooms.keys()), weights=list(rooms.values()), k=n - 2)
         for i in range(0, n):
-            room = self.randRoom(roomTypes[i])
-            if self.intersectNone(room):
-                self.addRoom(room)
+            room = None
+            while room is None or not self.intersectNone(room):
+                room = self.randRoom(roomTypes[i])
+            self.addRoom(room)
 
     def randEmptyCoord(self):
         return random.choice(self._rooms).randEmptyCoord(self)
-
-    def randEmptyCenterCoordInRandRoom(self):
-        co = self.randRoom().center()
-        while self.get(co) != self.ground:
-            co = self.randRoom().center()
-        return co
 
     # endregion
 
@@ -234,6 +231,7 @@ class Map:
         """
         print("Move all")
         from Monster import Monster
+        import utils
         self.hero.doAction(self)
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
             if utils.theGame().hero.invisible <= 0:

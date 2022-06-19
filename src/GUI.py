@@ -68,7 +68,10 @@ class GUI:
         self.difficulty = 1
         pygame.init()
         pygame.display.set_caption('Roguelike')
-        pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
+        try:
+            pygame.display.set_icon(pygame.image.load('assets/hero/hero.png'))
+        except FileNotFoundError as e:
+            print(e)
         self.updateScreenSize()
 
     # noinspection PyAttributeOutsideInit
