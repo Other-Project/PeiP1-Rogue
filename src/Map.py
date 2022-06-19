@@ -104,7 +104,10 @@ class Map:
     # region Rooms
 
     def getRoom(self, i: int, roomType=None):
-        rooms = list(filter(lambda r: isinstance(r, roomType), self._rooms))
+        rooms = []
+        for room in self._rooms:
+            if isinstance(room, roomType):
+                rooms.append(room)
         return rooms[i] if i < len(rooms) else None
 
     def addRoom(self, room):
