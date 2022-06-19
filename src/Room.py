@@ -23,11 +23,9 @@ class Room:
         """Vérifie si other chevauche la salle"""
         for x in range(self.c1.x, self.c2.x):
             for y in range(self.c1.y, self.c2.y):
-                if Coord(x,y) in other:
+                if Coord(x, y) in other:
                     return True
         return False
-        coins = lambda room: [room.c1, Coord(room.c2.x, room.c1.y), Coord(room.c1.x, room.c2.y), room.c2]  # Renvoi les coordonnées des 4 coins de room
-        return any([coin in other for coin in coins(self)]) or any([coin in self for coin in coins(other)])
 
     def randCoord(self):
         return Coord(random.randint(self.c1.x, self.c2.x), random.randint(self.c1.y, self.c2.y))
@@ -42,4 +40,3 @@ class Room:
 
     def decorate(self, floor):
         raise NotImplementedError("Abstract Error")
-
