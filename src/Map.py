@@ -260,7 +260,7 @@ class Map:
             theGame().addMessage("The " + hero.name + " has already rested")
             return False
         theGame().addMessage("The " + hero.name + " is resting")
-        hero.hp += 5
+        hero.hp = min(hero.hp + 5, hero.healthMax)
         for i in range(10):
             self.moveAllMonsters()
         self.reposEffectue = True
