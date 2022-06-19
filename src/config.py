@@ -64,7 +64,7 @@ def invincible(hero: Hero):
 
 
 def invisible(hero: Hero):
-    hero.invisible = 5
+    hero.invisible = 6
     hero.image = "assets/hero/invisibleHero.png"
 
 
