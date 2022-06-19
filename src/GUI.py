@@ -77,7 +77,7 @@ class GUI:
     # noinspection PyAttributeOutsideInit
     def updateScreenSize(self, w=0, h=0):
         """Resize the window"""
-        self.w, self.h = max(1200, w), max(700, h)
+        self.w, self.h = max(1300, w), max(700, h)
         self.screen = pygame.display.set_mode((self.w, self.h), pygame.RESIZABLE)
         if self.game.floor is not None:
             self.tileSize = min(self.w * 0.7, self.w - 500, self.h) / self.game.floor.size
@@ -397,10 +397,11 @@ class GUI:
         statsW, statsH = heroW / 3 - 40, 30
         stats = [
             ("assets/equipments/sword/sword1.png", str(self.game.hero.strengthTot())),
+            ("assets/equipments/bow/bow1.0.png", str(self.game.hero.rangeStrengthTot())),
             ("assets/equipments/shield/shield2.png", str(self.game.hero.resistance())),
             ("assets/items/gold.png", str(self.game.hero.gold))
         ]
-        self.drawBar(statsX, statsY, len(stats), lambda x, y, w, h, i: self.drawStatComponent(x, y, w, h, stats[i]), heroW, statsH, nbCol=3)
+        self.drawBar(statsX, statsY, len(stats), lambda x, y, w, h, i: self.drawStatComponent(x, y, w, h, stats[i]), heroW, statsH, nbCol=len(stats))
 
     # endregion
 
