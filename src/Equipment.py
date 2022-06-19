@@ -7,7 +7,7 @@ class Equipment(Item):
         :param name: The name of the element
         :param image: The image of the element
         """
-        Item.__init__(self, name=name, usage=lambda item, hero: self.equip(hero), image=image)
+        Item.__init__(self, name=name, usage=lambda item, hero: self.equip(hero), image=image, price=None)
         self.solidityMax, self.solidity = solidityMax, solidityMax
 
     def equip(self, hero):

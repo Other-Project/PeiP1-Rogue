@@ -1,26 +1,31 @@
 from Room import Room
-from Coord import Coord
 from Chest import Chest
 
 
 class Marchand(Chest):
-    def __init__(self, name: str = 'Marchand', image="assets/other/deep_elf_demonologist.png", contain: list = None, size: int = 3):
+    def __init__(self, name: str = 'Retailer', image="assets/other/deep_elf_demonologist.png", contain: list = None, size: int = 3):
         Chest.__init__(self, name, image, contain, size)
+        if contain is None:
+            import utils
+            self.contain = [utils.theGame().randEquipment() for _ in range(size)]
+        else:
+            self.contain = contain
 
-        self.product = {}
-
-    def sell(self,item, hero):
+    def meet(self, hero):
         import utils
         from Hero import Hero
-        from Equipment import Equipment
+        if isinstance(hero, Hero):
+            utils.theGame().addMessage("You open the Chest")
+            utils.theGame().gui.retailerPopup(self)
+        return False
 
-        if not isinstance(item, Equipment):
-            raise TypeError("The item is not equipable")
-
-        if isinstance(hero, Hero) and hero.gold > self.product[item]:
-            hero.gold -= self.product[item]
-            hero.inventory.append(item)
-            utils.theGame().addMessage("You bought "+item.name)
+    def sell(self, item, hero):
+        import utils
+        if hero.gold >= item.price:
+            hero.take(item)
+            self.contain.remove(item)
+            hero.gold -= item.price
+            utils.theGame().addMessage("You bought " + item.name)
         else:
             utils.theGame().addMessage("Not enough gold yet")
 

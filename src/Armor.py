@@ -5,7 +5,7 @@ class Armor(Equipment):
     """An item than can be used to protect"""
     from Hero import Hero
 
-    def __init__(self, name: str, resistance: int = 0, armorType=None, solidityMax=10, image=None):
+    def __init__(self, name: str, resistance: int = 0, armorType=None, solidityMax=10, image=None, price=None):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -15,6 +15,7 @@ class Armor(Equipment):
         Equipment.__init__(self, name=name, solidityMax=solidityMax, image=image)
         self.resistance = resistance
         self.armorType = armorType
+        self.price = price
 
     def equip(self, hero: Hero):
         """Equip the armor"""
