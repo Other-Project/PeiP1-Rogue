@@ -11,7 +11,8 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.hero = hero
         self.dest = dest
-        self.originImage = pygame.image.load(image)
+        self.originImage = self.image = pygame.image.load(image)
+        self.rect = pygame.Rect(0, 0, 0, 0)
         self.angle = 0
         self.onCollide = onCollide
 
@@ -43,4 +44,3 @@ class Projectile(pygame.sprite.Sprite):
         if self.onCollide is not None:
             self.onCollide(self.dest)
         self.hero.all_projectiles.remove(self)
-
