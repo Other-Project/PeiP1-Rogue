@@ -1,7 +1,7 @@
 import math
+
 import pygame
 
-from GUI import GUI
 import utils
 
 

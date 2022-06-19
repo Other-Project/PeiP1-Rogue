@@ -5,7 +5,6 @@ class Weapon(Equipment):
     """An item than can be used to attack"""
     from Hero import Hero
     from Creature import Creature
-    from Map import Map
 
     def __init__(self, name: str, damage: int = 1, radiusDamage: int = 0, radius: int = 0, solidityMax=10, image=None, price=None):
         """
