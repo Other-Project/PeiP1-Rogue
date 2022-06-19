@@ -136,11 +136,11 @@ class Hero(Creature):
         return int(30 * math.exp((self.lvl - 1) / 4))
 
     def experience(self):
-        if self.xp >= self.lvlSup():
+        while self.xp >= self.lvlSup():
             self.xp -= self.lvlSup()
             self.lvl += 1
-            self.healthMax += 1
-            self.manaMax = min(self.manaMax + 3, 50)
+            self.healthMax = min(self.healthMax + 1, 20)
+            self.manaMax = min(self.manaMax + 3, 20)
 
     def resistance(self):
         from Armor import Armor
@@ -149,6 +149,9 @@ class Hero(Creature):
 
     def strengthTot(self):
         return self.strength + (self.weapon.damage if self.weapon is not None else 0)
+
+    def rangeStrengthTot(self):
+        return self.weapon.radiusDamage if self.weapon is not None else 0
 
     def equippedArmor(self):
         """returns equipped armor"""
