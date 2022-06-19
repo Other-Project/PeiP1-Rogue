@@ -1,7 +1,7 @@
 from Chest import Chest
 
 
-class Marchand(Chest):
+class Merchant(Chest):
     def __init__(self, name: str = 'Retailer', image="assets/other/retailer.png", contain: list = None, size: int = 3):
         Chest.__init__(self, name, image, contain, size)
 

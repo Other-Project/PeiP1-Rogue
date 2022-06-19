@@ -12,5 +12,5 @@ class RoomShop(Room):
         Room.__init__(self, c1=c1, c2=c2)
 
     def decorate(self, floor):
-        from Merchant import Marchand
-        floor.put(self.center(), Marchand())
+        from Merchant import Merchant
+        floor.put(self.center(), Merchant())
