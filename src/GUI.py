@@ -212,8 +212,35 @@ class GUI:
         pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
-    def popContaine(self, l, x=500, y=500, size=20):
-        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
+    def chestPopup(self, l):
+        popupW, popupH = self.tileSize * 10, self.tileSize * 5
+        popupX, popupY = (self.tileSize * self.game.floor.size - popupW) / 2, (self.tileSize * self.game.floor.size - popupH) / 2
+        pygame.draw.rect(self.screen, (65, 65, 65), pygame.Rect(popupX, popupY, popupW, popupH))
+        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(popupX + 0.5 * self.tileSize, popupY + 0.5 * self.tileSize, popupW - self.tileSize, popupH - self.tileSize))
+        y = popupY + 2 * self.tileSize
+        while True:
+            events = self.getEvents()
+            x = popupX + self.tileSize
+            X = popupX + self.tileSize
+            closeButton = Button(popupX + 8.5 * self.tileSize, popupY + 0.5 * self.tileSize, self.tileSize, self.tileSize)
+            if len(events) > 0:
+                for size in range(len(l.copy())):
+                    pygame.draw.rect(self.screen, (45, 45, 45), pygame.Rect(X, y, self.tileSize, self.tileSize))
+                    X += self.tileSize * 3.5
+                for element in l:
+                    closeButton.drawImage(self.screen, "assets/other/cross.png", events)
+                    elemButton = Button(x, y, self.tileSize, self.tileSize)
+                    elemButton.drawImage(self.screen, element.image, events)
+                    x += self.tileSize * 3.5
+                    utils.theGame().newTurn()
+                    if elemButton.clicked:
+                        self.game.hero.take(element)
+                        l.remove(element)
+                        self.sidePanel(events)
+                    pygame.display.flip()
+                if closeButton.clicked:
+                    break
+                pygame.display.flip()
 
     def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
         """Draws a box with an item (or not) inside"""
