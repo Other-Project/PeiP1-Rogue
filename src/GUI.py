@@ -1,7 +1,6 @@
-import pygame
 import math
 
-import utils
+import pygame
 
 debug = False  # Debug mode
 
@@ -164,9 +163,12 @@ class GUI:
         """Main loop"""
         self.updateScreenSize()
         self.startScreen()
+
+        events = None
         while self.game.hero.hp > 0:
-            events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
-            if len(events) > 0:
+            if events is not None:
+                events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
+            if events is None or len(events) > 0:
                 self.screen.fill((75, 75, 75))
                 self.sidePanel(events)
                 self.gameMap(events)
@@ -176,6 +178,8 @@ class GUI:
                 pygame.display.flip()
                 if debug:
                     print("Game screen updated")
+                events = []
+
         self.endScreen()
 
     # region Game map
@@ -405,8 +409,8 @@ class GUI:
     def startScreen(self):
         """Draws the start screen"""
         self.screen.fill((255, 255, 255))
+        events = [pygame.event.Event(pygame.NOEVENT)]
         while True:
-            events = self.getEvents()
             if len(events) > 0:
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
@@ -431,6 +435,7 @@ class GUI:
                 pygame.display.flip()
                 if debug:
                     print("Start screen updated")
+            events = self.getEvents()
 
     def endScreen(self):
         """Draws the end screen"""
@@ -450,14 +455,13 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160, 0, 0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        close_button.drawText(self.screen, "Exit")
-        replay_button.drawText(self.screen, "Restart")
         self.gameMap(None)
-        pygame.display.flip()
 
+        events = None
         while True:
-            events = self.getEvents()
-            if len(events) > 0:
+            if events is not None:
+                events = self.getEvents()
+            if events is None or len(events) > 0:
                 close_button.drawText(self.screen, "Exit", events)
                 if close_button.clicked:
                     pygame.quit()
@@ -470,6 +474,7 @@ class GUI:
                     self.main()
                     break
                 pygame.display.flip()
+                events = []
                 if debug:
                     print("End screen updated")
 
@@ -485,19 +490,20 @@ class GUI:
 
         y = popupY + 2 * self.tileSize
         Y = popupY + 3 * self.tileSize
+        events = None
         while True:
-
+            if events is not None:
+                events = self.getEvents()
             pygame.draw.rect(self.screen, (70, 70, 70), pygame.Rect(popupX, popupY, popupW, popupH))
             pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(popupX + 0.5 * self.tileSize, popupY + 0.5 * self.tileSize, popupW - self.tileSize, popupH - self.tileSize))
 
             closeButton = Button(popupX + 8.5 * self.tileSize, popupY + 0.5 * self.tileSize, self.tileSize, self.tileSize)
-            events = self.getEvents()
             closeButton.drawImage(self.screen, "assets/other/cross.png", events)
             if closeButton.clicked:
                 break
 
             x = popupX + self.tileSize
-            if len(events) > 0:
+            if events is None or len(events) > 0:
                 for i in range(chest.size):
                     if i < len(chest.items):
                         element = chest.items[i]
@@ -507,6 +513,7 @@ class GUI:
                     else:
                         self.drawItem(None, x, y, events, lambda e, h: None)
                     x += self.tileSize * 3.5
+                    events = []
                 pygame.display.flip()
 
     def takeItemFromChest(self, chest, element):

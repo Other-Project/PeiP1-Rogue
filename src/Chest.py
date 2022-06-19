@@ -12,8 +12,12 @@ class Chest(Element):
         import utils
         from Hero import Hero
         if isinstance(hero, Hero):
-            utils.theGame().addMessage("You open the chest")
-            utils.theGame().gui.chestPopup(self, False)
+            if hero.key is True:
+                utils.theGame().addMessage("You open the chest")
+                utils.theGame().gui.chestPopup(self, False)
+            else:
+                utils.theGame().addMessage("You don't have the key.")
+                utils.theGame().addMessage("Kill Monster to find the key")
         return False
 
     def takeItem(self, hero, element):

@@ -29,8 +29,13 @@ class Map:
 
         for room in self._rooms:
             room.decorate(self)
-        self.put(self.getRoom(1, RoomMonster).center(), Stairs())
+        import Monster
+        keyMonster = random.choice(tuple(self._elem.keys()))
+        while not isinstance(keyMonster, Monster.Monster):
+            keyMonster = random.choice(tuple(self._elem.keys()))
+        keyMonster.key = True
 
+        self.put(self.getRoom(1, RoomMonster).center(), Stairs())
         self.reposEffectue = False
 
     def __repr__(self):

@@ -5,7 +5,7 @@ class Monster(Creature):
     from Map import Map
     from Hero import Hero
 
-    def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, visibility=True):
+    def __init__(self, name, hp, image=None, strength=1, radius=0, xpGain=1, movingSpeed=1, visibility=True, key = False):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -15,6 +15,7 @@ class Monster(Creature):
         :param strength: The strength of the monster
         :param xpGain: The quantity of XP that the hero will gain
         :param movingSpeed: The number of moves the monster can make in one turn
+        :param key: a random monster have the key to open the chest
         """
         from Hero import Hero
         Creature.__init__(self, name, hp=hp, enemyType=Hero, strength=strength, image=image, visibility=visibility)
@@ -22,6 +23,7 @@ class Monster(Creature):
         self.xpGain = xpGain
         self.movingSpeed = movingSpeed
         self.hpMax = hp
+        self.key = key
 
     def attack(self, attacked: Hero, damage=None):
         """Attacks the hero"""
@@ -44,7 +46,6 @@ class Monster(Creature):
 
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""
-        import utils
         astar = floor.hero.astarTree
         if astar is None:
             return
