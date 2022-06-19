@@ -103,10 +103,11 @@ class Hero(Creature):
         elif attacked.visibility:
             damage += self.strength
             if self.weapon is not None and self.weapon.damage > 0:
-                damage += self.weapon.damage
-                self.weapon.solidity -= 1
-                if self.weapon.solidity <= 0:
-                    self.weapon = None
+                if self.weapon.equip(self):
+                    damage += self.weapon.damage
+                    self.weapon.solidity -= 1
+                    if self.weapon.solidity <= 0:
+                        self.weapon = None
         Creature.attack(self, attacked, damage)
 
         import utils

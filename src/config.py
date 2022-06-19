@@ -143,8 +143,8 @@ bosses = [
 
 rooms = {
     RoomMonster: 40,
-    RoomChest: 20,
-    RoomTrap: 10,
+    RoomChest: 5,
+    RoomTrap: 5,
     RoomShop: 5,
     RoomBoss: 1
 }
