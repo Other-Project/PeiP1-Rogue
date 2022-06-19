@@ -11,6 +11,7 @@ from RoomMonster import RoomMonster
 from RoomShop import RoomShop
 from RoomChest import RoomChest
 from RoomBoss import RoomBoss
+from Roompiège import RoomPiege
 
 
 ##################
@@ -145,5 +146,6 @@ rooms = {
     RoomMonster: 40,
     RoomChest: 2,
     RoomShop: 1,
-    RoomBoss: 1
+    RoomBoss: 1,
+    RoomPiege: 10
 }

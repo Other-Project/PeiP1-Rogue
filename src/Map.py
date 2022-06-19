@@ -2,6 +2,7 @@ import random
 from typing import Union, Optional, List
 from Coord import Coord
 from Element import Element
+import utils
 
 
 class Map:
@@ -26,6 +27,7 @@ class Map:
         self._elem = {}
         self.put(self.position, self.hero)
         self.visited = []
+        self.pieges = []
 
         for room in self._rooms:
             room.decorate(self)
@@ -201,12 +203,21 @@ class Map:
             self._mat[orig.y][orig.x] = Map.ground
             self._mat[dest.y][dest.x] = e
             self._elem[e] = dest
+            self.verifPiege(coco=way)
             return True
         elif self.get(dest) != Map.empty:
             if self.get(dest).meet(e) and self.get(dest) != self.hero:
                 self.rm(dest)
             return True
         return False
+
+    def verifPiege(self, coco):
+        from GUI import GUI
+
+        if self.pos(utils.theGame().hero) in self.pieges:
+            utils.theGame().hero.hp -= 2
+            utils.theGame().addMessage("You have stepped on a trap")
+            utils.theGame().gui.changeCase("assets/grounds/cobble_blood12.png", coco)
 
     def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature) -> Optional[List[Creature]]:
         """

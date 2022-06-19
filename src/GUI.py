@@ -1,5 +1,5 @@
 import math
-
+from Coord import Coord
 import pygame
 
 debug = False  # Debug mode
@@ -519,5 +519,9 @@ class GUI:
     def takeItemFromChest(self, chest, element):
         chest.takeItem(self.game.hero, element)
         self.sidePanel(None)
+
+    def changeCase(self, image: str, coco: Coord):
+        self.screen.blit(pygame.transform.scale(pygame.image.load(image), self.getTileSurface(None)), self.getTilePos(coco.x, coco.y, None))
+
 
     # endregion
