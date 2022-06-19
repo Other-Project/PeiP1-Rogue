@@ -29,7 +29,7 @@ class Map:
         self._elem = {}
         self.put(self.position, self.hero)
         self.visited = []
-        self.pieges = []
+        self.traps = []
 
         for room in self._rooms:
             room.decorate(self)
@@ -203,21 +203,12 @@ class Map:
             self._mat[orig.y][orig.x] = Map.ground
             self._mat[dest.y][dest.x] = e
             self._elem[e] = dest
-            self.verifPiege(coco=way)
             return True
         elif self.get(dest) != Map.empty:
             if self.get(dest).meet(e) and self.get(dest) != self.hero:
                 self.rm(dest)
             return True
         return False
-
-    def verifPiege(self, coco):
-        from GUI import GUI
-
-        if self.pos(utils.theGame().hero) in self.pieges:
-            utils.theGame().hero.hp -= 2
-            utils.theGame().addMessage("You have stepped on a trap")
-            utils.theGame().gui.changeCase("assets/grounds/cobble_blood12.png", coco)
 
     def getAllCreaturesInRadius(self, caller: Creature, radius: int, searchType: type = Creature) -> Optional[List[Creature]]:
         """
@@ -248,9 +239,18 @@ class Map:
         from Monster import Monster
         import utils
         self.hero.doAction(self)
+        self.onTrap()
         for e in self.getAllCreaturesInRadius(self.hero, radius, Monster):
             if utils.theGame().hero.invisible <= 0:
                 e.doAction(self)
+
+    def onTrap(self):
+        """Check if the hero is on a trap and damage him if that's the case"""
+        posHero = self.pos(self.hero)
+        if posHero in self.traps:
+            self.hero.hp -= 2
+            utils.theGame().addMessage("You have stepped on a trap")
+            utils.theGame().gui.heroTrapped(posHero)
 
     def rest(self, hero):
         """The hero recovers 5 hp and the monsters move 10 times"""

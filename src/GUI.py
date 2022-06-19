@@ -251,6 +251,11 @@ class GUI:
         pygame.draw.rect(self.screen, (80, 80, 80), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
+    def heroTrapped(self, coord: Coord, image="assets/hero/heroTrapped.png"):
+        self.gameMap(None)
+        self.screen.blit(pygame.transform.scale(pygame.image.load(image), self.getTileSurface(None)), self.getTilePos(coord.x, coord.y, None))
+        pygame.display.flip()
+
     # endregion
 
     # region Side Bar
@@ -520,9 +525,5 @@ class GUI:
     def takeItemFromChest(self, chest, element):
         chest.takeItem(self.game.hero, element)
         self.sidePanel(None)
-
-    def changeCase(self, image: str, coco: Coord):
-        self.screen.blit(pygame.transform.scale(pygame.image.load(image), self.getTileSurface(None)), self.getTilePos(coco.x, coco.y, None))
-
 
     # endregion
