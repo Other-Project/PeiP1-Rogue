@@ -86,12 +86,12 @@ equipments = {
     ],
     1: [
         Weapon("sword", radius=0, damage=2, image="assets/equipments/sword/sword1.png"),
-        Weapon("bow", radius=3, damage=2, image="assets/equipments/bow/bow1.0.png"),
+        Weapon("bow", radius=3, damage=0, radiusDamage=2, image="assets/equipments/bow/bow1.0.png"),
         Armor("shield", resistance=1, armorType="shield", image="assets/equipments/shield/shield1.png"),
         Armor("helmet", resistance=1, armorType="helmet", image="assets/equipments/helmet/helmet1.png"),
         Armor("chainmail", resistance=1, armorType="chestplate", image="assets/equipments/armor/armor1.png"),
         Armor("Legs", resistance=1, armorType="legs", image="assets/equipments/leg/leg1.png"),
-        Armor("boots", resistance=1, armorType="boots", image="assets/items/gold.png"),
+        Armor("boots", resistance=1, armorType="boots", image="assets/equipments/boot/boot1.png"),
     ],
     2: [
         Armor("shield", resistance=2, armorType="shield", image="assets/equipments/shield/shield2.png"),
@@ -100,7 +100,7 @@ equipments = {
         Armor("Legs", resistance=2, armorType="legs", image="assets/equipments/leg/leg2.png"),
         Armor("boots", resistance=2, armorType="boots", image="assets/equipments/boot/boot3.png"),
         Weapon("sword", radius=0, damage=3, image="assets/equipments/sword/sword2.png"),
-        Weapon("bow", radius=3, damage=3, image="assets/equipments/bow/bow2.png"),
+        Weapon("bow", radius=3, damage=0, radiusDamage=3, image="assets/equipments/bow/bow2.png"),
         Amulet("amulet of strength", image="assets/equipments/amulet/xp.png", effectType="strength"),
 
     ],
