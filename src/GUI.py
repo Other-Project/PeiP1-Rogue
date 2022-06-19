@@ -159,9 +159,9 @@ class GUI:
 
     # endregion
 
-    def main(self):
+    def main(self, w=0, h=0):
         """Main loop"""
-        self.updateScreenSize()
+        self.updateScreenSize(w, h)
         self.startScreen()
 
         events = None
@@ -471,7 +471,7 @@ class GUI:
                 if replay_button.clicked:
                     self.game.newGame()
                     self.game.buildFloor()
-                    self.main()
+                    self.main(self.w, self.h)
                     break
                 pygame.display.flip()
                 events = []
