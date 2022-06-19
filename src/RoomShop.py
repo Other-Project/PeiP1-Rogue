@@ -4,7 +4,7 @@ from Chest import Chest
 
 
 class Retailer(Chest):
-    def __init__(self, name: str = 'Retailer', image="assets/other/deep_elf_demonologist.png", contain: list = None, size: int = 3):
+    def __init__(self, name: str = 'Retailer', image="assets/other/retailer.png", contain: list = None, size: int = 3):
         Chest.__init__(self, name, image, contain, size)
         if contain is None:
             import utils
