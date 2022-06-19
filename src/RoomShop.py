@@ -2,7 +2,7 @@ from Room import Room
 from Chest import Chest
 
 
-class Marchand(Chest):
+class Retailer(Chest):
     def __init__(self, name: str = 'Retailer', image="assets/other/deep_elf_demonologist.png", contain: list = None, size: int = 3):
         Chest.__init__(self, name, image, contain, size)
         if contain is None:
@@ -31,6 +31,7 @@ class Marchand(Chest):
 
 
 class RoomShop(Room):
+    from Coord import Coord
     """A room with a merchant"""
     def __init__(self, c1: Coord, c2: Coord):
         """
@@ -40,4 +41,4 @@ class RoomShop(Room):
         Room.__init__(self, c1=c1, c2=c2)
 
     def decorate(self, floor):
-        floor.put(self.center(), Marchand())
+        floor.put(self.center(), Retailer())
