@@ -22,11 +22,13 @@ def heal(hero: Hero, hpGain=3):
     theGame().addMessage("The hero cured himself")
     return True
 
+
 def eat(hero: Hero, satietyGain=2):
     from utils import theGame
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
     theGame().newTurn()
     return True
+
 
 def manaPotion(hero: Hero, manaGain=1):
     if hero.mana < hero.manaMax:
@@ -36,6 +38,7 @@ def manaPotion(hero: Hero, manaGain=1):
         from utils import theGame
         theGame().addMessage("Your inventory is already full")
         return False
+
 
 def teleport(hero: Hero):
     import utils
@@ -47,28 +50,25 @@ def teleport(hero: Hero):
     utils.theGame().addMessage(" The hero has been teleported")
     return False
 
+
 def zap(hero: Hero):
     import utils
     for monster in utils.theGame().floor.getAllCreaturesInRadius(hero, 3, Monster):
         monster.hp -= 3
         utils.theGame().addMessage("The " + monster.name + " has loss 3 hp")
-        utils.theGame().newTurn()
 
-def invincible():
-    import utils
-    utils.theGame().hero.invincible=10
-    utils.theGame().newTurn()
 
-def invisible():
-    import utils
-    utils.theGame().hero.invisible = 5
-    utils.theGame().hero.image = "assets/hero/invisibleHero.png"
-    utils.theGame().newTurn()
+def invincible(hero: Hero):
+    hero.invincible=10
 
-def superStrength():
-    import utils
-    utils.theGame().hero.superStrength = 5
-    utils.theGame().hero.image = "assets/hero/heroSuperStrength.png"
+
+def invisible(hero: Hero):
+    hero.invisible = 5
+    hero.image = "assets/hero/invisibleHero.png"
+
+
+def superStrength(hero: Hero):
+    hero.superStrength = 5
 
 
 ##################
@@ -76,12 +76,12 @@ def superStrength():
 ##################
 
 potions = [
-    Potion("invisible", usage=lambda item, hero: invisible(), image="assets/potions/invisible.png", price=5),
+    Potion("invisible", usage=lambda item, hero: invisible(hero), image="assets/potions/invisible.png", price=5),
     Potion("teleport", usage=lambda item, hero: teleport(hero), image="assets/potions/potionTeleportation.png", price=5),
     Potion("heal", usage=lambda item, hero: heal(hero), image="assets/potions/potionHeal.png", price=6),
     Potion("zap", usage=lambda item, hero: zap(hero), image="assets/potions/zap.png", price=8),
-    Potion("invincible", usage=lambda item, hero: invincible(), image="assets/potions/invincible.png", price=9),
-    Potion("stronger", usage=lambda item, hero: invincible(), image="assets/potions/strength.png", price=9)
+    Potion("invincible", usage=lambda item, hero: invincible(hero), image="assets/potions/invincible.png", price=9),
+    Potion("stronger", usage=lambda item, hero: superStrength(hero), image="assets/potions/strength.png", price=9)
 ]
 
 equipments = {

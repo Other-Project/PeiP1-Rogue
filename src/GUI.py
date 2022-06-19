@@ -121,11 +121,6 @@ class GUI:
         posHero = self.game.floor.pos(self.game.hero)
         for y in range(len(self.game.floor)):
             for x in range(len(self.game.floor)):
-                if utils.theGame().hero.poisoned>0:
-                    utils.theGame().hero.image = "assets/hero/heroPoisened.png"
-                if utils.theGame().hero.invincible > 0:
-                    utils.theGame().hero.image = "assets/hero/heroInvincible.png"
-
                 e = self.game.floor.get(Coord(x, y))
                 if self.difficulty > 1 and posHero.distance(Coord(x, y)) > 6 and (self.difficulty > 2 or Coord(x, y) not in self.game.floor.visited):
                     self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/cloud.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
@@ -139,9 +134,10 @@ class GUI:
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(None)), self.getTilePos(x, y, None))
                 if e.image is not None:
                     from Monster import Monster
+                    from Hero import Hero
                     from Item import Item
                     element1_button = Button(self.getTilePos(x, y, None)[0], self.getTilePos(x, y, None)[1], self.tileSize, self.tileSize)
-                    element1_button.drawImage(self.screen, e.image, event)
+                    element1_button.drawImage(self.screen, e.getImage() if isinstance(e, Hero) else e.image, event)
                     if isinstance(e, Monster):
                         if element1_button.clicked:
                             if self.game.hero.weapon is not None:
@@ -440,10 +436,7 @@ class GUI:
         replay_button = Button(20 * self.tileSize + (self.w - 20 * self.tileSize) * (2.8 / 5), buttonsY, (self.w - 20 * self.tileSize) * (1.5 / 5), self.h * (1 / 10))
         font = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.05))
         font1 = pygame.font.SysFont('comicsansms', int((self.w - 20 * self.tileSize) * 0.07))
-        posHero = self.game.floor.pos(self.game.hero)
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/grounds/ground.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
-        self.screen.blit(pygame.transform.scale(pygame.image.load("assets/hero/grave.png"), self.getTileSurface(self.game.hero)), self.getTilePos(posHero.x, posHero.y, self.game.hero))
-        self.game.hero.image = "assets/hero/grave.png"
+
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/endBACK.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h - 40)),
                          (self.tileSize * self.game.floor.size + 20, 20))
         self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/end_screen/gameOver.png"), (self.w - self.tileSize * self.game.floor.size - 40, self.h * (1 / 3))),
