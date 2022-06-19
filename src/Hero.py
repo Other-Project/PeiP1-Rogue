@@ -43,6 +43,8 @@ class Hero(Creature):
             return "assets/hero/heroInvincible.png"
         elif self.superStrength > 0:
             return "assets/hero/heroSuperStrength.png"
+        elif self.invisible > 0:
+            return "assets/hero/invisibleHero.png"
         return self.image
 
     def description(self):
