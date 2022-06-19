@@ -5,7 +5,7 @@ from Creature import Creature
 
 
 class Hero(Creature):
-    def __init__(self, name="Hero", image="assets/hero/hero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10):
+    def __init__(self, name="Hero", image="assets/hero/hero.png", healthMax=10, manaMax=10, strength=2, satietyMax=10, key =False):
         """
         :param name: The name of the element
         :param image: The image of the element
@@ -13,6 +13,7 @@ class Hero(Creature):
         :param manaMax: The initial mana tank of the hero
         :param strength: The initial strength of the hero
         :param satietyMax: The maximum satiety value
+        :param key: necessary to open the chest
         """
         from Monster import Monster
         from AStar import AStar
@@ -33,6 +34,7 @@ class Hero(Creature):
         self.poisoned = 0
         self.invincible = 0
         self.superStrength = 0
+        self.key = key
 
     def getImage(self):
         if self.hp <= 0:
@@ -107,10 +109,16 @@ class Hero(Creature):
                     self.weapon = None
         Creature.attack(self, attacked, damage)
 
+        import utils
         if attacked.hp <= 0:
             self.xp += attacked.xpGain * self.xpMultiplier
             self.monstersKilled += 1
             self.experience()
+            if attacked.key is True:
+                self.key = True
+                utils.theGame().addMessage("You found a chest key")
+            else:
+                utils.theGame().addMessage("This monster hadn't the key")
 
     def doAction(self, floor):
         from AStar import AStar
