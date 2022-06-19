@@ -43,6 +43,8 @@ class Weapon(Equipment):
         import utils
         creaturePos = utils.theGame().floor.pos(creature)
         if utils.theGame().floor.pos(utils.theGame().hero).distance(creaturePos) <= self.radius:
+            self.solidity -= 1
             utils.theGame().hero.attack(creature, self.radiusDamage)
             if creature.hp <= 0:
                 utils.theGame().floor.rm(creaturePos)
+            utils.theGame().newTurn()
