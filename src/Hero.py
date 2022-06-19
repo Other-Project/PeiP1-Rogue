@@ -100,7 +100,7 @@ class Hero(Creature):
             damage += speAttack
         elif attacked.visibility:
             damage += self.strength
-            if self.weapon is not None:
+            if self.weapon is not None and self.weapon.damage > 0:
                 damage += self.weapon.damage
                 self.weapon.solidity -= 1
                 if self.weapon.solidity <= 0:
