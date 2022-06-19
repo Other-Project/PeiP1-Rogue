@@ -140,6 +140,6 @@ monsters = {
 
 rooms = {
     RoomMonster: 8,
-    RoomChest: 25,
+    RoomChest: 2,
     RoomShop: 1
 }

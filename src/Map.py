@@ -229,7 +229,6 @@ class Map:
 
         :param radius: The maximum distance from the hero in which to perform the movement
         """
-        print("Move all")
         from Monster import Monster
         import utils
         self.hero.doAction(self)

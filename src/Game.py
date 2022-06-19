@@ -30,6 +30,7 @@ class Game(object):
         self.newGame(hero, level, floor, message)
         self.gui = GUI(self)
 
+    # noinspection PyAttributeOutsideInit
     def newGame(self, hero: Hero = None, level: int = 1, floor: Map = None, message: List[str] = None):
         from Hero import Hero
         self.hero = hero or Hero()
@@ -37,17 +38,11 @@ class Game(object):
         self.floor = floor
         self._message = message or []
 
+    # noinspection PyAttributeOutsideInit
     def buildFloor(self):
         """Generates a new floor"""
         from Map import Map
-        """
-        if self.level%3 == 0:
-            self.floor = Map(hero=self.hero, roomSpe=RoomChest())
-        elif self.level%2 == 0:
-            self.floor = Map(hero=self.hero, roomSpe=RoomShop())
-        else:
-        """
-        self.floor = Map(hero=self.hero)
+        self.floor = Map(hero=self.hero, nbRooms=random.randint(3, 7))
 
     '''
     def putChest(self):

@@ -55,6 +55,7 @@ def drawImage(screen, path, x, y, w, h):
 
 
 def drawText(screen, text, x, y, w, h, size=14, color=(255, 255, 255), fontName="comicsansms"):
+    """Draws a text centered inside the w and h"""
     font = pygame.font.SysFont(fontName, size)
     txt = font.render(text, True, color)
     screen.blit(txt, (x + (w - txt.get_width()) / 2, y + (h - txt.get_height()) / 2))
