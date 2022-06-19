@@ -4,7 +4,10 @@ from Coord import Coord
 
 class Room:
     def __init__(self, c1, c2):
-        """Instancie une salle d'extrémité haut/gauche c1 et bas/droite c2"""
+        """
+        :param c1: Point at the top left
+        :param c2: Point at the bottom right
+        """
         self.c1 = c1
         self.c2 = c2
 

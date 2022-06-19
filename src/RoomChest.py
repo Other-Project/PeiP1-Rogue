@@ -3,10 +3,11 @@ from Coord import Coord
 
 
 class RoomChest(Room):
-    def __init__(self, c1, c2):
+    """A room with a chest"""
+    def __init__(self, c1: Coord, c2: Coord):
         """
-        :param name: The name of the special room
-        :param c1, c2: extrémités haut/gauche c1 et bas/droite c2
+        :param c1: Point at the top left
+        :param c2: Point at the bottom right
         """
         Room.__init__(self, c1=c1, c2=c2)
 
