@@ -14,7 +14,7 @@ class Item(Element):
         Element.__init__(self, name=name, image=image)
         self.usage = usage
         self.desc = desc
-        self.price=price
+        self.price = price
 
     def meet(self, hero):
         import utils
