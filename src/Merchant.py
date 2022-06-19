@@ -16,11 +16,14 @@ class Merchant(Chest):
     def takeItem(self, hero, element):
         import utils
         if hero.gold >= element.price:
-            hero.take(element)
-            self.items.remove(element)
-            hero.gold -= element.price
-            utils.theGame().addMessage("You bought " + element.name)
-            return True
+            if len(hero.inventory) < hero.inventorySize:
+                hero.take(element)
+                self.items.remove(element)
+                hero.gold -= element.price
+                utils.theGame().addMessage("You bought " + element.name)
+                return True
         else:
             utils.theGame().addMessage("Not enough gold yet")
             return False
+        utils.theGame().addMessage("Your inventory is full")
+        return False

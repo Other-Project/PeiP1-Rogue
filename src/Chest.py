@@ -25,6 +25,11 @@ class Chest(Element):
         return False
 
     def takeItem(self, hero, element):
-        hero.take(element)
-        self.items.remove(element)
+        import utils
+        if len(hero.inventory)<hero.inventorySize:
+            hero.take(element)
+            self.items.remove(element)
+        else:
+            utils.theGame().addMessage("Your inventory is full")
+
         return True
