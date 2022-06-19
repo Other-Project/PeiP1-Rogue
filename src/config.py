@@ -17,14 +17,14 @@ from RoomBoss import RoomBoss
 #     Usages     #
 ##################
 
-def heal(hero: Hero, hpGain=3):
+def heal(hero: Hero, hpGain=4):
     from utils import theGame
     hero.hp = min(hero.hp + hpGain, hero.healthMax)
     theGame().addMessage("The hero cured himself")
     return True
 
 
-def eat(hero: Hero, satietyGain=4):
+def eat(hero: Hero, satietyGain=6):
     from utils import theGame
     hero.satiety = min(hero.satiety + satietyGain, hero.satietyMax)
     theGame().newTurn()
@@ -88,7 +88,7 @@ potions = [
 equipments = {
     0: [
         Item("food", usage=lambda item, hero: eat(hero), image="assets/foods/chunk.png", desc="+4 satiety", price=1),
-        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/items/mana.png", desc="+1 mana",price=1),
+        Item("mana orb", usage=lambda item, hero: manaPotion(hero), image="assets/items/mana.png", desc="+1 mana", price=1),
         Item(name="gold", image="assets/items/gold.png", desc="+1 gold", price=0),
     ],
     1: [
@@ -120,9 +120,9 @@ equipments = {
 
 monsters = {
     0: [
-        Monster("Archer", 15, radius=3, image="assets/monsters/archer.png"),
+        Monster("Archer", 15, strength=1, radius=3, image="assets/monsters/archer.png"),
         Spider("Spider", 15, movingSpeed=2, xpGain=3, image="assets/monsters/spider.png"),
-        Monster("Bat", 10, movingSpeed=2, image="assets/monsters/bat.png"),
+        Monster("Bat", 10, strength=1, movingSpeed=2, image="assets/monsters/bat.png"),
         Monster("Goblin", 25, xpGain=2, image="assets/monsters/goblin.png"),
         Ghost("Ghost", 20, xpGain=3, image="assets/monsters/ghost.png"),
     ],
