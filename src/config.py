@@ -10,6 +10,7 @@ from Spider import Spider
 from RoomMonster import RoomMonster
 from RoomShop import RoomShop
 from RoomChest import RoomChest
+from RoomBoss import RoomBoss
 
 
 ##################
@@ -59,7 +60,7 @@ def zap(hero: Hero):
 
 
 def invincible(hero: Hero):
-    hero.invincible=10
+    hero.invincible = 10
 
 
 def invisible(hero: Hero):
@@ -137,8 +138,13 @@ monsters = {
     ]
 }
 
+bosses = [
+    Monster("Dragon", 20, strength=3, xpGain=10, image="assets/monsters/dragon.png")
+]
+
 rooms = {
-    RoomMonster: 8,
-    RoomChest: 2,
-    RoomShop: 1
+    RoomMonster: 16,
+    RoomChest: 4,
+    RoomShop: 2,
+    RoomBoss: 64
 }
