@@ -456,8 +456,6 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160, 0, 0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        # close_button.drawText(self.screen, "Exit")
-        # replay_button.drawText(self.screen, "Restart")
         self.gameMap(None)
 
         events = None
@@ -493,19 +491,20 @@ class GUI:
 
         y = popupY + 2 * self.tileSize
         Y = popupY + 3 * self.tileSize
+        events = None
         while True:
-
+            if events is not None:
+                events = self.getEvents()
             pygame.draw.rect(self.screen, (70, 70, 70), pygame.Rect(popupX, popupY, popupW, popupH))
             pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(popupX + 0.5 * self.tileSize, popupY + 0.5 * self.tileSize, popupW - self.tileSize, popupH - self.tileSize))
 
             closeButton = Button(popupX + 8.5 * self.tileSize, popupY + 0.5 * self.tileSize, self.tileSize, self.tileSize)
-            events = self.getEvents()
             closeButton.drawImage(self.screen, "assets/other/cross.png", events)
             if closeButton.clicked:
                 break
 
             x = popupX + self.tileSize
-            if len(events) > 0:
+            if events is None or len(events) > 0:
                 for i in range(chest.size):
                     if i < len(chest.items):
                         element = chest.items[i]
@@ -515,6 +514,7 @@ class GUI:
                     else:
                         self.drawItem(None, x, y, events, lambda e, h: None)
                     x += self.tileSize * 3.5
+                    events = []
                 pygame.display.flip()
 
     def takeItemFromChest(self, chest, element):
