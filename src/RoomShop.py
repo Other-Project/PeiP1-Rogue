@@ -1,3 +1,4 @@
+from Coord import Coord
 from Room import Room
 from Chest import Chest
 

@@ -146,5 +146,5 @@ rooms = {
     RoomMonster: 16,
     RoomChest: 4,
     RoomShop: 2,
-    RoomBoss: 64
+    RoomBoss: 1
 }
