@@ -44,7 +44,6 @@ class Monster(Creature):
 
     def doAction(self, floor: Map):
         """Moves the monster and attacks the hero if he is in range"""
-        import utils
         astar = floor.hero.astarTree
         if astar is None:
             return

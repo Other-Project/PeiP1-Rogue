@@ -1,4 +1,3 @@
-import pygame
 from Monster import Monster
 
 

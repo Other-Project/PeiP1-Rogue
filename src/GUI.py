@@ -1,7 +1,6 @@
-import pygame
 import math
 
-import utils
+import pygame
 
 debug = False  # Debug mode
 
