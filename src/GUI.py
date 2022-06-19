@@ -83,6 +83,83 @@ class GUI:
         if self.game.floor is not None:
             self.tileSize = min(self.w * 0.7, self.w - 500, self.h) / self.game.floor.size
 
+    def getEvents(self, additionalEvents=None):
+        events = []
+        additionalEvents = additionalEvents or {}
+        for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION] + list(additionalEvents.keys())):
+            if event.type in events:
+                continue
+            events.append(event.type)
+            if event.type == pygame.QUIT:
+                import sys
+                sys.exit()
+            elif event.type == pygame.VIDEORESIZE:
+                self.updateScreenSize(event.size[0], event.size[1])
+            elif event.type in additionalEvents:
+                additionalEvents[event.type](event)
+            if debug:
+                print("Received event:", pygame.event.event_name(event.type))
+        return events
+
+    # region Draw utils
+
+    def drawStatComponent(self, x, y, w, h, data):
+        statsFont = pygame.font.SysFont('comicsansms', 20)
+        drawImage(self.screen, data[0], x, y, w, h)
+        strengthTxt = statsFont.render(data[1], True, (255, 255, 255))
+        self.screen.blit(strengthTxt, (x + (w - strengthTxt.get_width()) / 2, y + h))
+
+    def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
+        """Draws a horizontal bar made of images"""
+        self.drawBar(x, y, valueMax,
+                     lambda _x, _y, w, h, i: drawImage(self.screen, image(i), _x, _y, max(w, 0), max(h, 0)),
+                     width, height, nbCol, padding, sizeImage)
+
+    # noinspection PyMethodMayBeStatic
+    def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
+        """Calculates a horizontal bar and call `drawFct` for each component"""
+        gapX = width / nbCol
+        gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
+        sizeW = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
+        sizeH = gapY - padding if sizeImage is None else min(sizeImage, gapY - padding)
+        x += abs(gapX - sizeW) / 2  # Center the bar
+        for nbr in range(valueMax):
+            drawFct(x + (nbr - int(nbr / nbCol) * nbCol) * gapX, y + int(nbr / nbCol) * gapY, sizeW, sizeH, nbr)
+
+    def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
+        """Draws a box with an item (or not) inside"""
+        size = size or self.tileSize
+        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
+        if elem is None:
+            return
+        elemButton = Button(x + size * 0.125, y + size * 0.125, size * 0.75, size * 0.75)
+        elemButton.drawImage(self.screen, elem.image, event)
+        if elemButton.clicked:
+            action(elem, self.game.hero)
+        if elemButton.rightClicked:
+            rightAction(elem, self.game.hero)
+
+        from Equipment import Equipment
+        if isinstance(elem, Equipment):
+            self.drawProgressBar(x + size * 0.125, y + size * 0.8125, size * 0.75, size * 0.125, elem.solidity / elem.solidityMax, self.getBarColor(elem.solidity, elem.solidityMax))
+
+    def drawProgressBar(self, x, y, w, h, val, color, r=None):
+        r = r or int(h // 2)
+        pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(x, y, w, h), border_radius=r)
+        pygame.draw.rect(self.screen, color, pygame.Rect(x + 1, y + 1, (w - 2) * max(min(val, 1), 0), h - 2), border_radius=r)
+
+    @staticmethod
+    def getBarColor(value: float, maxValue: float):
+        """The color that the bar should take according to its value"""
+        relativeHp = value / maxValue
+        if relativeHp > 0.67:  # 2/3 of life remaining
+            return 25, 172, 38
+        elif relativeHp > 0.34:  # 1/3 of life remaining
+            return 255, 216, 0
+        return 255, 0, 0
+
+    # endregion
+
     def main(self):
         """Main loop"""
         self.updateScreenSize()
@@ -100,6 +177,8 @@ class GUI:
                 if debug:
                     print("Game screen updated")
         self.endScreen()
+
+    # region Game map
 
     def getTileSurface(self, e):
         """Returns the screen surface of a map element (i.e. it's width and height)"""
@@ -157,51 +236,6 @@ class GUI:
                 for projectile in elem.all_projectiles:
                     projectile.draw()
 
-    def drawProgressBar(self, x, y, w, h, val, color, r=None):
-        r = r or int(h // 2)
-        pygame.draw.rect(self.screen, (32, 32, 32), pygame.Rect(x, y, w, h), border_radius=r)
-        pygame.draw.rect(self.screen, color, pygame.Rect(x + 1, y + 1, (w - 2) * max(min(val, 1), 0), h - 2), border_radius=r)
-
-    @staticmethod
-    def getBarColor(value: float, maxValue: float):
-        """The color that the bar should take according to its value"""
-        relativeHp = value / maxValue
-        if relativeHp > 0.67:  # 2/3 of life remaining
-            return 25, 172, 38
-        elif relativeHp > 0.34:  # 1/3 of life remaining
-            return 255, 216, 0
-        return 255, 0, 0
-
-    def startScreen(self):
-        """Draws the start screen"""
-        self.screen.fill((255, 255, 255))
-        while True:
-            events = self.getEvents()
-            if len(events) > 0:
-                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
-                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
-
-                difficultyBtnY = self.h * 4 / 5
-                difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
-                easy = Button(self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-                easy.drawText(self.screen, "Easy", events)
-                if easy.clicked:
-                    self.difficulty = 1
-                    break
-                medium = Button(self.w / 2 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-                medium.drawText(self.screen, "Medium", events)
-                if medium.clicked:
-                    self.difficulty = 2
-                    break
-                hard = Button(5 * self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
-                hard.drawText(self.screen, "Hard", events)
-                if hard.clicked:
-                    self.difficulty = 3
-                    break
-                pygame.display.flip()
-                if debug:
-                    print("Start screen updated")
-
     def drawInfoBox(self, pos, e, padding=5):
         """Draws an info box"""
         font = pygame.font.SysFont('comicsansms', int(self.tileSize * (2 / 5)))
@@ -213,39 +247,9 @@ class GUI:
         pygame.draw.rect(self.screen, (80, 80, 80), pygame.Rect(x - padding, y - padding, width + padding * 2, height + padding * 2))  # Draw the panel
         self.screen.blit(desc, (x, y))
 
-    def drawItem(self, elem, x, y, event, action=lambda elem, hero: elem.deEquip(hero), rightAction=lambda elem, hero: elem.deEquip(hero, True), size=None):
-        """Draws a box with an item (or not) inside"""
-        size = size or self.tileSize
-        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(x, y, size, size))
-        if elem is None:
-            return
-        elemButton = Button(x + size * 0.125, y + size * 0.125, size * 0.75, size * 0.75)
-        elemButton.drawImage(self.screen, elem.image, event)
-        if elemButton.clicked:
-            action(elem, self.game.hero)
-        if elemButton.rightClicked:
-            rightAction(elem, self.game.hero)
+    # endregion
 
-        from Equipment import Equipment
-        if isinstance(elem, Equipment):
-            self.drawProgressBar(x + size * 0.125, y + size * 0.8125, size * 0.75, size * 0.125, elem.solidity / elem.solidityMax, self.getBarColor(elem.solidity, elem.solidityMax))
-
-    def drawPotion(self, x, y, i, event):
-        """Draws a potion button"""
-        from config import potions
-        spellsFont = pygame.font.SysFont('comicsansms', 15)
-        spell = potions[i]
-
-        self.drawItem(spell, x, y, event, action=lambda elem, hero: elem.activate(hero), rightAction=lambda elem, hero: None)
-
-        name = spellsFont.render(spell.name, True, (255, 255, 255))
-        self.screen.blit(name, (x + (self.tileSize - name.get_width()) / 2, y + self.tileSize + 5))
-
-        price = spellsFont.render("x" + str(spell.price), True, (255, 255, 255))
-        priceY = y + self.tileSize + name.get_height() + 10
-        priceSize = max(price.get_width(), price.get_height())
-        drawImage(self.screen, "assets/items/mana.png", x + (self.tileSize - priceSize) / 2, priceY, priceSize, priceSize)
-        self.screen.blit(price, (x + (self.tileSize - priceSize) / 2, priceY))
+    # region Side Bar
 
     def sidePanel(self, event):
         """Draws the side panel"""
@@ -324,6 +328,23 @@ class GUI:
         for msgI in range(len(msgs)):
             self.screen.blit(messagesFont.render(msgs[msgI], True, (255, 255, 255)), (messagesX, messagesY + messagesFont.get_linesize() * msgI, messagesW, messagesFont.get_linesize()))
 
+    def drawPotion(self, x, y, i, event):
+        """Draws a potion button"""
+        from config import potions
+        spellsFont = pygame.font.SysFont('comicsansms', 15)
+        spell = potions[i]
+
+        self.drawItem(spell, x, y, event, action=lambda elem, hero: elem.activate(hero), rightAction=lambda elem, hero: None)
+
+        name = spellsFont.render(spell.name, True, (255, 255, 255))
+        self.screen.blit(name, (x + (self.tileSize - name.get_width()) / 2, y + self.tileSize + 5))
+
+        price = spellsFont.render("x" + str(spell.price), True, (255, 255, 255))
+        priceY = y + self.tileSize + name.get_height() + 10
+        priceSize = max(price.get_width(), price.get_height())
+        drawImage(self.screen, "assets/items/mana.png", x + (self.tileSize - priceSize) / 2, priceY, priceSize, priceSize)
+        self.screen.blit(price, (x + (self.tileSize - priceSize) / 2, priceY))
+
     def drawControl(self, x: int, y: int, w: int, h: int, text: str, image: str, scale: float):
         """Draws a control infogram"""
         font = pygame.font.SysFont('comicsansms', 14)
@@ -377,28 +398,39 @@ class GUI:
         ]
         self.drawBar(statsX, statsY, len(stats), lambda x, y, w, h, i: self.drawStatComponent(x, y, w, h, stats[i]), heroW, statsH, nbCol=3)
 
-    def drawStatComponent(self, x, y, w, h, data):
-        statsFont = pygame.font.SysFont('comicsansms', 20)
-        drawImage(self.screen, data[0], x, y, w, h)
-        strengthTxt = statsFont.render(data[1], True, (255, 255, 255))
-        self.screen.blit(strengthTxt, (x + (w - strengthTxt.get_width()) / 2, y + h))
+    # endregion
 
-    def drawBarImage(self, x, y, valueMax, image, width, height=None, nbCol=5, padding=5, sizeImage=None):
-        """Draws a horizontal bar made of images"""
-        self.drawBar(x, y, valueMax,
-                     lambda _x, _y, w, h, i: drawImage(self.screen, image(i), _x, _y, max(w, 0), max(h, 0)),
-                     width, height, nbCol, padding, sizeImage)
+    # region Start and End screens
 
-    # noinspection PyMethodMayBeStatic
-    def drawBar(self, x, y, valueMax, drawFct, width, height=None, nbCol=5, padding=5, sizeImage=None):
-        """Calculates a horizontal bar and call `drawFct` for each component"""
-        gapX = width / nbCol
-        gapY = gapX if height is None else height / math.ceil(valueMax / nbCol)
-        sizeW = gapX - padding if sizeImage is None else min(sizeImage, gapX - padding)
-        sizeH = gapY - padding if sizeImage is None else min(sizeImage, gapY - padding)
-        x += abs(gapX - sizeW) / 2  # Center the bar
-        for nbr in range(valueMax):
-            drawFct(x + (nbr - int(nbr / nbCol) * nbCol) * gapX, y + int(nbr / nbCol) * gapY, sizeW, sizeH, nbr)
+    def startScreen(self):
+        """Draws the start screen"""
+        self.screen.fill((255, 255, 255))
+        while True:
+            events = self.getEvents()
+            if len(events) > 0:
+                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
+                self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
+
+                difficultyBtnY = self.h * 4 / 5
+                difficultyBtnW, difficultyBtnH = self.w / 6, self.h / 10
+                easy = Button(self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                easy.drawText(self.screen, "Easy", events)
+                if easy.clicked:
+                    self.difficulty = 1
+                    break
+                medium = Button(self.w / 2 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                medium.drawText(self.screen, "Medium", events)
+                if medium.clicked:
+                    self.difficulty = 2
+                    break
+                hard = Button(5 * self.w / 6 - difficultyBtnW / 2, difficultyBtnY, difficultyBtnW, difficultyBtnH)
+                hard.drawText(self.screen, "Hard", events)
+                if hard.clicked:
+                    self.difficulty = 3
+                    break
+                pygame.display.flip()
+                if debug:
+                    print("Start screen updated")
 
     def endScreen(self):
         """Draws the end screen"""
@@ -441,56 +473,44 @@ class GUI:
                 if debug:
                     print("End screen updated")
 
-    def getEvents(self, additionalEvents=None):
-        events = []
-        additionalEvents = additionalEvents or {}
-        for event in pygame.event.get(eventtype=[pygame.QUIT, pygame.KEYDOWN, pygame.VIDEORESIZE, pygame.MOUSEBUTTONDOWN, pygame.MOUSEMOTION] + list(additionalEvents.keys())):
-            if event.type in events:
-                continue
-            events.append(event.type)
-            if event.type == pygame.QUIT:
-                import sys
-                sys.exit()
-            elif event.type == pygame.VIDEORESIZE:
-                self.updateScreenSize(event.size[0], event.size[1])
-            elif event.type in additionalEvents:
-                additionalEvents[event.type](event)
-            if debug:
-                print("Received event:", pygame.event.event_name(event.type))
-        return events
+    # endregion
 
     # region Chest and merchant interaction
 
-    def retailerPopup(self, retailer, sell):
+    from Chest import Chest
+
+    def chestPopup(self, chest: Chest, sell):
         popupW, popupH = self.tileSize * 10, self.tileSize * 5
         popupX, popupY = (self.tileSize * self.game.floor.size - popupW) / 2, (self.tileSize * self.game.floor.size - popupH) / 2
-        pygame.draw.rect(self.screen, (65, 65, 65), pygame.Rect(popupX, popupY, popupW, popupH))
-        pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(popupX + 0.5 * self.tileSize, popupY + 0.5 * self.tileSize, popupW - self.tileSize, popupH - self.tileSize))
+
         y = popupY + 2 * self.tileSize
+        Y = popupY + 3 * self.tileSize
         while True:
-            events = self.getEvents()
-            x = popupX + self.tileSize
-            X = popupX + self.tileSize
-            Y = popupY + 3 * self.tileSize
+
+            pygame.draw.rect(self.screen, (70, 70, 70), pygame.Rect(popupX, popupY, popupW, popupH))
+            pygame.draw.rect(self.screen, (64, 64, 64), pygame.Rect(popupX + 0.5 * self.tileSize, popupY + 0.5 * self.tileSize, popupW - self.tileSize, popupH - self.tileSize))
+
             closeButton = Button(popupX + 8.5 * self.tileSize, popupY + 0.5 * self.tileSize, self.tileSize, self.tileSize)
+            events = self.getEvents()
+            closeButton.drawImage(self.screen, "assets/other/cross.png", events)
+            if closeButton.clicked:
+                break
+
+            x = popupX + self.tileSize
             if len(events) > 0:
-                for size in range(len(retailer.contain.copy())):
-                    pygame.draw.rect(self.screen, (45, 45, 45), pygame.Rect(X, y, self.tileSize, self.tileSize))
-                    pygame.draw.rect(self.screen, (55, 55, 55), pygame.Rect(X, Y, self.tileSize, self.tileSize))
-                    X += self.tileSize * 3.5
-                for element in retailer.contain:
-                    closeButton.drawImage(self.screen, "assets/other/cross.png", events)
-                    elemButton = Button(x, y, self.tileSize, self.tileSize)
-                    elemButton.drawImage(self.screen, element.image, events)
-                    if sell:  # Display the price
-                        drawText(self.screen, str(element.price), x, Y, self.tileSize, self.tileSize, size=14, color=(255, 255, 255), fontName="comicsansms")
+                for i in range(chest.size):
+                    if i < len(chest.items):
+                        element = chest.items[i]
+                        self.drawItem(element, x, y, events, lambda e, h: self.takeItemFromChest(chest, e))
+                        if sell:  # Display the price
+                            drawText(self.screen, str(element.price), x, Y, self.tileSize, self.tileSize, size=14, color=(255, 255, 255), fontName="comicsansms")
+                    else:
+                        self.drawItem(None, x, y, events, lambda e, h: None)
                     x += self.tileSize * 3.5
-                    if elemButton.clicked:
-                        retailer.takeItem(self.game.hero, element)
-                        self.sidePanel(events)
-                    pygame.display.flip()
-                if closeButton.clicked:
-                    break
                 pygame.display.flip()
+
+    def takeItemFromChest(self, chest, element):
+        chest.takeItem(self.game.hero, element)
+        self.sidePanel(None)
 
     # endregion
