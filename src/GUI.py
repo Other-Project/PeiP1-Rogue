@@ -164,9 +164,12 @@ class GUI:
         """Main loop"""
         self.updateScreenSize()
         self.startScreen()
+
+        events = None
         while self.game.hero.hp > 0:
-            events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
-            if len(events) > 0:
+            if events is not None:
+                events = self.getEvents({pygame.KEYDOWN: lambda event: self.game.keyPressed(event.key)})
+            if events is None or len(events) > 0:
                 self.screen.fill((75, 75, 75))
                 self.sidePanel(events)
                 self.gameMap(events)
@@ -176,6 +179,8 @@ class GUI:
                 pygame.display.flip()
                 if debug:
                     print("Game screen updated")
+                events = []
+
         self.endScreen()
 
     # region Game map
@@ -405,8 +410,8 @@ class GUI:
     def startScreen(self):
         """Draws the start screen"""
         self.screen.fill((255, 255, 255))
+        events = [pygame.event.Event(pygame.NOEVENT)]
         while True:
-            events = self.getEvents()
             if len(events) > 0:
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/back.png"), (self.w, self.h)), (0, 0))
                 self.screen.blit(pygame.transform.scale(pygame.image.load("assets/gui/start_screen/arcade.png"), (self.w / 2, self.h)), (self.w * (1 / 4), 0))
@@ -431,6 +436,7 @@ class GUI:
                 pygame.display.flip()
                 if debug:
                     print("Start screen updated")
+            events = self.getEvents()
 
     def endScreen(self):
         """Draws the end screen"""
@@ -450,14 +456,15 @@ class GUI:
         self.screen.blit(font.render("monsters killed: " + str(self.game.hero.monstersKilled), True, (160, 0, 0)),
                          (20 * self.tileSize + (self.w - 20 * self.tileSize) * (0.5 / 5), self.h * (1.9 / 3)))
 
-        close_button.drawText(self.screen, "Exit")
-        replay_button.drawText(self.screen, "Restart")
+        # close_button.drawText(self.screen, "Exit")
+        # replay_button.drawText(self.screen, "Restart")
         self.gameMap(None)
-        pygame.display.flip()
 
+        events = None
         while True:
-            events = self.getEvents()
-            if len(events) > 0:
+            if events is not None:
+                events = self.getEvents()
+            if events is None or len(events) > 0:
                 close_button.drawText(self.screen, "Exit", events)
                 if close_button.clicked:
                     pygame.quit()
@@ -470,6 +477,7 @@ class GUI:
                     self.main()
                     break
                 pygame.display.flip()
+                events = []
                 if debug:
                     print("End screen updated")
 
