@@ -15,5 +15,10 @@ class Chest(Element):
         from Hero import Hero
         if isinstance(hero, Hero):
             utils.theGame().addMessage("You open the Chest")
-            utils.theGame().gui.chestPopup(self.contain)
+            utils.theGame().gui.retailerPopup(self, False)
         return False
+
+    def takeItem(self, hero, element):
+        hero.take(element)
+        self.contain.remove(element)
+        return True
