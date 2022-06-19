@@ -140,7 +140,7 @@ class Hero(Creature):
             self.xp -= self.lvlSup()
             self.lvl += 1
             self.healthMax += 1
-            self.manaMax = min(self.manaMax + 5, 50)
+            self.manaMax = min(self.manaMax + 3, 50)
 
     def resistance(self):
         from Armor import Armor
